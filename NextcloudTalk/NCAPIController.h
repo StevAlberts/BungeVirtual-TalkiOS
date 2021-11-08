@@ -55,6 +55,7 @@ typedef void (^ParticipantModificationCompletionBlock)(NSError *error);
 typedef void (^GetPeersForCallCompletionBlock)(NSMutableArray *peers, NSError *error);
 typedef void (^JoinCallCompletionBlock)(NSError *error, NSInteger statusCode);
 typedef void (^LeaveCallCompletionBlock)(NSError *error);
+typedef void (^RaiseSpeakCompletionBlock)(NSError *error, NSInteger statusCode);
 
 typedef void (^GetChatMessagesCompletionBlock)(NSArray *messages, NSInteger lastKnownMessage, NSInteger lastCommonReadMessage, NSError *error, NSInteger statusCode);
 typedef void (^SendChatMessagesCompletionBlock)(NSError *error);
@@ -150,6 +151,7 @@ extern NSInteger const kReceivedChatMessagesLimit;
 - (NSURLSessionDataTask *)getPeersForCall:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(GetPeersForCallCompletionBlock)block;
 - (NSURLSessionDataTask *)joinCall:(NSString *)token withCallFlags:(NSInteger)flags forAccount:(TalkAccount *)account withCompletionBlock:(JoinCallCompletionBlock)block;
 - (NSURLSessionDataTask *)leaveCall:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(LeaveCallCompletionBlock)block;
+- (NSURLSessionDataTask *)raiseSpeak:(NSString *)token withCallFlags:(NSInteger)flags forAccount:(TalkAccount *)account withCompletionBlock:(RaiseSpeakCompletionBlock)block;
 
 // Chat Controller
 - (NSURLSessionDataTask *)receiveChatMessagesOfRoom:(NSString *)token fromLastMessageId:(NSInteger)messageId history:(BOOL)history includeLastMessage:(BOOL)include timeout:(BOOL)timeout lastCommonReadMessage:(NSInteger)lastCommonReadMessage setReadMarker:(BOOL)setReadMarker forAccount:(TalkAccount *)account withCompletionBlock:(GetChatMessagesCompletionBlock)block;

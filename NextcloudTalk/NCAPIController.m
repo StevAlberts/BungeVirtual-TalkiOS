@@ -40,6 +40,7 @@ NSInteger const APIv4                       = 4;
 
 NSString * const kNCOCSAPIVersion           = @"/ocs/v2.php";
 NSString * const kNCSpreedAPIVersionBase    = @"/apps/spreed/api/v";
+NSString * const kikaoUtilities             = @"/apps/kikaoutilities/";
 
 NSInteger const kReceivedChatMessagesLimit = 100;
 
@@ -1016,6 +1017,45 @@ NSInteger const kReceivedChatMessagesLimit = 100;
         }
     }];
     
+    return task;
+}
+
+- (NSURLSessionDataTask *)
+raiseSpeak:(NSString *)token withCallFlags:(NSInteger)flags forAccount:(TalkAccount *)account withCompletionBlock:(RaiseSpeakCompletionBlock)block
+{
+    NSLog(@"..........raisedHand..............");
+
+    NSString *encodedToken = [token stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+    
+    NSString *endpoint = [NSString stringWithFormat:@"activities/%@", encodedToken];
+    
+    NSString *URLString = [NSString stringWithFormat:@"%@%@%@", account.server, kikaoUtilities, endpoint];
+
+    // @(0) - request @(1) - intervene
+    NSDictionary *parameters = @{@"activityType" : @(0) };
+    
+    NSLog(@"speakRequest URL = %@", URLString);
+    NSLog(@"speakRequest parameters = %@", parameters);
+
+    NCAPISessionManager *apiSessionManager = [_apiSessionManagers objectForKey:account.accountId];
+    NSURLSessionDataTask *task = [apiSessionManager POST:URLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+//        if (block) {
+//            block(nil);
+//        }
+        NSLog(@"success: %@", task);
+
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSInteger statusCode = [self getResponseStatusCode:task.response];
+        [self checkResponseStatusCode:statusCode forAccount:account];
+//        if (block) {
+//            block(error);
+//        }
+        NSLog(@"failure: %@", error);
+
+    }];
+    
+    NSLog(@"......speakRequest Task = %@", task);
+
     return task;
 }
 

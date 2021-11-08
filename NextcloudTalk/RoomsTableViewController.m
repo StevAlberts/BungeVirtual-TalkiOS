@@ -112,8 +112,8 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
     
     // Rooms placeholder view
     _roomsBackgroundView = [[PlaceholderView alloc] init];
-    [_roomsBackgroundView setImage:[UIImage imageNamed:@"conversations-placeholder"]];
-    [_roomsBackgroundView.placeholderTextView setText:NSLocalizedString(@"You are not part of any conversation. Press + to start a new one.", nil)];
+    [_roomsBackgroundView setImage:[UIImage imageNamed:@"bunge"]];
+    [_roomsBackgroundView.placeholderTextView setText:NSLocalizedString(@"Join a conversaion or Press + to start a new one.\n Say hi to your friends and colleagues!", nil)];
     [_roomsBackgroundView.placeholderView setHidden:YES];
     [_roomsBackgroundView.loadingView startAnimating];
     self.tableView.backgroundView = _roomsBackgroundView;
@@ -167,7 +167,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
 
 - (void)setupNavigationBar
 {
-    [self setNavigationLogoButton];
+//    [self setNavigationLogoButton];
     [self createRefreshControl];
     
     self.addButton.tintColor = [NCAppBranding themeTextColor];
@@ -377,20 +377,20 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
 
 #pragma mark - Title menu
 
-- (void)setNavigationLogoButton
-{
-    UIImage *logoImage = [UIImage imageNamed:[NCAppBranding navigationLogoImageName]];
-    if (multiAccountEnabled) {
-        UIButton *logoButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-        [logoButton setImage:logoImage forState:UIControlStateNormal];
-        [logoButton addTarget:self action:@selector(showAccountsMenu:) forControlEvents:UIControlEventTouchUpInside];
-        self.navigationItem.titleView = logoButton;
-    } else {
-        self.navigationItem.titleView = [[UIImageView alloc] initWithImage:logoImage];
-    }
-    self.navigationItem.titleView.accessibilityLabel = talkAppName;
-    self.navigationItem.titleView.accessibilityHint = NSLocalizedString(@"Double tap to change accounts or add a new one.", nil);
-}
+//- (void)setNavigationLogoButton
+//{
+//    UIImage *logoImage = [UIImage imageNamed:[NCAppBranding navigationLogoImageName]];
+//    if (multiAccountEnabled) {
+//        UIButton *logoButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+//        [logoButton setImage:logoImage forState:UIControlStateNormal];
+//        [logoButton addTarget:self action:@selector(showAccountsMenu:) forControlEvents:UIControlEventTouchUpInside];
+//        self.navigationItem.titleView = logoButton;
+//    } else {
+//        self.navigationItem.titleView = [[UIImageView alloc] initWithImage:logoImage];
+//    }
+//    self.navigationItem.titleView.accessibilityLabel = talkAppName;
+//    self.navigationItem.titleView.accessibilityHint = NSLocalizedString(@"Double tap to change accounts or add a new one.", nil);
+//}
 
 -(void)showAccountsMenu:(UIButton*)sender
 {
@@ -556,7 +556,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
 - (void)setOnlineAppearance
 {
     self.addButton.enabled = YES;
-    [self setNavigationLogoButton];
+//    [self setNavigationLogoButton];
 }
 
 #pragma mark - UIScrollViewDelegate Methods
@@ -885,6 +885,22 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
                                                                    [self addRoomToFavoritesAtIndexPath:indexPath];
                                                                }
                                                            }];
+//    NSLog(@"ROOM COUNT: %u", room.participants);
+    NSLog(@"ROOM TYPE: %u", room.type);
+    NSLog(@"ROOM ACTIVE: %ld", (long)room.lastActivity);
+    NSLog(@"ROOM: %u", room.hasCall);
+
+
+//    UIAlertAction *activeAction = [UIAlertAction actionWithTitle:(room.) ? NSLocalizedString(@"Remove from favorites", nil) : NSLocalizedString(@"Add to favorites", nil)
+//                                                             style:UIAlertActionStyleDefault
+//                                                           handler:^void (UIAlertAction *action) {
+//                                                               if (room.isFavorite) {
+//                                                                   [self removeRoomFromFavoritesAtIndexPath:indexPath];
+//                                                               } else {
+//                                                                   [self addRoomToFavoritesAtIndexPath:indexPath];
+//                                                               }
+//                                                           }];
+//
     NSString *favImageName = (room.isFavorite) ? @"favorite-action" : @"fav-setting";
     [favoriteAction setValue:[[UIImage imageNamed:favImageName] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forKey:@"image"];
     [optionsActionSheet addAction:favoriteAction];
@@ -1147,9 +1163,14 @@ API_AVAILABLE(ios(11.0)){
         [cell.roomImage setImage:[UIImage imageNamed:@"pass-conv"]];
     }
     
-    // Set favorite image
+//     Set favorite image
     if (room.isFavorite) {
         [cell.favoriteImage setImage:[UIImage imageNamed:@"favorite-room"]];
+    }
+    
+    // Set is active
+    if (room.hasCall) {
+        [cell.favoriteImage setImage:[UIImage imageNamed:@"video-active"]];
     }
         
     return cell;

@@ -34,9 +34,9 @@ typedef enum NCTextColorStyle {
 
 #pragma mark - App configuration
 
-NSString * const talkAppName = @"Nextcloud Talk";
-NSString * const filesAppName = @"Nextcloud";
-NSString * const copyright = @"© 2021 Nextcloud GmbH";
+NSString * const talkAppName = @"Bungevirtual Talk";
+NSString * const filesAppName = @"Bungevirtual";
+NSString * const copyright = @"© 2021";
 NSString * const bundleIdentifier = @"com.nextcloud.Talk";
 NSString * const groupIdentifier = @"group.com.nextcloud.Talk";
 NSString * const pushNotificationServer = @"https://push-notifications.nextcloud.com";
@@ -46,10 +46,10 @@ NSString * const domain = nil;
 
 #pragma mark - Theming
 
-NSString * const brandColorHex = @"#0082C9";
+NSString * const brandColorHex = @"#005C02";
 NSString * const brandTextColorHex = @"#FFFFFF";
 BOOL const customNavigationLogo = NO;
-BOOL const useServerThemimg = YES;
+BOOL const useServerThemimg = NO;
 
 + (UIColor *)brandColor
 {

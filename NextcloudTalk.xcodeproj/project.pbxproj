@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04AE57A227300CFB0021145C /* LauncherScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04AE57A127300CFB0021145C /* LauncherScreen.storyboard */; };
+		04C8ABE527392D2800BCF803 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C90E5661EDDE1340093D85A /* CoreGraphics.framework */; };
+		04C8ABE727392D2A00BCF803 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C90E5631EDDE0FB0093D85A /* Foundation.framework */; };
+		04C8ABE927392D2C00BCF803 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA1CC961F016117002FE6A2 /* Security.framework */; };
+		04C8ABED27392D3000BCF803 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C90E5CE1EDF23A00093D85A /* WebKit.framework */; };
+		04C8ABEF273930FA00BCF803 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C90E5681EDDE13A0093D85A /* UIKit.framework */; };
+		04C8ABF1273930FF00BCF803 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA1CCC91F17C503002FE6A2 /* AudioToolbox.framework */; };
+		04C8ABF327393F3E00BCF803 /* NotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2CC0014F24A1F0E900A20167 /* NotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		04C8ABF7273961CD00BCF803 /* NCCommunication in Frameworks */ = {isa = PBXBuildFile; productRef = 04C8ABF6273961CD00BCF803 /* NCCommunication */; };
 		1F3D3B22255F109E00230DAE /* BarButtonItemWithActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3D3B20255F109E00230DAE /* BarButtonItemWithActivity.m */; };
 		1F4DD3EB2571C688007DC98E /* EmojiUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4DD3EA2571C688007DC98E /* EmojiUtils.swift */; };
 		1F4DD3EC2571C688007DC98E /* EmojiUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4DD3EA2571C688007DC98E /* EmojiUtils.swift */; };
@@ -40,7 +49,6 @@
 		2C1ABDCF257E939600AEDFB6 /* NCContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1ABDCD257E939600AEDFB6 /* NCContact.m */; };
 		2C1ABDD0257E939600AEDFB6 /* NCContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1ABDCD257E939600AEDFB6 /* NCContact.m */; };
 		2C1ABDE5257F883400AEDFB6 /* ABContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1ABDE4257F883400AEDFB6 /* ABContact.m */; };
-		2C1D13A3253760EE00EC0533 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C1D13A1253760EE00EC0533 /* LaunchScreen.xib */; };
 		2C1EF36B25505DCE007C9768 /* NCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1EF36A25505DCE007C9768 /* NCNavigationController.m */; };
 		2C1EF36D25505DCE007C9768 /* NCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1EF36A25505DCE007C9768 /* NCNavigationController.m */; };
 		2C2026A0236832D300DFC89B /* FTPopOverMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C20269F236832D300DFC89B /* FTPopOverMenu.m */; };
@@ -160,10 +168,6 @@
 		2C8A2BCF221FEEFE00DE6D2C /* DirectoryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C8A2BCD221FEEFE00DE6D2C /* DirectoryTableViewCell.xib */; };
 		2C8CDD0621C2EDE8004E2997 /* AvatarBackgroundImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8CDD0521C2EDE8004E2997 /* AvatarBackgroundImageView.m */; };
 		2C8E2A1B232174C20022BFC9 /* MessageSeparatorTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8E2A1A232174C20022BFC9 /* MessageSeparatorTableViewCell.m */; };
-		2C90E5641EDDE0FB0093D85A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C90E5631EDDE0FB0093D85A /* Foundation.framework */; };
-		2C90E5671EDDE1340093D85A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C90E5661EDDE1340093D85A /* CoreGraphics.framework */; };
-		2C90E5691EDDE13A0093D85A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C90E5681EDDE13A0093D85A /* UIKit.framework */; };
-		2C90E5CF1EDF23A00093D85A /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C90E5CE1EDF23A00093D85A /* WebKit.framework */; };
 		2C90E5D31EE80C870093D85A /* AuthenticationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C90E5D11EE80C870093D85A /* AuthenticationViewController.m */; };
 		2C9200C32474262C0050084F /* UIBarButtonItem+Badge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9200C22474262C0050084F /* UIBarButtonItem+Badge.m */; };
 		2C92195C1F58530B008AC1A3 /* UIImageView+Letters.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C92195B1F58530B008AC1A3 /* UIImageView+Letters.m */; };
@@ -181,12 +185,10 @@
 		2CA155562099E07700CE8EF0 /* GroupedChatMessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA155552099E07700CE8EF0 /* GroupedChatMessageTableViewCell.m */; };
 		2CA1CC911F014354002FE6A2 /* NCConnectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA1CC901F014354002FE6A2 /* NCConnectionController.m */; };
 		2CA1CC951F014EF9002FE6A2 /* NCSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA1CC941F014EF9002FE6A2 /* NCSettingsController.m */; };
-		2CA1CC971F016117002FE6A2 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA1CC961F016117002FE6A2 /* Security.framework */; };
 		2CA1CCA41F025F64002FE6A2 /* RoomsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA1CCA31F025F64002FE6A2 /* RoomsTableViewController.m */; };
 		2CA1CCAA1F02D1A4002FE6A2 /* NCAPIController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA1CCA91F02D1A4002FE6A2 /* NCAPIController.m */; };
 		2CA1CCAC1F067F35002FE6A2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CA1CCAB1F067F35002FE6A2 /* Images.xcassets */; };
 		2CA1CCC31F166CC5002FE6A2 /* NCRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA1CCC21F166CC5002FE6A2 /* NCRoom.m */; };
-		2CA1CCCA1F17C503002FE6A2 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA1CCC91F17C503002FE6A2 /* AudioToolbox.framework */; };
 		2CA1CCCD1F181741002FE6A2 /* NCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA1CCCC1F181741002FE6A2 /* NCUser.m */; };
 		2CA1CCD01F1E1779002FE6A2 /* SearchTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA1CCCF1F1E1779002FE6A2 /* SearchTableViewController.m */; };
 		2CA1CCD61F1E664C002FE6A2 /* ContactsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA1CCD41F1E664C002FE6A2 /* ContactsTableViewCell.m */; };
@@ -224,7 +226,6 @@
 		2CBF82BD1FD5AE0A00636459 /* NCImageSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CBF82BC1FD5AE0A00636459 /* NCImageSessionManager.m */; };
 		2CBF82C11FD5AE3F00636459 /* NCPushProxySessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CBF82C01FD5AE3F00636459 /* NCPushProxySessionManager.m */; };
 		2CC0015324A1F0E900A20167 /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC0015224A1F0E900A20167 /* NotificationService.m */; };
-		2CC0015724A1F0E900A20167 /* NotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2CC0014F24A1F0E900A20167 /* NotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2CC0015E24A25A8000A20167 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8B60131FB4A9DA006E87EF /* libcrypto.a */; };
 		2CC0015F24A25A8000A20167 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C8B60141FB4A9DA006E87EF /* libssl.a */; };
 		2CC0016124A25B5500A20167 /* NCAPIController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA1CCA91F02D1A4002FE6A2 /* NCAPIController.m */; };
@@ -251,7 +252,6 @@
 		2CC007CA20E125C20096D91F /* NewRoomTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC007C820E125C20096D91F /* NewRoomTableViewController.m */; };
 		2CC007CB20E125C20096D91F /* NewRoomTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CC007C920E125C20096D91F /* NewRoomTableViewController.xib */; };
 		2CC007CE20E50B0A0096D91F /* MessageBodyTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC007CD20E50B0A0096D91F /* MessageBodyTextView.m */; };
-		2CC5F0982716FF1900DE1775 /* NCCommunication in Frameworks */ = {isa = PBXBuildFile; productRef = 2CC5F0972716FF1900DE1775 /* NCCommunication */; };
 		2CC5F09A2717028B00DE1775 /* NCCommunication in Frameworks */ = {isa = PBXBuildFile; productRef = 2CC5F0992717028B00DE1775 /* NCCommunication */; };
 		2CC5F09C2717198500DE1775 /* NCCommunication in Frameworks */ = {isa = PBXBuildFile; productRef = 2CC5F09B2717198500DE1775 /* NCCommunication */; };
 		2CC7158920B837140045C789 /* PlaceholderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CC7158820B837140045C789 /* PlaceholderView.xib */; };
@@ -272,19 +272,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		04C8ABF427393F3E00BCF803 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2C0574751EDD9E8E00D9E7F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2CC0014E24A1F0E900A20167;
+			remoteInfo = NotificationServiceExtension;
+		};
 		2C62AFAC24C08845007E460A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2C0574751EDD9E8E00D9E7F2 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2C62AFA224C08845007E460A;
 			remoteInfo = ShareExtension;
-		};
-		2CC0015524A1F0E900A20167 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2C0574751EDD9E8E00D9E7F2 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2CC0014E24A1F0E900A20167;
-			remoteInfo = NotificationServiceExtension;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -296,7 +296,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				2C62AFAE24C08845007E460A /* ShareExtension.appex in Embed App Extensions */,
-				2CC0015724A1F0E900A20167 /* NotificationServiceExtension.appex in Embed App Extensions */,
+				04C8ABF327393F3E00BCF803 /* NotificationServiceExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -304,6 +304,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		04AE57A127300CFB0021145C /* LauncherScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LauncherScreen.storyboard; sourceTree = "<group>"; };
 		1F3D3B20255F109E00230DAE /* BarButtonItemWithActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarButtonItemWithActivity.m; sourceTree = "<group>"; };
 		1F3D3B21255F109E00230DAE /* BarButtonItemWithActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarButtonItemWithActivity.h; sourceTree = "<group>"; };
 		1F4DD3EA2571C688007DC98E /* EmojiUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiUtils.swift; sourceTree = "<group>"; };
@@ -348,7 +349,6 @@
 		2C1ABDCD257E939600AEDFB6 /* NCContact.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NCContact.m; sourceTree = "<group>"; };
 		2C1ABDE3257F883400AEDFB6 /* ABContact.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ABContact.h; sourceTree = "<group>"; };
 		2C1ABDE4257F883400AEDFB6 /* ABContact.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ABContact.m; sourceTree = "<group>"; };
-		2C1D13A2253760EE00EC0533 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		2C1EF36925505DCE007C9768 /* NCNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NCNavigationController.h; sourceTree = "<group>"; };
 		2C1EF36A25505DCE007C9768 /* NCNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NCNavigationController.m; sourceTree = "<group>"; };
 		2C20269E236832D300DFC89B /* FTPopOverMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPopOverMenu.h; sourceTree = "<group>"; };
@@ -748,16 +748,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04C8ABED27392D3000BCF803 /* WebKit.framework in Frameworks */,
 				2CB5D0541FB4D20B00D7A5B7 /* libcrypto.a in Frameworks */,
 				2CB5D0531FB4D1FD00D7A5B7 /* libssl.a in Frameworks */,
-				2CA1CCCA1F17C503002FE6A2 /* AudioToolbox.framework in Frameworks */,
-				2CA1CC971F016117002FE6A2 /* Security.framework in Frameworks */,
-				2C90E5CF1EDF23A00093D85A /* WebKit.framework in Frameworks */,
-				2C90E5691EDDE13A0093D85A /* UIKit.framework in Frameworks */,
-				2C90E5671EDDE1340093D85A /* CoreGraphics.framework in Frameworks */,
-				2C90E5641EDDE0FB0093D85A /* Foundation.framework in Frameworks */,
-				2CC5F0982716FF1900DE1775 /* NCCommunication in Frameworks */,
+				04C8ABE727392D2A00BCF803 /* Foundation.framework in Frameworks */,
+				04C8ABE927392D2C00BCF803 /* Security.framework in Frameworks */,
+				04C8ABE527392D2800BCF803 /* CoreGraphics.framework in Frameworks */,
+				04C8ABF1273930FF00BCF803 /* AudioToolbox.framework in Frameworks */,
 				9993261EDAC77481FF4EF58A /* libPods-NextcloudTalk.a in Frameworks */,
+				04C8ABF7273961CD00BCF803 /* NCCommunication in Frameworks */,
+				04C8ABEF273930FA00BCF803 /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -833,7 +833,7 @@
 				2CA1CCAB1F067F35002FE6A2 /* Images.xcassets */,
 				2C0574941EDD9E8E00D9E7F2 /* Info.plist */,
 				2C05748C1EDD9E8E00D9E7F2 /* Main.storyboard */,
-				2C1D13A1253760EE00EC0533 /* LaunchScreen.xib */,
+				04AE57A127300CFB0021145C /* LauncherScreen.storyboard */,
 				2C7F47AC20289B9600081CC7 /* Localizable.strings */,
 				2C330374255E6EBC00BDB4E4 /* InfoPlist.strings */,
 				2C4446EE265D454200DF1DBC /* NotificationCenterNotifications.h */,
@@ -1465,12 +1465,12 @@
 			buildRules = (
 			);
 			dependencies = (
-				2CC0015624A1F0E900A20167 /* PBXTargetDependency */,
 				2C62AFAD24C08845007E460A /* PBXTargetDependency */,
+				04C8ABF527393F3E00BCF803 /* PBXTargetDependency */,
 			);
 			name = NextcloudTalk;
 			packageProductDependencies = (
-				2CC5F0972716FF1900DE1775 /* NCCommunication */,
+				04C8ABF6273961CD00BCF803 /* NCCommunication */,
 			);
 			productName = NextcloudTalk;
 			productReference = 2C05747D1EDD9E8E00D9E7F2 /* NextcloudTalk.app */;
@@ -1525,14 +1525,12 @@
 		2C0574751EDD9E8E00D9E7F2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					2C05747C1EDD9E8E00D9E7F2 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = NKUJUXUJ3B;
 						LastSwiftMigration = 1220;
-						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -1550,24 +1548,19 @@
 					};
 					2C62AFA224C08845007E460A = {
 						CreatedOnToolsVersion = 11.5;
-						DevelopmentTeam = NKUJUXUJ3B;
 						LastSwiftMigration = 1220;
-						ProvisioningStyle = Automatic;
 					};
 					2CC0014E24A1F0E900A20167 = {
 						CreatedOnToolsVersion = 11.5;
-						DevelopmentTeam = NKUJUXUJ3B;
 						LastSwiftMigration = 1220;
-						ProvisioningStyle = Automatic;
 					};
 				};
 			};
 			buildConfigurationList = 2C0574781EDD9E8E00D9E7F2 /* Build configuration list for PBXProject "NextcloudTalk" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 				es,
@@ -1616,6 +1609,7 @@
 				2C3780C5210F4A26003F9AE8 /* HeaderWithButton.xib in Resources */,
 				2CC007B920D8139D0096D91F /* RoomCreationTableViewController.xib in Resources */,
 				2C7F47AA20289B9600081CC7 /* Localizable.strings in Resources */,
+				04AE57A227300CFB0021145C /* LauncherScreen.storyboard in Resources */,
 				2C0574A51EDDA2E300D9E7F2 /* LoginViewController.xib in Resources */,
 				2C738158210613A200CDB8DB /* NCChatTitleView.xib in Resources */,
 				2C36A03F261342FF0026F04A /* AvatarHeaderView.xib in Resources */,
@@ -1630,7 +1624,6 @@
 				2C06BF6420AC64370031EB46 /* DateHeaderView.xib in Resources */,
 				2C440D1220EA4A770005F9BB /* RoomInfoTableViewController.xib in Resources */,
 				2C7A1237200E0A5700864818 /* UserSettingsTableViewCell.xib in Resources */,
-				2C1D13A3253760EE00EC0533 /* LaunchScreen.xib in Resources */,
 				2CA1CCAC1F067F35002FE6A2 /* Images.xcassets in Resources */,
 				2CA1CCD71F1E664C002FE6A2 /* ContactsTableViewCell.xib in Resources */,
 				2C05748E1EDD9E8E00D9E7F2 /* Main.storyboard in Resources */,
@@ -2032,15 +2025,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		04C8ABF527393F3E00BCF803 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2CC0014E24A1F0E900A20167 /* NotificationServiceExtension */;
+			targetProxy = 04C8ABF427393F3E00BCF803 /* PBXContainerItemProxy */;
+		};
 		2C62AFAD24C08845007E460A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2C62AFA224C08845007E460A /* ShareExtension */;
 			targetProxy = 2C62AFAC24C08845007E460A /* PBXContainerItemProxy */;
-		};
-		2CC0015624A1F0E900A20167 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2CC0014E24A1F0E900A20167 /* NotificationServiceExtension */;
-			targetProxy = 2CC0015524A1F0E900A20167 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2051,14 +2044,6 @@
 				2C05748D1EDD9E8E00D9E7F2 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		2C1D13A1253760EE00EC0533 /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2C1D13A2253760EE00EC0533 /* Base */,
-			);
-			name = LaunchScreen.xib;
 			sourceTree = "<group>";
 		};
 		2C330374255E6EBC00BDB4E4 /* InfoPlist.strings */ = {
@@ -2121,21 +2106,31 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -2158,7 +2153,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -2170,21 +2165,31 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -2201,9 +2206,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2217,12 +2223,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = NextcloudTalk/NextcloudTalk.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = NKUJUXUJ3B;
+				DEVELOPMENT_TEAM = RU628PCE8T;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
@@ -2237,7 +2243,7 @@
 					"\"$(PROJECT_DIR)/ThirdParty\"/**",
 				);
 				INFOPLIST_FILE = NextcloudTalk/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2246,8 +2252,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/openssl",
 				);
-				MARKETING_VERSION = 12.3.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nextcloud.Talk;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bungevirtual.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "NextcloudTalk/NextcloudTalk-Bridging-Header.h";
@@ -2265,12 +2271,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = NextcloudTalk/NextcloudTalk.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nextcloud GmbH (NKUJUXUJ3B)";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = NKUJUXUJ3B;
+				DEVELOPMENT_TEAM = RU628PCE8T;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
@@ -2285,7 +2291,7 @@
 					"\"$(PROJECT_DIR)/ThirdParty\"/**",
 				);
 				INFOPLIST_FILE = NextcloudTalk/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2294,8 +2300,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/openssl",
 				);
-				MARKETING_VERSION = 12.3.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nextcloud.Talk;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bungevirtual.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "NextcloudTalk/NextcloudTalk-Bridging-Header.h";
@@ -2322,12 +2328,12 @@
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = NKUJUXUJ3B;
+				DEVELOPMENT_TEAM = RU628PCE8T;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2356,7 +2362,7 @@
 					"\"$(PROJECT_DIR)/ThirdParty\"/**",
 				);
 				INFOPLIST_FILE = ShareExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2382,11 +2388,12 @@
 					"\"${PODS_ROOT}/Realm/core\"",
 					"$(PROJECT_DIR)/ThirdParty/openssl",
 				);
-				MARKETING_VERSION = 12.3.1;
+				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nextcloud.Talk.ShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bungevirtual.ios.ShareExtension;
 				PRODUCT_NAME = ShareExtension;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -2415,12 +2422,12 @@
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nextcloud GmbH (NKUJUXUJ3B)";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = NKUJUXUJ3B;
+				DEVELOPMENT_TEAM = RU628PCE8T;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2449,7 +2456,7 @@
 					"\"$(PROJECT_DIR)/ThirdParty\"/**",
 				);
 				INFOPLIST_FILE = ShareExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2475,10 +2482,11 @@
 					"\"${PODS_ROOT}/Realm/core\"",
 					"$(PROJECT_DIR)/ThirdParty/openssl",
 				);
-				MARKETING_VERSION = 12.3.1;
+				MARKETING_VERSION = 1.0.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nextcloud.Talk.ShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bungevirtual.ios.ShareExtension;
 				PRODUCT_NAME = ShareExtension;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -2506,11 +2514,11 @@
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = NotificationServiceExtension/NotificationServiceExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = NKUJUXUJ3B;
+				DEVELOPMENT_TEAM = RU628PCE8T;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2539,7 +2547,7 @@
 					"\"$(PROJECT_DIR)/ThirdParty\"/**",
 				);
 				INFOPLIST_FILE = NotificationServiceExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2549,11 +2557,12 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/openssl",
 				);
-				MARKETING_VERSION = 12.3.1;
+				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nextcloud.Talk.NotificationServiceExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bungevirtual.ios.NotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "NextcloudTalk-Swift.h";
@@ -2581,11 +2590,11 @@
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = NotificationServiceExtension/NotificationServiceExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nextcloud GmbH (NKUJUXUJ3B)";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = NKUJUXUJ3B;
+				DEVELOPMENT_TEAM = RU628PCE8T;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2614,7 +2623,7 @@
 					"\"$(PROJECT_DIR)/ThirdParty\"/**",
 				);
 				INFOPLIST_FILE = NotificationServiceExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2624,10 +2633,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/openssl",
 				);
-				MARKETING_VERSION = 12.3.1;
+				MARKETING_VERSION = 1.0.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nextcloud.Talk.NotificationServiceExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bungevirtual.ios.NotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "NextcloudTalk-Swift.h";
@@ -2689,7 +2699,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2CC5F0972716FF1900DE1775 /* NCCommunication */ = {
+		04C8ABF6273961CD00BCF803 /* NCCommunication */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2CC5F0962716FF1900DE1775 /* XCRemoteSwiftPackageReference "ios-communication-library" */;
 			productName = NCCommunication;

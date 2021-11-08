@@ -1,0 +1,11 @@
+framework module NCCommunication {
+  umbrella header "NCCommunication.h"
+
+  export *
+  module * { export * }
+}
+
+module NCCommunication.Swift {
+    header "NCCommunication-Swift.h"
+    requires objc
+}

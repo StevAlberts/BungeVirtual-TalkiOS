@@ -44,10 +44,10 @@
 {
     [super viewDidLoad];
     
-    self.appLogo.image = [UIImage imageNamed:@"loginLogo"];
+    self.appLogo.image = [UIImage imageNamed:@"bunge"];
     self.view.backgroundColor = [NCAppBranding brandColor];
     
-    NSString *serverUrlPlaceholderText = NSLocalizedString(@"Server address https://…", nil);
+    NSString *serverUrlPlaceholderText = NSLocalizedString(@"bungevirtual.com", nil);
     self.serverUrl.textColor = [NCAppBranding brandTextColor];
     self.serverUrl.tintColor = [NCAppBranding brandTextColor];
     self.serverUrl.attributedPlaceholder = [[NSAttributedString alloc] initWithString:serverUrlPlaceholderText

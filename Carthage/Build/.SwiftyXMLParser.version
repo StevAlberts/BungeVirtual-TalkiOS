@@ -1,0 +1,19 @@
+{
+  "commitish" : "5.2.1",
+  "iOS" : [
+    {
+      "swiftToolchainVersion" : "5.4.2 (swiftlang-1205.0.28.2 clang-1205.0.19.57)",
+      "hash" : "31d121e186491cb28723662f0631ab289646080a07385d201c660102e7cb7dc6",
+      "name" : "SwiftyXMLParser",
+      "container" : "SwiftyXMLParser.xcframework",
+      "identifier" : "ios-arm64_i386_x86_64-simulator"
+    },
+    {
+      "swiftToolchainVersion" : "5.4.2 (swiftlang-1205.0.28.2 clang-1205.0.19.57)",
+      "hash" : "cc15d5b7dbc74b65e11748945889c72018fbdcb1670ff92f7120223207fea597",
+      "name" : "SwiftyXMLParser",
+      "container" : "SwiftyXMLParser.xcframework",
+      "identifier" : "ios-arm64_armv7"
+    }
+  ]
+}

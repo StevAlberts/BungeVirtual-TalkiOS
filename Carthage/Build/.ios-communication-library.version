@@ -1,0 +1,19 @@
+{
+  "commitish" : "0.98.0",
+  "iOS" : [
+    {
+      "swiftToolchainVersion" : "5.4.2 (swiftlang-1205.0.28.2 clang-1205.0.19.57)",
+      "hash" : "1705a282ba82d434d0e152dd8259351816206b20bc4677553f56278d4196e1a3",
+      "name" : "NCCommunication",
+      "container" : "NCCommunication.xcframework",
+      "identifier" : "ios-arm64_i386_x86_64-simulator"
+    },
+    {
+      "swiftToolchainVersion" : "5.4.2 (swiftlang-1205.0.28.2 clang-1205.0.19.57)",
+      "hash" : "85ebf240abefd05ff1e70ba4b3e565356915b059bbaf6ffacb42fdfb9d374f20",
+      "name" : "NCCommunication",
+      "container" : "NCCommunication.xcframework",
+      "identifier" : "ios-arm64_armv7"
+    }
+  ]
+}

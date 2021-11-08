@@ -45,6 +45,7 @@
 #import "UserProfileViewController.h"
 #import "UserSettingsTableViewCell.h"
 #import "UserStatusTableViewController.h"
+#import "NCUserInterfaceController.h"
 
 typedef enum SettingsSection {
     kSettingsSectionUser = 0,
@@ -101,6 +102,14 @@ typedef enum AboutSection {
     self.tabBarController.tabBar.tintColor = [NCAppBranding themeColor];
     self.cancelButton.tintColor = [NCAppBranding themeTextColor];
     
+    //logout button
+    _logoutButton = [[UIBarButtonItem alloc]
+                     initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutButtonPressed)];
+//    self.logoutButton.tintColor = [UIColor systemRedColor];
+
+    self.navigationItem.rightBarButtonItem = _logoutButton;
+    
+    
     _phoneUtil = [[NBPhoneNumberUtil alloc] init];
     
     _contactSyncSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
@@ -150,6 +159,34 @@ typedef enum AboutSection {
 
 - (IBAction)cancelButtonPressed:(id)sender {
     [self dismissViewControllerAnimated:true completion:nil];
+}
+
+- (void)logoutButtonPressed
+{
+    NSString *alertTitle = (multiAccountEnabled) ? NSLocalizedString(@"Logout", nil) : NSLocalizedString(@"Log out", nil);
+    NSString *alertMessage = (multiAccountEnabled) ? NSLocalizedString(@"Do you really want to log out from this account?", nil) : NSLocalizedString(@"Do you really want to log out from this account?", nil);
+    NSString *actionTitle = (multiAccountEnabled) ? NSLocalizedString(@"Log out", nil) : NSLocalizedString(@"Log out", nil);
+    
+    UIAlertController *confirmDialog =
+    [UIAlertController alertControllerWithTitle:alertTitle
+                                        message:alertMessage
+                                 preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [self logout];
+    }];
+    [confirmDialog addAction:confirmAction];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil];
+    [confirmDialog addAction:cancelAction];
+    [self presentViewController:confirmDialog animated:YES completion:nil];
+}
+
+- (void)logout
+{
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    [[NCSettingsController sharedInstance] logoutAccountWithAccountId:activeAccount.accountId withCompletionBlock:^(NSError *error) {
+        [[NCUserInterfaceController sharedInstance] presentConversationsList];
+        [[NCConnectionController sharedInstance] checkAppState];
+    }];
 }
 
 - (NSArray *)getSettingsSections

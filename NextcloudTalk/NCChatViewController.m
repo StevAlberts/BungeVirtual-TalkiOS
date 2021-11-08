@@ -119,6 +119,7 @@ typedef enum NCChatMessageAction {
 @property (nonatomic, strong) UIImagePickerController *imagePicker;
 @property (nonatomic, strong) BarButtonItemWithActivity *videoCallButton;
 @property (nonatomic, strong) BarButtonItemWithActivity *voiceCallButton;
+@property (nonatomic, strong) BarButtonItemWithActivity *joinCallButton;
 @property (nonatomic, assign) BOOL isPreviewControllerShown;
 @property (nonatomic, strong) NSString *previewControllerFilePath;
 @property (nonatomic, strong) dispatch_group_t animationDispatchGroup;
@@ -592,23 +593,36 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
 - (void)configureActionItems
 {
     UIImage *videoCallImage = [[UIImage imageNamed:@"video"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    UIImage *voiceCallImage = [[UIImage imageNamed:@"phone"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+//    UIImage *voiceCallImage = [[UIImage imageNamed:@"phone"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     
     CGFloat buttonWidth = 24.0;
     CGFloat buttonPadding = 30.0;
     
     _videoCallButton = [[BarButtonItemWithActivity alloc] initWithWidth:buttonWidth withImage:videoCallImage];
     [_videoCallButton.innerButton addTarget:self action:@selector(videoCallButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [_videoCallButton.innerButton setTitle:@" Join meeting" forState:UIControlStateNormal];
+//    if(_room.hasCall){
+//        [_videoCallButton.innerButton setTitle:@" Join meeting" forState:UIControlStateNormal];
+//    }
+//    else if(_room.hasCall && _room.canModerate){
+//        [_videoCallButton.innerButton setTitle:@" Start meeting" forState:UIControlStateNormal];
+//    }else{
+//
+//        [_videoCallButton.innerButton setTitle:@" Waiting" forState:UIControlStateNormal];
+//        [_videoCallButton.innerButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+//    }
+   
+//    [_videoCallButton.innerButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
     
     _videoCallButton.accessibilityLabel = NSLocalizedString(@"Video call", nil);
     _videoCallButton.accessibilityHint = NSLocalizedString(@"Double tap to start a video call", nil);
     
+//    _voiceCallButton = [[BarButtonItemWithActivity alloc] initWithWidth:buttonWidth withImage:voiceCallImage];
     
-    _voiceCallButton = [[BarButtonItemWithActivity alloc] initWithWidth:buttonWidth withImage:voiceCallImage];
-    [_voiceCallButton.innerButton addTarget:self action:@selector(voiceCallButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+//    [_voiceCallButton.innerButton addTarget:self action:@selector(voiceCallButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    _voiceCallButton.accessibilityLabel = NSLocalizedString(@"Voice call", nil);
-    _voiceCallButton.accessibilityHint = NSLocalizedString(@"Double tap to start a voice call", nil);
+//    _voiceCallButton.accessibilityLabel = NSLocalizedString(@"Voice call", nil);
+//    _voiceCallButton.accessibilityHint = NSLocalizedString(@"Double tap to start a voice call", nil);
     
     UIBarButtonItem *fixedSpace =
       [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
@@ -616,7 +630,7 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
                                                     action:nil];
     fixedSpace.width = buttonPadding;
     
-    self.navigationItem.rightBarButtonItems = @[_videoCallButton, fixedSpace, _voiceCallButton];
+    self.navigationItem.rightBarButtonItems = @[_videoCallButton];
 }
 
 #pragma mark - User Interface

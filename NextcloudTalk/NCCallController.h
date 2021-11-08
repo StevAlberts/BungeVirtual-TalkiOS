@@ -62,6 +62,7 @@
 - (instancetype)initWithDelegate:(id<NCCallControllerDelegate>)delegate inRoom:(NCRoom *)room forAudioOnlyCall:(BOOL)audioOnly withSessionId:(NSString *)sessionId;
 - (void)startCall;
 - (void)leaveCall;
+- (void)speakRequest;
 - (BOOL)isVideoEnabled;
 - (BOOL)isAudioEnabled;
 - (void)enableVideo:(BOOL)enable;
