@@ -40,7 +40,7 @@ NSInteger const APIv4                       = 4;
 
 NSString * const kNCOCSAPIVersion           = @"/ocs/v2.php";
 NSString * const kNCSpreedAPIVersionBase    = @"/apps/spreed/api/v";
-NSString * const kikaoUtilities             = @"/apps/kikaoutilities/";
+NSString * const kikaoUtilities             = @"/apps/kikaoutilities/api/0.1/";
 
 NSInteger const kReceivedChatMessagesLimit = 100;
 
@@ -1020,29 +1020,33 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     return task;
 }
 
-- (NSURLSessionDataTask *)
-raiseSpeak:(NSString *)token withCallFlags:(NSInteger)flags forAccount:(TalkAccount *)account withCompletionBlock:(RaiseSpeakCompletionBlock)block
+- (NSURLSessionDataTask *) raiseHand:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(RaiseHandCompletionBlock)block
 {
     NSLog(@"..........raisedHand..............");
 
     NSString *encodedToken = [token stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
     
-    NSString *endpoint = [NSString stringWithFormat:@"activities/%@", encodedToken];
+    NSString *endpoint = [NSString stringWithFormat:@"activities"];
     
     NSString *URLString = [NSString stringWithFormat:@"%@%@%@", account.server, kikaoUtilities, endpoint];
 
-    // @(0) - request @(1) - intervene
-    NSDictionary *parameters = @{@"activityType" : @(0) };
+    // @(0) - raise hand
+    NSDictionary *parameters = @{@"activityType" : @(0), @"token" : encodedToken, @"userId" : account.userId };
     
     NSLog(@"speakRequest URL = %@", URLString);
     NSLog(@"speakRequest parameters = %@", parameters);
+    
+    NSLog(@"encodedToken = %@", encodedToken);
+    NSLog(@"token = %@", token);
+
 
     NCAPISessionManager *apiSessionManager = [_apiSessionManagers objectForKey:account.accountId];
+    
     NSURLSessionDataTask *task = [apiSessionManager POST:URLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
 //        if (block) {
 //            block(nil);
 //        }
-        NSLog(@"success: %@", task);
+        NSLog(@"...success: %@", responseObject);
 
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSInteger statusCode = [self getResponseStatusCode:task.response];
@@ -1050,11 +1054,12 @@ raiseSpeak:(NSString *)token withCallFlags:(NSInteger)flags forAccount:(TalkAcco
 //        if (block) {
 //            block(error);
 //        }
-        NSLog(@"failure: %@", error);
+        
+        NSLog(@"...failure: %@", error);
 
     }];
     
-    NSLog(@"......speakRequest Task = %@", task);
+    NSLog(@"......speakHand Task = %@", task.accessibilityPath);
 
     return task;
 }

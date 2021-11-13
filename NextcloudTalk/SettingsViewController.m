@@ -65,14 +65,15 @@ typedef enum LockSection {
 typedef enum ConfigurationSectionOption {
     kConfigurationSectionOptionVideo = 0,
     kConfigurationSectionOptionBrowser,
-    kConfigurationSectionOptionReadStatus,
-    kConfigurationSectionOptionContactsSync
+    kConfigurationSectionOptionReadStatus
+//    kConfigurationSectionOptionContactsSync
 } ConfigurationSectionOption;
 
 typedef enum AboutSection {
-    kAboutSectionPrivacy = 0,
-    kAboutSectionSourceCode,
-    kAboutSectionNumber
+//    kAboutSectionPrivacy = 0,
+//    kAboutSectionSourceCode,
+    kAboutSectionLogout
+//    kAboutSectionNumber
 } AboutSection;
 
 #define k_phone_textfield_tag    99
@@ -103,11 +104,11 @@ typedef enum AboutSection {
     self.cancelButton.tintColor = [NCAppBranding themeTextColor];
     
     //logout button
-    _logoutButton = [[UIBarButtonItem alloc]
-                     initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutButtonPressed)];
+//    _logoutButton = [[UIBarButtonItem alloc]
+//                     initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logoutButtonPressed)];
 //    self.logoutButton.tintColor = [UIColor systemRedColor];
 
-    self.navigationItem.rightBarButtonItem = _logoutButton;
+//    self.navigationItem.rightBarButtonItem = _logoutButton;
     
     
     _phoneUtil = [[NBPhoneNumberUtil alloc] init];
@@ -237,9 +238,9 @@ typedef enum AboutSection {
         [options addObject:[NSNumber numberWithInt:kConfigurationSectionOptionReadStatus]];
     }
     // Contacts sync
-    if ([[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityPhonebookSearch]) {
-        [options addObject:[NSNumber numberWithInt:kConfigurationSectionOptionContactsSync]];
-    }
+//    if ([[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityPhonebookSearch]) {
+//        [options addObject:[NSNumber numberWithInt:kConfigurationSectionOptionContactsSync]];
+//    }
     
     return [NSArray arrayWithArray:options];
 }
@@ -564,9 +565,9 @@ typedef enum AboutSection {
             return kLockSectionNumber;
             break;
             
-        case kSettingsSectionAbout:
-            return kAboutSectionNumber;
-            break;
+//        case kSettingsSectionAbout:
+//            return kAboutSectionNumber;
+//            break;
             
         case kSettingsSectionAccounts:
         {
@@ -614,7 +615,7 @@ typedef enum AboutSection {
             break;
 
         case kSettingsSectionAbout:
-            return NSLocalizedString(@"About", nil);
+            return NSLocalizedString(@"Logout", nil);
             break;
             
         default:
@@ -672,6 +673,7 @@ typedef enum AboutSection {
     static NSString *contactsSyncCellIdentifier = @"ContactsSyncCellIdentifier";
     static NSString *privacyCellIdentifier = @"PrivacyCellIdentifier";
     static NSString *sourceCodeCellIdentifier = @"SourceCodeCellIdentifier";
+    static NSString *logoutCellIdentifier = @"SourceCodeCellIdentifier";
     static NSString *lockOnCellIdentifier = @"LockOnCellIdentifier";
     static NSString *lockUseSimplyCellIdentifier = @"LockUseSimplyCellIdentifier";
     static NSString *userStatusCellIdentifier = @"UserStatusCellIdentifier";
@@ -788,22 +790,22 @@ typedef enum AboutSection {
                     _readStatusSwitch.on = !serverCapabilities.readStatusPrivacy;
                 }
                     break;
-                case kConfigurationSectionOptionContactsSync:
-                {
-                    cell = [tableView dequeueReusableCellWithIdentifier:contactsSyncCellIdentifier];
-                    if (!cell) {
-                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:contactsSyncCellIdentifier];
-                        cell.textLabel.text = NSLocalizedString(@"Phone number integration", nil);
-                        cell.detailTextLabel.text = NSLocalizedString(@"Match system contacts", nil);
-                        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                        cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
-                        [cell.imageView setImage:[[UIImage imageNamed:@"mobile-phone"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
-                        cell.imageView.tintColor = [UIColor colorWithRed:0.43 green:0.43 blue:0.45 alpha:1];
-                    }
-                    cell.accessoryView = _contactSyncSwitch;
-                    _contactSyncSwitch.on = [[NCSettingsController sharedInstance] isContactSyncEnabled];
-                }
-                    break;
+//                case kConfigurationSectionOptionContactsSync:
+//                {
+//                    cell = [tableView dequeueReusableCellWithIdentifier:contactsSyncCellIdentifier];
+//                    if (!cell) {
+//                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:contactsSyncCellIdentifier];
+//                        cell.textLabel.text = NSLocalizedString(@"Phone number integration", nil);
+//                        cell.detailTextLabel.text = NSLocalizedString(@"Match system contacts", nil);
+//                        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//                        cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
+//                        [cell.imageView setImage:[[UIImage imageNamed:@"mobile-phone"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+//                        cell.imageView.tintColor = [UIColor colorWithRed:0.43 green:0.43 blue:0.45 alpha:1];
+//                    }
+//                    cell.accessoryView = _contactSyncSwitch;
+//                    _contactSyncSwitch.on = [[NCSettingsController sharedInstance] isContactSyncEnabled];
+//                }
+//                    break;
             }
         }
             break;
@@ -854,24 +856,36 @@ typedef enum AboutSection {
         case kSettingsSectionAbout:
         {
             switch (indexPath.row) {
-                case kAboutSectionPrivacy:
+//                case kAboutSectionPrivacy:
+//                {
+//                    cell = [tableView dequeueReusableCellWithIdentifier:privacyCellIdentifier];
+//                    if (!cell) {
+//                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:privacyCellIdentifier];
+//                        cell.textLabel.text = NSLocalizedString(@"Privacy", nil);
+//                        [cell.imageView setImage:[UIImage imageNamed:@"privacy"]];
+//                    }
+//                }
+//                    break;
+//                case kAboutSectionSourceCode:
+//                {
+//                    cell = [tableView dequeueReusableCellWithIdentifier:sourceCodeCellIdentifier];
+//                    if (!cell) {
+//                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:sourceCodeCellIdentifier];
+//                        cell.textLabel.text = NSLocalizedString(@"Get source code", nil);
+//                        [cell.imageView setImage:[UIImage imageNamed:@"github"]];
+//                    }
+//                }
+//                    break;
+                case kAboutSectionLogout:
                 {
-                    cell = [tableView dequeueReusableCellWithIdentifier:privacyCellIdentifier];
-                    if (!cell) {
-                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:privacyCellIdentifier];
-                        cell.textLabel.text = NSLocalizedString(@"Privacy", nil);
-                        [cell.imageView setImage:[UIImage imageNamed:@"privacy"]];
-                    }
-                }
-                    break;
-                case kAboutSectionSourceCode:
-                {
-                    cell = [tableView dequeueReusableCellWithIdentifier:sourceCodeCellIdentifier];
-                    if (!cell) {
-                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:sourceCodeCellIdentifier];
-                        cell.textLabel.text = NSLocalizedString(@"Get source code", nil);
-                        [cell.imageView setImage:[UIImage imageNamed:@"github"]];
-                    }
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:logoutCellIdentifier];
+                    NSString *actionTitle = (multiAccountEnabled) ? NSLocalizedString(@"Log out", nil) : NSLocalizedString(@"Log out", nil);
+                    UIImage *actionImage = [UIImage imageNamed:@"logout"] ;
+                    // delete -> logout
+                    cell.textLabel.text = actionTitle;
+                    cell.textLabel.textColor = [UIColor systemRedColor];
+                    [cell.imageView setImage:[actionImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                    [cell.imageView setTintColor:[UIColor systemRedColor]];
                 }
                     break;
             }
@@ -931,7 +945,7 @@ typedef enum AboutSection {
                 }
                     break;
                 case kConfigurationSectionOptionReadStatus:
-                case kConfigurationSectionOptionContactsSync:
+//                case kConfigurationSectionOptionContactsSync:
                     break;
             }
         }
@@ -953,18 +967,22 @@ typedef enum AboutSection {
         case kSettingsSectionAbout:
         {
             switch (indexPath.row) {
-                case kAboutSectionPrivacy:
-                {
-                    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://nextcloud.com/privacy"]];
-                    [self presentViewController:safariVC animated:YES completion:nil];
-                }
+//                case kAboutSectionPrivacy:
+//                {
+//                    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://nextcloud.com/privacy"]];
+//                    [self presentViewController:safariVC animated:YES completion:nil];
+//                }
+//                    break;
+//                case kAboutSectionSourceCode:
+//                {
+//                    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://github.com/nextcloud/talk-ios"]];
+//                    [self presentViewController:safariVC animated:YES completion:nil];
+//                }
                     break;
-                case kAboutSectionSourceCode:
+                case kAboutSectionLogout:
                 {
-                    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://github.com/nextcloud/talk-ios"]];
-                    [self presentViewController:safariVC animated:YES completion:nil];
+                    [self logoutButtonPressed];
                 }
-                    break;
             }
         }
             break;

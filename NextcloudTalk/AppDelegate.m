@@ -76,8 +76,10 @@
     NSLog(@"Configure App Settings");
     [NCSettingsController sharedInstance];
     
+    NSLog(@"Configure NCUserInterfaceController");
     [NCUserInterfaceController sharedInstance].mainNavigationController = (UINavigationController *) self.window.rootViewController;
     
+    NSLog(@"Configure NCRoomsManager");
     //Init rooms manager to start receiving NSNotificationCenter notifications
     [NCRoomsManager sharedInstance];
 

@@ -596,11 +596,14 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
 //    UIImage *voiceCallImage = [[UIImage imageNamed:@"phone"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     
     CGFloat buttonWidth = 24.0;
-    CGFloat buttonPadding = 30.0;
+//    CGFloat buttonPadding = 30.0;
     
     _videoCallButton = [[BarButtonItemWithActivity alloc] initWithWidth:buttonWidth withImage:videoCallImage];
+//    _videoCallButton = [[BarButtonItemWithActivity alloc] initWithImage:videoCallImage style:UIBarButtonItemStylePlain target:self action:@selector(videoCallButtonPressed:)];
+//    [_videoCallButton.innerButton addTarget:self action:@selector(videoCallButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [_videoCallButton.innerButton addTarget:self action:@selector(videoCallButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [_videoCallButton.innerButton setTitle:@" Join meeting" forState:UIControlStateNormal];
+//    [_videoCallButton.innerButton ];
 //    if(_room.hasCall){
 //        [_videoCallButton.innerButton setTitle:@" Join meeting" forState:UIControlStateNormal];
 //    }
@@ -624,13 +627,13 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
 //    _voiceCallButton.accessibilityLabel = NSLocalizedString(@"Voice call", nil);
 //    _voiceCallButton.accessibilityHint = NSLocalizedString(@"Double tap to start a voice call", nil);
     
-    UIBarButtonItem *fixedSpace =
-      [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
-                                                    target:nil
-                                                    action:nil];
-    fixedSpace.width = buttonPadding;
+//    UIBarButtonItem *fixedSpace =
+//      [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
+//                                                    target:nil
+//                                                    action:nil];
+//    fixedSpace.width = buttonPadding;
     
-    self.navigationItem.rightBarButtonItems = @[_videoCallButton];
+    self.navigationItem.rightBarButtonItem = _videoCallButton;
 }
 
 #pragma mark - User Interface
@@ -1859,15 +1862,15 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
             FTPopOverMenuModel *copyModel = [[FTPopOverMenuModel alloc] initWithTitle:NSLocalizedString(@"Copy", nil) image:[[UIImage imageNamed:@"copy"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] userInfo:copyInfo];
             [menuArray addObject:copyModel];
             
-            // Open in nextcloud option
+            // Open in bungevirtual option
             if (message.file && !_offlineMode) {
                 NSDictionary *openInNextcloudInfo = [NSDictionary dictionaryWithObject:@(kNCChatMessageActionOpenFileInNextcloud) forKey:@"action"];
                 NSString *openInNextcloudTitle = [NSString stringWithFormat:NSLocalizedString(@"Open in %@", nil), filesAppName];
-                FTPopOverMenuModel *openInNextcloudModel = [[FTPopOverMenuModel alloc] initWithTitle:openInNextcloudTitle image:[[UIImage imageNamed:@"logo-action"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] userInfo:openInNextcloudInfo];
+                FTPopOverMenuModel *openInNextcloudModel = [[FTPopOverMenuModel alloc] initWithTitle:openInNextcloudTitle image:[[UIImage imageNamed:@"bunge"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] userInfo:openInNextcloudInfo];
                 [menuArray addObject:openInNextcloudModel];
             }
             
-            // Delete option
+            // Delete option when send fails
             if (message.sendingFailed || [message isDeletableForAccount:[[NCDatabaseManager sharedInstance] activeAccount] andParticipantType:_room.participantType]) {
                 NSDictionary *replyInfo = [NSDictionary dictionaryWithObject:@(kNCChatMessageActionDelete) forKey:@"action"];
                 FTPopOverMenuModel *replyModel = [[FTPopOverMenuModel alloc] initWithTitle:NSLocalizedString(@"Delete", nil) image:[[UIImage imageNamed:@"delete"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] userInfo:replyInfo];
@@ -2293,6 +2296,7 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
         NSString *message = [notification.userInfo objectForKey:@"message"];
         NSString *referenceId = [notification.userInfo objectForKey:@"referenceId"];
         if (error) {
+            NSLog(@"Deleting error...:%@", error);
             if (referenceId) {
                 [self setFailedStatusToMessageWithReferenceId:referenceId];
             } else {
@@ -3126,7 +3130,7 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
     // Open in nextcloud option
     if (message.file && !_offlineMode) {
         NSString *openInNextcloudTitle = [NSString stringWithFormat:NSLocalizedString(@"Open in %@", nil), filesAppName];
-        UIImage *nextcloudActionImage = [[UIImage imageNamed:@"logo-action"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        UIImage *nextcloudActionImage = [[UIImage imageNamed:@"bunge"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         UIAction *openInNextcloudAction = [UIAction actionWithTitle:openInNextcloudTitle image:nextcloudActionImage identifier:nil handler:^(UIAction *action){
             
             [self didPressOpenInNextcloud:message];
@@ -3135,9 +3139,22 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
         [actions addObject:openInNextcloudAction];
     }
     
+    
+//    // Delete file option
+//    if (message.file || [message isDeletableForAccount:[[NCDatabaseManager sharedInstance] activeAccount] andParticipantType:_room.participantType]) {
+//        UIImage *deleteImage = [[UIImage imageNamed:@"delete"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+//        UIAction *deleteAction = [UIAction actionWithTitle:NSLocalizedString(@"Delete file", nil) image:deleteImage identifier:nil handler:^(UIAction *action){
+//
+//            [self didPressDelete:message];
+//        }];
+//
+//        deleteAction.attributes = UIMenuElementAttributesDestructive;
+//        [actions addObject:deleteAction];
+//    }
+    
 
-    // Delete option
-    if (message.sendingFailed || [message isDeletableForAccount:[[NCDatabaseManager sharedInstance] activeAccount] andParticipantType:_room.participantType]) {
+    // Delete message option
+    if (message.file || message.sendingFailed || [message isDeletableForAccount:[[NCDatabaseManager sharedInstance] activeAccount] andParticipantType:_room.participantType]) {
         UIImage *deleteImage = [[UIImage imageNamed:@"delete"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         UIAction *deleteAction = [UIAction actionWithTitle:NSLocalizedString(@"Delete", nil) image:deleteImage identifier:nil handler:^(UIAction *action){
             

@@ -63,10 +63,12 @@
 - (void)startCall;
 - (void)leaveCall;
 - (void)speakRequest;
+- (void)raiseHand;
 - (BOOL)isVideoEnabled;
 - (BOOL)isAudioEnabled;
 - (void)enableVideo:(BOOL)enable;
 - (void)enableAudio:(BOOL)enable;
+//- (void)enableRaiseHand:(BOOL)enable;
 - (NSString *)getUserIdFromSessionId:(NSString *)sessionId;
 
 @end

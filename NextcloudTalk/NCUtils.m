@@ -82,7 +82,8 @@ static NSString *const nextcloudScheme = @"nextcloud:";
     BOOL isInstalled = NO;
 #ifndef APP_EXTENSION
     NSURL *url = [NSURL URLWithString:nextcloudScheme];
-    isInstalled = [[UIApplication sharedApplication] canOpenURL:url];
+//    isInstalled = [[UIApplication sharedApplication] canOpenURL:url];
+    isInstalled = NO;
 #endif
     return isInstalled;
 }

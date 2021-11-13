@@ -47,6 +47,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="bunge" width="51.5" height="51.5"/>
+        <image name="bunge" width="320" height="320"/>
     </resources>
 </document>

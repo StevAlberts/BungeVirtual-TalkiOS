@@ -1134,8 +1134,8 @@ typedef enum SummaryRow {
         case kProfileSectionRemoveAccount:
         {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:removeAccountCellIdentifier];
-            NSString *actionTitle = (multiAccountEnabled) ? NSLocalizedString(@"Log out", nil) : NSLocalizedString(@"Log out", nil);
-            UIImage *actionImage = (multiAccountEnabled) ? [UIImage imageNamed:@"logout"] : [UIImage imageNamed:@"delete"];
+            NSString *actionTitle = (multiAccountEnabled) ? NSLocalizedString(@"Remove account", nil) : NSLocalizedString(@"Log out", nil);
+            UIImage *actionImage = (multiAccountEnabled) ? [UIImage imageNamed:@"delete"] : [UIImage imageNamed:@"logout"];
             // delete -> logout
             cell.textLabel.text = actionTitle;
             cell.textLabel.textColor = [UIColor systemRedColor];

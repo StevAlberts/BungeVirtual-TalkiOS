@@ -37,8 +37,10 @@ typedef enum NCTextColorStyle {
 NSString * const talkAppName = @"Bungevirtual Talk";
 NSString * const filesAppName = @"Bungevirtual";
 NSString * const copyright = @"© 2021";
-NSString * const bundleIdentifier = @"com.nextcloud.Talk";
-NSString * const groupIdentifier = @"group.com.nextcloud.Talk";
+NSString * const bundleIdentifier = @"com.bungevirtual.ios";
+NSString * const groupIdentifier = @"group.com.bungevirtual.ios";
+//NSString * const groupIdentifier = @"group.com.nextcloud.Talk";
+
 NSString * const pushNotificationServer = @"https://push-notifications.nextcloud.com";
 BOOL const multiAccountEnabled = YES;
 BOOL const forceDomain = NO;
@@ -133,13 +135,13 @@ BOOL const useServerThemimg = NO;
 + (NSString *)navigationLogoImageName
 {
     NSString *imageName = @"navigationLogo";
-    if (!customNavigationLogo) {
-        if (useServerThemimg && [self textColorStyleForBackgroundColor:[self themeColor]] == NCTextColorStyleDark) {
-            imageName = @"navigationLogoDark";
-        } else if ([self brandTextColorStyle] == NCTextColorStyleDark) {
-            imageName = @"navigationLogoDark";
-        }
-    }
+//    if (!customNavigationLogo) {
+//        if (useServerThemimg && [self textColorStyleForBackgroundColor:[self themeColor]] == NCTextColorStyleDark) {
+//            imageName = @"navigationLogoDark";
+//        } else if ([self brandTextColorStyle] == NCTextColorStyleDark) {
+//            imageName = @"navigationLogoDark";
+//        }
+//    }
     return imageName;
 }
 

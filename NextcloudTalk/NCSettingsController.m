@@ -111,6 +111,7 @@ NSString * const kContactSyncEnabled  = @"contactSyncEnabled";
 
 - (void)configureDatabase
 {
+    NSLog(@"configureDatabase stated .....");
     // Init database
     [NCDatabaseManager sharedInstance];
     

@@ -58,6 +58,7 @@ static NSString * const kNCVideoTrackKind = @"video";
 @property (nonatomic, strong) AVAudioRecorder *recorder;
 @property (nonatomic, strong) NSTimer *micAudioLevelTimer;
 @property (nonatomic, assign) BOOL speaking;
+@property (nonatomic, assign) BOOL raisingHand;
 @property (nonatomic, strong) NSTimer *sendNickTimer;
 @property (nonatomic, strong) NSArray *pendingUsersInRoom;
 @property (nonatomic, strong) NSArray *usersInRoom;
@@ -75,6 +76,8 @@ static NSString * const kNCVideoTrackKind = @"video";
 @property (nonatomic, strong) NSURLSessionTask *joinCallTask;
 @property (nonatomic, strong) NSURLSessionTask *getPeersForCallTask;
 @property (nonatomic, strong) NSURLSessionTask *raiseSpeakTask;
+@property (nonatomic, strong) NSURLSessionTask *raiseHandTask;
+
 
 @end
 
@@ -172,6 +175,49 @@ static NSString * const kNCVideoTrackKind = @"video";
         
         if (!error) {
             NSLog(@"speakRequest.......NO !SUCEESS");
+            
+
+//            [self.delegate callControllerDidJoinCall:self];
+//            [self getPeersForCall];
+//            [self startMonitoringMicrophoneAudioLevel];
+//            if ([self->_externalSignalingController isEnabled]) {
+//                self->_userSessionId = [self->_externalSignalingController sessionId];
+//                if ([self->_externalSignalingController hasMCU]) {
+//                    [self createOwnPublishPeerConnection];
+//                }
+//                if (self->_pendingUsersInRoom) {
+//                    NSLog(@"Procees pending users on start call");;
+//                    NSArray *usersInRoom = [self->_pendingUsersInRoom copy];
+//                    self->_pendingUsersInRoom = nil;
+//                    [self processUsersInRoom:usersInRoom];
+//                }
+//            } else {
+//                [self->_signalingController startPullingSignalingMessages];
+//            }
+//            self->_joinedCallOnce = YES;
+//            [self setInCall:YES];
+        } else {
+//            if (self->_joinCallAttempts < 3) {
+//                NSLog(@"Could not join call, retrying. %ld", (long)self->_joinCallAttempts);
+//                self->_joinCallAttempts += 1;
+//                [self joinCall];
+//                return;
+//            }
+//            [self.delegate callControllerDidFailedJoiningCall:self statusCode:@(statusCode) errorReason:[self getJoinCallErrorReason:statusCode]];
+            NSLog(@"Could not raise hand. Error: %@", error.description);
+        }
+    }];
+}
+
+// raisedhand
+- (void) raiseHand
+{
+    NSLog(@"Raised hand...........");
+    
+    _raiseHandTask = [[NCAPIController sharedInstance]
+                       raiseHand:_room.token forAccount:_account withCompletionBlock:^(NSError *error, NSInteger statusCode) {
+        if (!error) {
+            NSLog(@"Raise Hand.......SUCEESS");
             
 
 //            [self.delegate callControllerDidJoinCall:self];

@@ -76,6 +76,7 @@ typedef NS_ENUM(NSInteger, CallState) {
     BOOL _pushToTalkActive;
     BOOL _speakRequest;
     BOOL _interveneRequest;
+    BOOL _raisedHand;
     PulsingHaloLayer *_halo;
     PulsingHaloLayer *_haloPushToTalk;
     UIImpactFeedbackGenerator *_buttonFeedbackGenerator;
@@ -89,13 +90,17 @@ typedef NS_ENUM(NSInteger, CallState) {
 @property (nonatomic, strong) IBOutlet UIButton *videoDisableButton;
 @property (nonatomic, strong) IBOutlet UIButton *switchCameraButton;
 @property (nonatomic, strong) IBOutlet UIButton *hangUpButton;
+@property (nonatomic, strong) IBOutlet UIButton *chatButton;
 @property (nonatomic, strong) IBOutlet UIButton *videoCallButton;
 @property (nonatomic, strong) IBOutlet UICollectionView *collectionView;
 @property (nonatomic, strong) IBOutlet UICollectionViewFlowLayout *flowLayout;
 @property (nonatomic, strong) IBOutlet UIView *requestContainerView;
+@property (nonatomic, strong) IBOutlet UIView *raiseHandContainerView;
 @property (nonatomic, strong) IBOutlet UIButton *speakRequestButton;
+@property (nonatomic, strong) IBOutlet UIButton *raiseHandButton;
+//@property (nonatomic, strong) IBOutlet UIButton *raiseUpButton;
+//@property (nonatomic, strong) IBOutlet UIButton *raiseDownButton;
 @property (nonatomic, strong) IBOutlet UIButton *interveneRequestButton;
-@property (nonatomic, strong) IBOutlet UIButton *raiseContainerView;
 
 @end
 
@@ -153,11 +158,22 @@ typedef NS_ENUM(NSInteger, CallState) {
     pushToTalkRecognizer.delegate = self;
     [self.audioMuteButton addGestureRecognizer:pushToTalkRecognizer];
     
-    // Request to speak recognizer (raiseHand)
+    // Request to speak recognizer
     UITapGestureRecognizer *requestToSpeakRecognizer =
       [[UITapGestureRecognizer alloc] initWithTarget:self
         action:@selector(handleSpeakRequest:)];
     [self.speakRequestButton addGestureRecognizer:requestToSpeakRecognizer];
+    
+    // Raise hand recognizer
+//    UILongPressGestureRecognizer *raiseHandRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleRaiseHand:)];
+//    raiseHandRecognizer.delegate = self;
+//    [self.raiseHandButton addGestureRecognizer:raiseHandRecognizer];
+    
+//    UITapGestureRecognizer *raiseHandRecognizer =
+//      [[UITapGestureRecognizer alloc] initWithTarget:self
+//                                              action:@selector(handleRaiseHandRequest:)];
+//    [self.raiseHandButton addGestureRecognizer:raiseHandRecognizer];
+    
     
     [_screensharingView setHidden:YES];
     
@@ -167,6 +183,7 @@ typedef NS_ENUM(NSInteger, CallState) {
     [self.hangUpButton.layer setCornerRadius:30.0f];
     [self.videoCallButton.layer setCornerRadius:30.0f];
     [self.toggleChatButton.layer setCornerRadius:30.0f];
+    [self.raiseHandButton.layer setCornerRadius:30.0f];
     [self.closeScreensharingButton.layer setCornerRadius:16.0f];
         
     self.audioMuteButton.accessibilityLabel = NSLocalizedString(@"Microphone", nil);
@@ -524,13 +541,13 @@ typedef NS_ENUM(NSInteger, CallState) {
 
 - (void)setWaitingScreenText
 {
-    NSString *waitingMessage = NSLocalizedString(@"Waiting for others to join call …", nil);
+    NSString *waitingMessage = NSLocalizedString(@"Waiting for others to join …", nil);
     if (_room.type == kNCRoomTypeOneToOne) {
-        waitingMessage = [NSString stringWithFormat:NSLocalizedString(@"Waiting for %@ to join call …", nil), _room.displayName];
+        waitingMessage = [NSString stringWithFormat:NSLocalizedString(@"Waiting for %@ to join …", nil), _room.displayName];
     }
     
     if (_callState == CallStateReconnecting) {
-        waitingMessage = NSLocalizedString(@"Connecting to the call …", nil);
+        waitingMessage = NSLocalizedString(@"Connecting to the meeting …", nil);
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -710,15 +727,21 @@ typedef NS_ENUM(NSInteger, CallState) {
     } else {
         _speakerButton.hidden = YES;
         _videoCallButton.hidden = YES;
-        // Center audio - video - hang up buttons
+//         Center chat - audio - video - hang up buttons
+        CGRect chatButtonFrame = _chatButton.frame;
+        chatButtonFrame.origin.x = 0;
+        _chatButton.frame = chatButtonFrame;
+
         CGRect audioButtonFrame = _audioMuteButton.frame;
-        audioButtonFrame.origin.x = 40;
+        audioButtonFrame.origin.x = 85;
         _audioMuteButton.frame = audioButtonFrame;
+
         CGRect videoButtonFrame = _videoDisableButton.frame;
-        videoButtonFrame.origin.x = 130;
+        videoButtonFrame.origin.x = 175;
         _videoDisableButton.frame = videoButtonFrame;
+
         CGRect hangUpButtonFrame = _hangUpButton.frame;
-        hangUpButtonFrame.origin.x = 220;
+        hangUpButtonFrame.origin.x = 250;
         _hangUpButton.frame = hangUpButtonFrame;
     }
     
@@ -851,7 +874,8 @@ typedef NS_ENUM(NSInteger, CallState) {
         case 3:
         {
             NSLog(@"SHOW RAISE HAND");
-//            [self.requestContainerView setHidden:YES];
+            [self.raiseHandContainerView setHidden:NO];
+//            [self.requestContainerView setHidden:NO];
         }
             break;
         // committee
@@ -864,9 +888,11 @@ typedef NS_ENUM(NSInteger, CallState) {
         case 20:
         {
             NSLog(@"SHOW REQ CONTROLS");
+//            [self.raiseHandContainerView setHidden:NO];
+            [self.requestContainerView setHidden:NO];
 //            [self.audioMuteButton setHidden:YES];
             [self muteAudio];
-            [_callController enableAudio:NO];
+//            [_callController enableAudio:NO];
 
 //            [self.audioMuteButton setHidden:YES];
 //            [self.audioMuteButton setHidden:YES];
@@ -987,32 +1013,64 @@ typedef NS_ENUM(NSInteger, CallState) {
     }
 }
 
+#pragma mark - Raise hand actions
 
 // Requesting to raise hand
--(void)handleRaiseHandRequest:(UITapGestureRecognizer *)gestureRecognizer
-{
-    NSLog(@"Request to speak ......");
-    NSString *speakReqString = NSLocalizedString(@"Requested to speak", nil);
-    self->_speakRequestButton.accessibilityValue = speakReqString;
-    [self.view makeToast:speakReqString duration:1.5 position:CSToastPositionCenter];
-
-    if (_callController) {
-        if (!_speakRequest) {
-            _speakRequest = YES;
-            [_callController speakRequest];
-            _interveneRequestButton.tintColor = [UIColor grayColor];
-            [_interveneRequestButton setEnabled:NO];
-            _speakRequestButton.backgroundColor = [UIColor systemRedColor];
-            [_speakRequestButton setTitle:@"Cancel" forState: UIControlStateNormal];
-        }else{
-            _speakRequest = NO;
-            _speakRequestButton.backgroundColor = [UIColor systemGreenColor];
-            _interveneRequestButton.backgroundColor = [UIColor systemGreenColor];
-            [_interveneRequestButton setEnabled:YES];
-            [_speakRequestButton setTitle:@"Speak request" forState: UIControlStateNormal];
-        }
+-(void)handleRaiseHand {
+    if(!_raisedHand){
+        [self raiseHandUp];
+    }else{
+        [self raiseHandDown];
     }
 }
+
+- (void)raiseHandUp
+{
+    if (!_raisedHand && _callController) {
+        NSLog(@"raiseHandUp...");
+        _raisedHand = YES;
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//
+//        });
+        [self.raiseHandButton setImage:[UIImage imageNamed:@"hand-up"] forState:UIControlStateNormal];
+        NSString *raiseUpString = NSLocalizedString(@"Hand raised", nil);
+        self->_raiseHandButton.accessibilityValue = raiseUpString;
+        [self.view makeToast:raiseUpString duration:1.5 position:CSToastPositionCenter];
+//        [_buttonFeedbackGenerator impactOccurred];
+        [_callController raiseHand];
+    }
+    
+}
+
+- (void)raiseHandDown
+{
+    if (_raisedHand && _callController) {
+        NSLog(@"raiseHandDown...");
+        _raisedHand = NO;
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//
+//        });
+        [self.raiseHandButton setImage:[UIImage imageNamed:@"hand-down"] forState:UIControlStateNormal];
+        NSString *raiseDownString = NSLocalizedString(@"Cancelled", nil);
+        self->_raiseHandButton.accessibilityValue = raiseDownString;
+        [self.view makeToast:raiseDownString duration:1.5 position:CSToastPositionCenter];
+//        [_buttonFeedbackGenerator impactOccurred];
+        [_callController raiseHand];
+
+    }
+}
+
+//- (void)enableRaiseHand:(BOOL)enable
+//{
+////    [self sendDataChannelMessageToAllOfType:enable ? @"hand-up" : @"hand-down" withPayload:nil];
+//
+//    if (enable) {
+//        NSLog(@"YenableRaiseHand.....:%id", enable);
+//        [self ]
+//    }else{
+//        NSLog(@"NenableRaiseHand.....:%id", enable);
+//    }
+//}
 
 - (void)forceMuteAudio
 {
@@ -1077,6 +1135,7 @@ typedef NS_ENUM(NSInteger, CallState) {
 
 - (void)disableLocalVideo
 {
+    NSLog(@"disableLocalVideo...");
     [_callController enableVideo:NO];
     [_captureController stopCapture];
     [_localVideoView setHidden:YES];
@@ -1090,6 +1149,8 @@ typedef NS_ENUM(NSInteger, CallState) {
 
 - (void)enableLocalVideo
 {
+    NSLog(@"enableLocalVideo...");
+
     [_callController enableVideo:YES];
     [_captureController startCapture];
     [_localVideoView setHidden:NO];
@@ -1149,6 +1210,11 @@ typedef NS_ENUM(NSInteger, CallState) {
 - (IBAction)hangupButtonPressed:(id)sender
 {
     [self hangup];
+}
+
+- (IBAction)raiseHandButtonPressed:(id)sender
+{
+    [self handleRaiseHand];
 }
 
 - (void)hangup
@@ -1236,6 +1302,7 @@ typedef NS_ENUM(NSInteger, CallState) {
         [self setHaloToToggleChatButton];
         
         [self showChatToggleButtonAnimated:NO];
+        //green call
         [_toggleChatButton setImage:[UIImage imageNamed:@"phone"] forState:UIControlStateNormal];
         if (!_isAudioOnly) {
             [self.view bringSubviewToFront:_localVideoView];

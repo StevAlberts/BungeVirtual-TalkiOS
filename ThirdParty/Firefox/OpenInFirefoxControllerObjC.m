@@ -34,8 +34,10 @@ static NSString *encodeByAddingPercentEscapes(NSString *string) {
 - (BOOL)isFirefoxInstalled {
     BOOL isInstalled = NO;
 #ifndef APP_EXTENSION
-    NSURL *url = [NSURL URLWithString:firefoxScheme];
-    isInstalled = [[UIApplication sharedApplication] canOpenURL:url];
+//    NSURL *url = [NSURL URLWithString:firefoxScheme];
+//    isInstalled = [[UIApplication sharedApplication] canOpenURL:url];
+//    isInstalled = [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+    isInstalled = NO;
 #endif
     return isInstalled;
 }
