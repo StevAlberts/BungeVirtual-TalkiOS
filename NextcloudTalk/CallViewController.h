@@ -25,6 +25,7 @@
 #import <WebRTC/RTCCameraPreviewView.h>
 #import "AvatarBackgroundImageView.h"
 #import "NCRoom.h"
+#import "NCKActivity.h"
 
 @class CallViewController;
 @protocol CallViewControllerDelegate <NSObject>
@@ -39,6 +40,8 @@
 
 @property (nonatomic, weak) id<CallViewControllerDelegate> delegate;
 @property (nonatomic, strong) NCRoom *room;
+@property (nonatomic, strong) NCKActivity *kActivity;
+
 @property (nonatomic, assign) BOOL videoDisabledAtStart;
 
 @property (nonatomic, strong) IBOutlet RTCCameraPreviewView *localVideoView;

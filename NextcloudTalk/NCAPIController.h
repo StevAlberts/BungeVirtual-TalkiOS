@@ -55,9 +55,10 @@ typedef void (^ParticipantModificationCompletionBlock)(NSError *error);
 typedef void (^GetPeersForCallCompletionBlock)(NSMutableArray *peers, NSError *error);
 typedef void (^JoinCallCompletionBlock)(NSError *error, NSInteger statusCode);
 typedef void (^LeaveCallCompletionBlock)(NSError *error);
-typedef void (^RaiseSpeakCompletionBlock)(NSError *error, NSInteger statusCode);
+//typedef void (^RaiseSpeakCompletionBlock)(NSError *error, NSInteger statusCode);
 typedef void (^RaiseHandCompletionBlock)(NSError *error, NSInteger statusCode);
 
+typedef void (^RequestCompletionBlock)(NSDictionary *responseDict, NSError *error);
 
 typedef void (^GetChatMessagesCompletionBlock)(NSArray *messages, NSInteger lastKnownMessage, NSInteger lastCommonReadMessage, NSError *error, NSInteger statusCode);
 typedef void (^SendChatMessagesCompletionBlock)(NSError *error);
@@ -104,6 +105,8 @@ extern NSInteger const kReceivedChatMessagesLimit;
 @interface NCAPIController : NSObject
 
 @property (nonatomic, strong) NSMutableDictionary *apiSessionManagers;
+@property (nonatomic, strong) NSMutableDictionary *apiSession;
+@property (nonatomic, strong) NSMutableDictionary *apiSessionRequest;
 @property (nonatomic, strong) AFImageDownloader *imageDownloader;
 @property (nonatomic, strong) AFImageDownloader *imageDownloaderNoCache;
 
@@ -153,8 +156,13 @@ extern NSInteger const kReceivedChatMessagesLimit;
 - (NSURLSessionDataTask *)getPeersForCall:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(GetPeersForCallCompletionBlock)block;
 - (NSURLSessionDataTask *)joinCall:(NSString *)token withCallFlags:(NSInteger)flags forAccount:(TalkAccount *)account withCompletionBlock:(JoinCallCompletionBlock)block;
 - (NSURLSessionDataTask *)leaveCall:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(LeaveCallCompletionBlock)block;
-- (NSURLSessionDataTask *)raiseSpeak:(NSString *)token withCallFlags:(NSInteger)flags forAccount:(TalkAccount *)account withCompletionBlock:(RaiseSpeakCompletionBlock)block;
-- (NSURLSessionDataTask *)raiseHand:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(RaiseHandCompletionBlock)block;
+//- (NSURLSessionDataTask *)raiseSpeak:(NSString *)token withCallFlags:(NSInteger)flags forAccount:(TalkAccount *)account withCompletionBlock:(RaiseSpeakCompletionBlock)block;
+- (NSURLSessionDataTask *)raiseHand:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
+- (NSURLSessionDataTask *)speakRequestApi:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
+- (NSURLSessionDataTask *)interveneRequestApi:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
+- (NSURLSessionDataTask *)cancelRequestApi:(NSString *)token requestId:(NSInteger *)reqId forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
+//- (void)listenResponse;
+- (NSURLSessionDataTask *)listenResponseApi:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
 
 // Chat Controller
 - (NSURLSessionDataTask *)receiveChatMessagesOfRoom:(NSString *)token fromLastMessageId:(NSInteger)messageId history:(BOOL)history includeLastMessage:(BOOL)include timeout:(BOOL)timeout lastCommonReadMessage:(NSInteger)lastCommonReadMessage setReadMarker:(BOOL)setReadMarker forAccount:(TalkAccount *)account withCompletionBlock:(GetChatMessagesCompletionBlock)block;

@@ -24,6 +24,7 @@
 
 #import "NCPeerConnection.h"
 #import "NCRoom.h"
+#import "NCKActivity.h"
 
 @class NCCallController;
 @class RTCCameraVideoCapturer;
@@ -57,13 +58,21 @@
 @property (nonatomic, copy) NSString *userSessionId;
 @property (nonatomic, copy) NSString *userDisplayName;
 @property (nonatomic, assign) BOOL disableVideoAtStart;
+@property (nonatomic, copy) NSDictionary *allRequests;
+//@property (nonatomic, strong) NCKActivity* kActivity;
 
 
 - (instancetype)initWithDelegate:(id<NCCallControllerDelegate>)delegate inRoom:(NCRoom *)room forAudioOnlyCall:(BOOL)audioOnly withSessionId:(NSString *)sessionId;
 - (void)startCall;
 - (void)leaveCall;
-- (void)speakRequest;
+//- (void)speakRequest;
 - (void)raiseHand;
+- (void)requestToSpeak;
+- (void)requestToIntervene;
+- (void)requestToCancel;
+- (void)listenResponse;
+
+
 - (BOOL)isVideoEnabled;
 - (BOOL)isAudioEnabled;
 - (void)enableVideo:(BOOL)enable;

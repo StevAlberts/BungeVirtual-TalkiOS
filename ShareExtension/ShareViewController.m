@@ -27,6 +27,7 @@
 #import "NCDatabaseManager.h"
 #import "NCRoom.h"
 #import "NCUtils.h"
+#import "NCKActivity.h"
 #import "PlaceholderView.h"
 #import "ShareConfirmationViewController.h"
 #import "ShareTableViewCell.h"
@@ -104,7 +105,8 @@
     RLMRealmConfiguration *configuration = [RLMRealmConfiguration defaultConfiguration];
     configuration.fileURL = databaseURL;
     configuration.schemaVersion= kTalkDatabaseSchemaVersion;
-    configuration.objectClasses = @[TalkAccount.class, ServerCapabilities.class, NCRoom.class];
+//    configuration.objectClasses = @[TalkAccount.class, ServerCapabilities.class, NCRoom.class];
+    configuration.objectClasses = @[TalkAccount.class, ServerCapabilities.class, NCRoom.class, NCKActivity.class];
     configuration.migrationBlock = ^(RLMMigration *migration, uint64_t oldSchemaVersion) {
         // At the very minimum we need to update the version with an empty block to indicate that the schema has been upgraded (automatically) by Realm
     };

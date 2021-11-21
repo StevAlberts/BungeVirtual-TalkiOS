@@ -94,13 +94,15 @@ typedef NS_ENUM(NSInteger, CallState) {
 @property (nonatomic, strong) IBOutlet UIButton *videoCallButton;
 @property (nonatomic, strong) IBOutlet UICollectionView *collectionView;
 @property (nonatomic, strong) IBOutlet UICollectionViewFlowLayout *flowLayout;
+
 @property (nonatomic, strong) IBOutlet UIView *requestContainerView;
 @property (nonatomic, strong) IBOutlet UIView *raiseHandContainerView;
-@property (nonatomic, strong) IBOutlet UIButton *speakRequestButton;
+
 @property (nonatomic, strong) IBOutlet UIButton *raiseHandButton;
-//@property (nonatomic, strong) IBOutlet UIButton *raiseUpButton;
-//@property (nonatomic, strong) IBOutlet UIButton *raiseDownButton;
+@property (nonatomic, strong) IBOutlet UIButton *speakRequestButton;
 @property (nonatomic, strong) IBOutlet UIButton *interveneRequestButton;
+
+@property (nonatomic, strong) NSTimer *listenerTimer;
 
 @end
 
@@ -143,6 +145,9 @@ typedef NS_ENUM(NSInteger, CallState) {
     _callController.disableVideoAtStart = _videoDisabledAtStart;
     
     [_callController startCall];
+    
+    // handle talk controls
+    [self handleTalkControls];
 }
 
 - (void)viewDidLoad
@@ -158,21 +163,11 @@ typedef NS_ENUM(NSInteger, CallState) {
     pushToTalkRecognizer.delegate = self;
     [self.audioMuteButton addGestureRecognizer:pushToTalkRecognizer];
     
-    // Request to speak recognizer
-    UITapGestureRecognizer *requestToSpeakRecognizer =
-      [[UITapGestureRecognizer alloc] initWithTarget:self
-        action:@selector(handleSpeakRequest:)];
-    [self.speakRequestButton addGestureRecognizer:requestToSpeakRecognizer];
-    
-    // Raise hand recognizer
-//    UILongPressGestureRecognizer *raiseHandRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleRaiseHand:)];
-//    raiseHandRecognizer.delegate = self;
-//    [self.raiseHandButton addGestureRecognizer:raiseHandRecognizer];
-    
-//    UITapGestureRecognizer *raiseHandRecognizer =
-//      [[UITapGestureRecognizer alloc] initWithTarget:self
-//                                              action:@selector(handleRaiseHandRequest:)];
-//    [self.raiseHandButton addGestureRecognizer:raiseHandRecognizer];
+    // init timer
+    _listenerTimer = [NSTimer timerWithTimeInterval:5.0 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+
+    NSRunLoop *runner = [NSRunLoop currentRunLoop];
+    [runner addTimer:_listenerTimer forMode: NSDefaultRunLoopMode];
     
     
     [_screensharingView setHidden:YES];
@@ -223,8 +218,7 @@ typedef NS_ENUM(NSInteger, CallState) {
         [self.collectionView setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
     }
     
-    // handle talk controls
-    [self handleTalkControls];
+    
     
     UIPanGestureRecognizer *localVideoDragGesturure = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(localVideoDragged:)];
     [self.localVideoView addGestureRecognizer:localVideoDragGesturure];
@@ -452,9 +446,9 @@ typedef NS_ENUM(NSInteger, CallState) {
             [[NCAudioController sharedInstance] setAudioSessionToVoiceChatMode];
         } else {
             // Only enable video if it was not disabled by the user.
-            if (!_userDisabledVideo) {
-                [self enableLocalVideo];
-            }
+//            if (!_userDisabledVideo) {
+//                [self enableLocalVideo];
+//            }
             [[NCAudioController sharedInstance] setAudioSessionToVideoChatMode];
         }
     }
@@ -888,14 +882,19 @@ typedef NS_ENUM(NSInteger, CallState) {
         case 20:
         {
             NSLog(@"SHOW REQ CONTROLS");
-//            [self.raiseHandContainerView setHidden:NO];
             [self.requestContainerView setHidden:NO];
-//            [self.audioMuteButton setHidden:YES];
+            
             [self muteAudio];
-//            [_callController enableAudio:NO];
-
-//            [self.audioMuteButton setHidden:YES];
-//            [self.audioMuteButton setHidden:YES];
+            [self disableLocalVideo];
+            
+            if(_callController){
+                NSLog(@"_callController.....YES");
+                [self.audioMuteButton setHidden:YES];
+                [self.videoCallButton setHidden:YES];
+                [self.videoDisableButton setHidden:YES];
+            }else{
+                NSLog(@"_callController.....NO");
+            }
 
         }
             break;
@@ -962,56 +961,124 @@ typedef NS_ENUM(NSInteger, CallState) {
 }
 
 // Requesting to speak (0)
--(void)handleSpeakRequest:(UITapGestureRecognizer *)gestureRecognizer
+-(void)handleSpeakRequest
 {
-    NSLog(@"Request to speak ......");
     NSString *speakReqString = NSLocalizedString(@"Requested to speak", nil);
     self->_speakRequestButton.accessibilityValue = speakReqString;
     [self.view makeToast:speakReqString duration:1.5 position:CSToastPositionCenter];
 
     if (_callController) {
         if (!_speakRequest) {
+            NSLog(@"Request to speak ......");
+                        
             _speakRequest = YES;
-            [_callController speakRequest];
-            _interveneRequestButton.tintColor = [UIColor grayColor];
+            
+            [_callController requestToSpeak];
+
+            _interveneRequestButton.backgroundColor = [UIColor grayColor];
             [_interveneRequestButton setEnabled:NO];
+            
             _speakRequestButton.backgroundColor = [UIColor systemRedColor];
+            
             [_speakRequestButton setTitle:@"Cancel" forState: UIControlStateNormal];
+            
         }else{
-            _speakRequest = NO;
-            _speakRequestButton.backgroundColor = [UIColor systemGreenColor];
-            _interveneRequestButton.backgroundColor = [UIColor systemGreenColor];
-            [_interveneRequestButton setEnabled:YES];
-            [_speakRequestButton setTitle:@"Speak request" forState: UIControlStateNormal];
+            [self handleCancelRequest];
         }
+    }else{
+        NSLog(@"No controller....");
     }
 }
 
 // requesting to intervene (1)
--(void)handleInterveneRequest:(UITapGestureRecognizer *)gestureRecognizer
+-(void)handleInterveneRequest
 {
-    NSLog(@"Request to speak ......");
-    NSString *speakReqString = NSLocalizedString(@"Requested to speak", nil);
-    self->_speakRequestButton.accessibilityValue = speakReqString;
+    NSLog(@"handleInterveneRequest ......");
+    NSString *speakReqString = NSLocalizedString(@"Requested to intervene", nil);
+    self->_interveneRequestButton.accessibilityValue = speakReqString;
     [self.view makeToast:speakReqString duration:1.5 position:CSToastPositionCenter];
 
     if (_callController) {
-        if (!_speakRequest) {
-            _speakRequest = YES;
-            [_callController speakRequest];
-            _interveneRequestButton.tintColor = [UIColor grayColor];
-            [_interveneRequestButton setEnabled:NO];
-            _speakRequestButton.backgroundColor = [UIColor systemRedColor];
-            [_speakRequestButton setTitle:@"Cancel" forState: UIControlStateNormal];
+        if (!_interveneRequest) {
+            _interveneRequest = YES;
+            
+            [_callController requestToIntervene];
+            
+            _speakRequestButton.backgroundColor = [UIColor grayColor];
+            [_speakRequestButton setEnabled:NO];
+            
+            _interveneRequestButton.backgroundColor = [UIColor systemRedColor];
+            [_interveneRequestButton setTitle:@"Cancel" forState: UIControlStateNormal];
+            
         }else{
-            _speakRequest = NO;
-            _speakRequestButton.backgroundColor = [UIColor systemGreenColor];
-            _interveneRequestButton.backgroundColor = [UIColor systemGreenColor];
-            [_interveneRequestButton setEnabled:YES];
-            [_speakRequestButton setTitle:@"Speak request" forState: UIControlStateNormal];
+            [self handleCancelRequest];
         }
     }
 }
+
+- (void)timerFired:(NSTimer*)theTimer
+{
+    if(_interveneRequest || _speakRequest){
+      [theTimer isValid]; //recall the NSTimer
+       //implement your methods
+        NSLog(@"Timer listening ......");
+        
+        [_callController listenResponse];
+
+    }else{
+      [theTimer invalidate]; //stop the NSTimer
+    
+      NSLog(@"Not listening ......");
+
+    }
+}
+
+// requesting to intervene (1)
+-(void)handleCancelRequest
+{
+
+    NSLog(@"handleCancelRequest ......");
+    NSString *cancelString = NSLocalizedString(@"Canceled", nil);
+
+    [self.view makeToast:cancelString duration:1.5 position:CSToastPositionCenter];
+
+    _speakRequest = NO;
+    _interveneRequest = NO;
+
+    _speakRequestButton.backgroundColor = [UIColor systemGreenColor];
+    _interveneRequestButton.backgroundColor = [UIColor systemGreenColor];
+
+    [_speakRequestButton setEnabled:YES];
+    [_interveneRequestButton setEnabled:YES];
+
+    [_speakRequestButton setTitle:@"Speak request" forState: UIControlStateNormal];
+
+    [_interveneRequestButton setTitle:@"Intervene request" forState: UIControlStateNormal];
+
+    _speakRequestButton.backgroundColor = [UIColor systemGreenColor];
+    _interveneRequestButton.backgroundColor = [UIColor systemGreenColor];
+    [_interveneRequestButton setEnabled:YES];
+    [_speakRequestButton setTitle:@"Speak request" forState: UIControlStateNormal];
+    
+    //cancel with api
+    [_callController requestToCancel];
+
+}
+
+// requesting to intervene (1)
+-(void)handleShowControls
+{
+    NSLog(@"handleShowControls ......");
+    
+    NSString *cancelString = NSLocalizedString(@"Request granted", nil);
+    [self.view makeToast:cancelString duration:1.5 position:CSToastPositionCenter];
+    
+    [self.audioMuteButton setHidden:YES];
+    [self.videoCallButton setHidden:YES];
+    [self.videoDisableButton setHidden:YES];
+}
+
+
 
 #pragma mark - Raise hand actions
 
@@ -1029,9 +1096,7 @@ typedef NS_ENUM(NSInteger, CallState) {
     if (!_raisedHand && _callController) {
         NSLog(@"raiseHandUp...");
         _raisedHand = YES;
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//
-//        });
+
         [self.raiseHandButton setImage:[UIImage imageNamed:@"hand-up"] forState:UIControlStateNormal];
         NSString *raiseUpString = NSLocalizedString(@"Hand raised", nil);
         self->_raiseHandButton.accessibilityValue = raiseUpString;
@@ -1047,9 +1112,7 @@ typedef NS_ENUM(NSInteger, CallState) {
     if (_raisedHand && _callController) {
         NSLog(@"raiseHandDown...");
         _raisedHand = NO;
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//
-//        });
+        
         [self.raiseHandButton setImage:[UIImage imageNamed:@"hand-down"] forState:UIControlStateNormal];
         NSString *raiseDownString = NSLocalizedString(@"Cancelled", nil);
         self->_raiseHandButton.accessibilityValue = raiseDownString;
@@ -1215,6 +1278,16 @@ typedef NS_ENUM(NSInteger, CallState) {
 - (IBAction)raiseHandButtonPressed:(id)sender
 {
     [self handleRaiseHand];
+}
+
+- (IBAction)speakRequestButtonPressed:(id)sender
+{
+    [self handleSpeakRequest];
+}
+
+- (IBAction)interveneRequestButtonPressed:(id)sender
+{
+    [self handleInterveneRequest];
 }
 
 - (void)hangup

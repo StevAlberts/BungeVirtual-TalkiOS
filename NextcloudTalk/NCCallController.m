@@ -42,6 +42,8 @@
 #import "NCSignalingController.h"
 #import "NCExternalSignalingController.h"
 
+#import "NCKActivity.h"
+
 static NSString * const kNCMediaStreamId = @"NCMS";
 static NSString * const kNCAudioTrackId = @"NCa0";
 static NSString * const kNCVideoTrackId = @"NCv0";
@@ -55,6 +57,7 @@ static NSString * const kNCVideoTrackKind = @"video";
 @property (nonatomic, assign) BOOL preparedForRejoin;
 @property (nonatomic, assign) BOOL joinedCallOnce;
 @property (nonatomic, assign) NSInteger joinCallAttempts;
+@property (nonatomic, assign) NSInteger regId;
 @property (nonatomic, strong) AVAudioRecorder *recorder;
 @property (nonatomic, strong) NSTimer *micAudioLevelTimer;
 @property (nonatomic, assign) BOOL speaking;
@@ -73,12 +76,24 @@ static NSString * const kNCVideoTrackKind = @"video";
 @property (nonatomic, strong) NCSignalingController *signalingController;
 @property (nonatomic, strong) NCExternalSignalingController *externalSignalingController;
 @property (nonatomic, strong) TalkAccount *account;
+@property (nonatomic, strong) NCKActivity *kActivity;
 @property (nonatomic, strong) NSURLSessionTask *joinCallTask;
 @property (nonatomic, strong) NSURLSessionTask *getPeersForCallTask;
-@property (nonatomic, strong) NSURLSessionTask *raiseSpeakTask;
+
+//@property (nonatomic, strong) NSURLSessionTask *raiseSpeakTask;
+
 @property (nonatomic, strong) NSURLSessionTask *raiseHandTask;
+@property (nonatomic, strong) NSURLSessionTask *speakRequestTask;
+@property (nonatomic, strong) NSURLSessionTask *interveneRequestTask;
+@property (nonatomic, strong) NSURLSessionTask *cancelRequestTask;
+@property (nonatomic, strong) NSURLSessionTask *listenTask;
 
+@end
 
+@interface ApiDataClass : NSObject {
+//    int _someNumber;
+    NSDictionary *_callResponse;
+}
 @end
 
 @implementation NCCallController
@@ -114,6 +129,7 @@ static NSString * const kNCVideoTrackKind = @"video";
         }
         
         [self initRecorder];
+
     }
     
     return self;
@@ -162,92 +178,133 @@ static NSString * const kNCVideoTrackKind = @"video";
     }];
 }
 
-// request to speak
-- (void) speakRequest
-{
-    NSLog(@"speakRequest...........");
-    
-//    _raiseSpeakTask = [[NCAPIController sharedInstance]
-//                      raiseSpeak:_room.token
-//                      forAccount:_account withCompletionBlock:^(NSError *error) {
-    _raiseSpeakTask = [[NCAPIController sharedInstance]
-                       raiseSpeak:_room.token withCallFlags:0 forAccount:_account withCompletionBlock:^(NSError *error, NSInteger statusCode) {
-        
-        if (!error) {
-            NSLog(@"speakRequest.......NO !SUCEESS");
-            
-
-//            [self.delegate callControllerDidJoinCall:self];
-//            [self getPeersForCall];
-//            [self startMonitoringMicrophoneAudioLevel];
-//            if ([self->_externalSignalingController isEnabled]) {
-//                self->_userSessionId = [self->_externalSignalingController sessionId];
-//                if ([self->_externalSignalingController hasMCU]) {
-//                    [self createOwnPublishPeerConnection];
-//                }
-//                if (self->_pendingUsersInRoom) {
-//                    NSLog(@"Procees pending users on start call");;
-//                    NSArray *usersInRoom = [self->_pendingUsersInRoom copy];
-//                    self->_pendingUsersInRoom = nil;
-//                    [self processUsersInRoom:usersInRoom];
-//                }
-//            } else {
-//                [self->_signalingController startPullingSignalingMessages];
-//            }
-//            self->_joinedCallOnce = YES;
-//            [self setInCall:YES];
-        } else {
-//            if (self->_joinCallAttempts < 3) {
-//                NSLog(@"Could not join call, retrying. %ld", (long)self->_joinCallAttempts);
-//                self->_joinCallAttempts += 1;
-//                [self joinCall];
-//                return;
-//            }
-//            [self.delegate callControllerDidFailedJoiningCall:self statusCode:@(statusCode) errorReason:[self getJoinCallErrorReason:statusCode]];
-            NSLog(@"Could not raise hand. Error: %@", error.description);
-        }
-    }];
-}
-
 // raisedhand
 - (void) raiseHand
 {
     NSLog(@"Raised hand...........");
     
     _raiseHandTask = [[NCAPIController sharedInstance]
-                       raiseHand:_room.token forAccount:_account withCompletionBlock:^(NSError *error, NSInteger statusCode) {
+                       raiseHand:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
         if (!error) {
             NSLog(@"Raise Hand.......SUCEESS");
-            
 
-//            [self.delegate callControllerDidJoinCall:self];
-//            [self getPeersForCall];
-//            [self startMonitoringMicrophoneAudioLevel];
-//            if ([self->_externalSignalingController isEnabled]) {
-//                self->_userSessionId = [self->_externalSignalingController sessionId];
-//                if ([self->_externalSignalingController hasMCU]) {
-//                    [self createOwnPublishPeerConnection];
-//                }
-//                if (self->_pendingUsersInRoom) {
-//                    NSLog(@"Procees pending users on start call");;
-//                    NSArray *usersInRoom = [self->_pendingUsersInRoom copy];
-//                    self->_pendingUsersInRoom = nil;
-//                    [self processUsersInRoom:usersInRoom];
-//                }
-//            } else {
-//                [self->_signalingController startPullingSignalingMessages];
-//            }
-//            self->_joinedCallOnce = YES;
-//            [self setInCall:YES];
         } else {
-//            if (self->_joinCallAttempts < 3) {
-//                NSLog(@"Could not join call, retrying. %ld", (long)self->_joinCallAttempts);
-//                self->_joinCallAttempts += 1;
-//                [self joinCall];
-//                return;
-//            }
-//            [self.delegate callControllerDidFailedJoiningCall:self statusCode:@(statusCode) errorReason:[self getJoinCallErrorReason:statusCode]];
+
             NSLog(@"Could not raise hand. Error: %@", error.description);
+        }
+    }];
+}
+
+- (void) requestToSpeak
+{
+    NSLog(@"requestToSpeak...........");
+    
+    _speakRequestTask = [[NCAPIController sharedInstance]
+                       speakRequestApi:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+
+        if (!error) {
+            NSLog(@"requestToSpeak SUCEESS: %@", responseDict);
+            
+            NCKActivity *activity = [NCKActivity activityWithDictionary:responseDict];
+
+            self->_regId = activity.activityId;
+            
+            NSLog(@"activityId...:%ld", (long)activity.activityId);
+            NSLog(@"activityId_regId...:%ld", self->_regId);
+
+            [self listenResponse];
+            
+        } else {
+            NSLog(@"Could not requestToSpeak. Error: %@", error.description);
+        }
+        
+        
+    }];
+    
+    NSLog(@"_speakRequestTask.......: %@", _speakRequestTask);
+
+}
+
+- (void) requestToIntervene
+{
+    NSLog(@"requestToIntervene...........");
+    
+    _interveneRequestTask = [[NCAPIController sharedInstance]
+                       interveneRequestApi:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+        
+        NSLog(@"requestToSpeak: %@", responseDict);
+        
+        if (!error) {
+            NSLog(@"requestToIntervene.......SUCEESS");
+            NSLog(@"requestToSpeak SUCEESS: %@", responseDict);
+            NSString *rId = [responseDict objectForKey:@"id"];
+            self->_regId = rId.integerValue;
+            [self listenResponse];
+        } else {
+            NSLog(@"Could not requestToIntervene. Error: %@", error.description);
+        }
+    }];
+}
+
+//- (void) requestToCancel:(NSInteger)reqId
+- (void) requestToCancel
+{
+    NSLog(@"requestToCancel...........");
+    
+    NSLog(@"requestToCancel...........%ld", _regId);
+    
+    NSLog(@"requestToCancel...........%id", &(_regId));
+
+
+    _cancelRequestTask = [[NCAPIController sharedInstance]
+                          cancelRequestApi:_room.token requestId:_regId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+        
+        NSLog(@"requestToSpeak: %@", responseDict);
+        
+        if (!error) {
+            NSLog(@"requestToIntervene.......SUCEESS");
+        } else {
+            NSLog(@"Could not requestToIntervene. Error: %@", error.description);
+        }
+    }];
+
+}
+
+
+- (void) listenResponse
+{
+    NSLog(@"Start...listenResponse...");
+    
+    [ self getRequestApi:0];
+    
+    //NSTimer calling Method B, as long the audio file is playing, every 5 seconds.
+    [NSTimer scheduledTimerWithTimeInterval:5.0f
+    target:self selector:@selector(getRequestApi:) userInfo:nil repeats:YES];
+}
+
+
+- (void) getRequestApi:(NSTimer *)timer
+{
+//Do calculations.
+    NSLog(@"Listening....");
+    _listenTask = [[NCAPIController sharedInstance]
+                          listenResponseApi:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+        
+        NSLog(@"getRequestApi: %@", responseDict);
+        
+//        self->_allRequests = responseDict;
+//
+//        NSLog(@"_allRequests....: %@", self->_allRequests);
+
+        if (!error) {
+            NSLog(@"getRequestApi.......SUCEESS");
+            NSLog(@"getRequestApi: %@", responseDict);
+            
+            self->_allRequests = responseDict;
+            
+            NSLog(@"_allRequests....: %@", self->_allRequests);
+        } else {
+            NSLog(@"Could not getRequestApi. Error....: %@", error);
         }
     }];
 }

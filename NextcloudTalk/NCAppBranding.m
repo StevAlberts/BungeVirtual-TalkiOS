@@ -39,6 +39,7 @@ NSString * const filesAppName = @"Bungevirtual";
 NSString * const copyright = @"© 2021";
 NSString * const bundleIdentifier = @"com.bungevirtual.ios";
 NSString * const groupIdentifier = @"group.com.bungevirtual.ios";
+//NSString * const bundleIdentifier = @"com.nextcloud.Talk";
 //NSString * const groupIdentifier = @"group.com.nextcloud.Talk";
 
 NSString * const pushNotificationServer = @"https://push-notifications.nextcloud.com";

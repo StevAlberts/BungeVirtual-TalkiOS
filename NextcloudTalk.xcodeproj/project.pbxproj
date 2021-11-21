@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		04AE57A227300CFB0021145C /* LauncherScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04AE57A127300CFB0021145C /* LauncherScreen.storyboard */; };
+		04BE383E2748F84D00D620F0 /* NCKActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BE383D2748F84D00D620F0 /* NCKActivity.m */; };
+		04BE383F2748F84D00D620F0 /* NCKActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BE383D2748F84D00D620F0 /* NCKActivity.m */; };
 		04C8ABE527392D2800BCF803 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C90E5661EDDE1340093D85A /* CoreGraphics.framework */; };
 		04C8ABE727392D2A00BCF803 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C90E5631EDDE0FB0093D85A /* Foundation.framework */; };
 		04C8ABE927392D2C00BCF803 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA1CC961F016117002FE6A2 /* Security.framework */; };
@@ -307,6 +309,8 @@
 
 /* Begin PBXFileReference section */
 		04AE57A127300CFB0021145C /* LauncherScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LauncherScreen.storyboard; sourceTree = "<group>"; };
+		04BE38392748E3A100D620F0 /* NCKActivity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NCKActivity.h; sourceTree = "<group>"; };
+		04BE383D2748F84D00D620F0 /* NCKActivity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NCKActivity.m; sourceTree = "<group>"; };
 		170C0D2E7864BF86BBE14855 /* libPods-NotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F3D3B20255F109E00230DAE /* BarButtonItemWithActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarButtonItemWithActivity.m; sourceTree = "<group>"; };
 		1F3D3B21255F109E00230DAE /* BarButtonItemWithActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarButtonItemWithActivity.h; sourceTree = "<group>"; };
@@ -1108,6 +1112,8 @@
 				2CBF82BC1FD5AE0A00636459 /* NCImageSessionManager.m */,
 				2CBF82BF1FD5AE3F00636459 /* NCPushProxySessionManager.h */,
 				2CBF82C01FD5AE3F00636459 /* NCPushProxySessionManager.m */,
+				04BE38392748E3A100D620F0 /* NCKActivity.h */,
+				04BE383D2748F84D00D620F0 /* NCKActivity.m */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -1812,6 +1818,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C444703265D641300DF1DBC /* NCUserDefaults.m in Sources */,
+				04BE383E2748F84D00D620F0 /* NCKActivity.m in Sources */,
 				2C7C106221AF199300461817 /* SettingsViewController.m in Sources */,
 				1FEDE3C6257D439500853F79 /* NCChatFileController.m in Sources */,
 				1FEDE3CE257D43AB00853F79 /* NCMessageFileParameter.m in Sources */,
@@ -1965,6 +1972,7 @@
 				2C62B02E24C1BDD7007E460A /* PlaceholderView.m in Sources */,
 				2C62B01024C1BDC5007E460A /* NCRoom.m in Sources */,
 				2C62B00D24C1BDC1007E460A /* NCPushNotification.m in Sources */,
+				04BE383F2748F84D00D620F0 /* NCKActivity.m in Sources */,
 				2C62B01C24C1BDC9007E460A /* CCCertificate.m in Sources */,
 				2C4446F9265D5A0700DF1DBC /* NotificationCenterNotifications.m in Sources */,
 				2C1ABD8725769E7D00AEDFB6 /* ShareItemController.m in Sources */,
@@ -2230,7 +2238,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = RU628PCE8T;
@@ -2257,7 +2265,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/openssl",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bungevirtual.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2279,7 +2287,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = RU628PCE8T;
@@ -2306,7 +2314,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/openssl",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bungevirtual.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
