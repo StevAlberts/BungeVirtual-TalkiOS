@@ -42,6 +42,11 @@
 @property (nonatomic, strong) NCRoom *room;
 @property (nonatomic, strong) NCKActivity *kActivity;
 
+@property (nonatomic, copy) NSDictionary *responses;
+
+@property (nonatomic, copy) NSArray *allActivities;
+
+
 @property (nonatomic, assign) BOOL videoDisabledAtStart;
 
 @property (nonatomic, strong) IBOutlet RTCCameraPreviewView *localVideoView;
