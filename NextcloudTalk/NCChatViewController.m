@@ -1254,9 +1254,11 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
                 if (statusCode == 400) {
                     [self.view makeToast:NSLocalizedString(@"Message could not be deleted because it is too old", nil) duration:5 position:CSToastPositionCenter];
                 } else if (statusCode == 405) {
-                    [self.view makeToast:NSLocalizedString(@"Only normal chat messages can be deleted", nil) duration:5 position:CSToastPositionCenter];
+//                    [self.view makeToast:NSLocalizedString(@"Only normal chat messages can be deleted", nil) duration:5 position:CSToastPositionCenter];
+                    NSLog(@"Only normal chat messages can be deleted");
                 } else {
-                    [self.view makeToast:NSLocalizedString(@"An error occurred while deleting the message", nil) duration:5 position:CSToastPositionCenter];
+                    NSLog(@"An error occurred while deleting the message");
+//                    [self.view makeToast:NSLocalizedString(@"An error occurred while deleting the message", nil) duration:5 position:CSToastPositionCenter];
                 }
                 // Set back original message on failure
                 [self updateMessageWithReferenceId:message.referenceId withMessage:message];
@@ -1863,12 +1865,12 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
             [menuArray addObject:copyModel];
             
             // Open in bungevirtual option
-            if (message.file && !_offlineMode) {
-                NSDictionary *openInNextcloudInfo = [NSDictionary dictionaryWithObject:@(kNCChatMessageActionOpenFileInNextcloud) forKey:@"action"];
-                NSString *openInNextcloudTitle = [NSString stringWithFormat:NSLocalizedString(@"Open in %@", nil), filesAppName];
-                FTPopOverMenuModel *openInNextcloudModel = [[FTPopOverMenuModel alloc] initWithTitle:openInNextcloudTitle image:[[UIImage imageNamed:@"bunge"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] userInfo:openInNextcloudInfo];
-                [menuArray addObject:openInNextcloudModel];
-            }
+//            if (message.file && !_offlineMode) {
+//                NSDictionary *openInNextcloudInfo = [NSDictionary dictionaryWithObject:@(kNCChatMessageActionOpenFileInNextcloud) forKey:@"action"];
+//                NSString *openInNextcloudTitle = [NSString stringWithFormat:NSLocalizedString(@"Open in %@", nil), filesAppName];
+//                FTPopOverMenuModel *openInNextcloudModel = [[FTPopOverMenuModel alloc] initWithTitle:openInNextcloudTitle image:[[UIImage imageNamed:@"bunge"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] userInfo:openInNextcloudInfo];
+//                [menuArray addObject:openInNextcloudModel];
+//            }
             
             // Delete option when send fails
             if (message.sendingFailed || [message isDeletableForAccount:[[NCDatabaseManager sharedInstance] activeAccount] andParticipantType:_room.participantType]) {

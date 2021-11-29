@@ -16,7 +16,7 @@
 
 @interface NCKActivity : NSObject
 
-@property (nonatomic, assign) NSInteger activityId;
+@property (nonatomic, assign) NSInteger *activityId;
 @property (nonatomic, copy) NSString *token;
 @property (nonatomic, assign) NSString *userId;
 @property (nonatomic, assign) NSInteger activityType;

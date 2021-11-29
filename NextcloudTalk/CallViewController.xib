@@ -26,6 +26,7 @@
                 <outlet property="speakRequestButton" destination="sCG-Du-Sfh" id="w7R-T0-epU"/>
                 <outlet property="speakerButton" destination="dgz-bL-PRr" id="WdG-PS-8Qa"/>
                 <outlet property="switchCameraButton" destination="Mf3-yk-Olo" id="bJn-Fu-bqF"/>
+                <outlet property="timerButton" destination="4nx-60-AJJ" id="BWK-7K-tVf"/>
                 <outlet property="toggleChatButton" destination="vBI-Mz-P4p" id="PVu-uW-pOJ"/>
                 <outlet property="videoCallButton" destination="YDj-MO-jIc" id="RwW-bN-mi1"/>
                 <outlet property="videoDisableButton" destination="5zQ-it-ujU" id="n3u-2y-uqi"/>
@@ -101,21 +102,21 @@
                         <constraint firstItem="N0N-Ny-Aeg" firstAttribute="top" secondItem="j53-tu-e0T" secondAttribute="top" constant="16" id="pDR-Pt-2K8"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vBI-Mz-P4p">
-                    <rect key="frame" x="299" y="60" width="60" height="60"/>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vBI-Mz-P4p">
+                    <rect key="frame" x="181" y="54" width="155" height="53"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    <state key="normal" image="chat"/>
+                    <color key="backgroundColor" red="0.0" green="0.36078431370000003" blue="0.0078431372550000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <state key="normal" title=" Back to meeting"/>
                     <connections>
                         <action selector="toggleChatButtonPressed:" destination="-1" eventType="touchUpInside" id="zJP-fn-GWH"/>
                     </connections>
                 </button>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ybF-7q-HlR">
-                    <rect key="frame" x="28" y="488" width="320" height="163"/>
+                    <rect key="frame" x="28" y="456" width="320" height="195"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5zQ-it-ujU">
-                            <rect key="frame" x="90" y="95" width="60" height="60"/>
+                            <rect key="frame" x="90" y="127" width="60" height="60"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="0.5" alpha="0.95060911873318499" colorSpace="calibratedWhite"/>
                             <state key="normal" image="video"/>
@@ -124,7 +125,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YDj-MO-jIc">
-                            <rect key="frame" x="90" y="94" width="60" height="60"/>
+                            <rect key="frame" x="90" y="127" width="60" height="60"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="0.5" alpha="0.95060911873318499" colorSpace="calibratedWhite"/>
                             <state key="normal" image="video-off"/>
@@ -132,18 +133,8 @@
                                 <action selector="videoCallButtonPressed:" destination="-1" eventType="touchUpInside" id="YxF-Ew-WqM"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rl8-bS-FJ5">
-                            <rect key="frame" x="252" y="95" width="60" height="60"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <state key="normal" image="hang-up"/>
-                            <connections>
-                                <action selector="hangupButtonPressed:" destination="-1" eventType="touchUpInside" id="S0I-zJ-AFf"/>
-                            </connections>
-                        </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kDR-Ds-I7B">
-                            <rect key="frame" x="171" y="95" width="60" height="60"/>
+                            <rect key="frame" x="174" y="127" width="60" height="60"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.57248467209999998" green="0.57258617879999996" blue="0.57247823480000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <state key="normal" image="audio"/>
@@ -152,7 +143,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QaF-2h-lzj">
-                            <rect key="frame" x="6" y="95" width="61" height="60"/>
+                            <rect key="frame" x="8" y="127" width="60" height="60"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             <state key="normal" image="chat"/>
@@ -166,7 +157,7 @@
                             </connections>
                         </button>
                         <view hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="crK-ou-Sfx">
-                            <rect key="frame" x="125" y="0.0" width="71" height="71"/>
+                            <rect key="frame" x="126" y="32" width="71" height="70"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="87T-qE-2Md">
@@ -181,16 +172,16 @@
                             </subviews>
                         </view>
                         <view hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jZ8-EV-4k7">
-                            <rect key="frame" x="0.0" y="0.0" width="312" height="71"/>
+                            <rect key="frame" x="9" y="32" width="309" height="70"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cn2-q3-JMg">
-                                    <rect key="frame" x="158" y="11" width="153" height="60"/>
+                                    <rect key="frame" x="158" y="11" width="172" height="60"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" systemColor="systemGreenColor"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <state key="normal" title="Intervene request"/>
+                                    <state key="normal" title="Request To Intervene"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                             <integer key="value" value="10"/>
@@ -201,12 +192,12 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sCG-Du-Sfh">
-                                    <rect key="frame" x="0.0" y="10" width="150" height="60"/>
+                                    <rect key="frame" x="-9" y="10" width="159" height="60"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" systemColor="systemGreenColor"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <state key="normal" title="Speak request"/>
+                                    <state key="normal" title="Request To Speak"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                             <integer key="value" value="10"/>
@@ -218,6 +209,29 @@
                                 </button>
                             </subviews>
                         </view>
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4nx-60-AJJ">
+                            <rect key="frame" x="117" y="-9" width="87" height="45"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" systemColor="systemGreenColor"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <state key="normal" title="5:00"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="10"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rl8-bS-FJ5">
+                            <rect key="frame" x="258" y="127" width="60" height="60"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <state key="normal" image="hang-up"/>
+                            <connections>
+                                <action selector="hangupButtonPressed:" destination="-1" eventType="touchUpInside" id="S0I-zJ-AFf"/>
+                            </connections>
+                        </button>
                     </subviews>
                 </view>
             </subviews>

@@ -77,12 +77,18 @@ typedef NS_ENUM(NSInteger, CallState) {
     BOOL _speakRequest;
     BOOL _interveneRequest;
     BOOL _raisedHand;
+    BOOL _approved;
+    BOOL _isRequest;
+    BOOL _requestSuccess;
+
     PulsingHaloLayer *_halo;
     PulsingHaloLayer *_haloPushToTalk;
     UIImpactFeedbackGenerator *_buttonFeedbackGenerator;
     CGPoint _localVideoDragStartingPosition;
     CGPoint _localVideoOriginPosition;
 }
+
+@property (nonatomic, strong) TalkAccount *account;
 
 @property (nonatomic, strong) IBOutlet UIView *buttonsContainerView;
 @property (nonatomic, strong) IBOutlet UIButton *audioMuteButton;
@@ -102,7 +108,11 @@ typedef NS_ENUM(NSInteger, CallState) {
 @property (nonatomic, strong) IBOutlet UIButton *speakRequestButton;
 @property (nonatomic, strong) IBOutlet UIButton *interveneRequestButton;
 
+@property (nonatomic, strong) IBOutlet UIButton *timerButton;
+
 @property (nonatomic, strong) NSTimer *listenerTimer;
+
+
 
 @end
 
@@ -126,6 +136,9 @@ typedef NS_ENUM(NSInteger, CallState) {
     _videoRenderersDict = [[NSMutableDictionary alloc] init];
     _screenRenderersDict = [[NSMutableDictionary alloc] init];
     _buttonFeedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:(UIImpactFeedbackStyleLight)];
+    
+    // init account
+    _account = [[NCDatabaseManager sharedInstance] activeAccount];
     
     // Use image downloader without cache so I can get 200 or 201 from the avatar requests.
     [AvatarBackgroundImageView setSharedImageDownloader:[[NCAPIController sharedInstance] imageDownloaderNoCache]];
@@ -162,13 +175,6 @@ typedef NS_ENUM(NSInteger, CallState) {
     UILongPressGestureRecognizer *pushToTalkRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handlePushToTalk:)];
     pushToTalkRecognizer.delegate = self;
     [self.audioMuteButton addGestureRecognizer:pushToTalkRecognizer];
-    
-    // init timer
-    _listenerTimer = [NSTimer timerWithTimeInterval:5.0 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
-
-    NSRunLoop *runner = [NSRunLoop currentRunLoop];
-    [runner addTimer:_listenerTimer forMode: NSDefaultRunLoopMode];
-    
     
     [_screensharingView setHidden:YES];
     
@@ -356,7 +362,10 @@ typedef NS_ENUM(NSInteger, CallState) {
     if (!_callController) {
         [self startCallWithSessionId:roomController.userSessionId];
     }
+    
+    [self methodA];
 }
+
 
 - (void)providerDidChangeAudioMute:(NSNotification *)notification
 {
@@ -740,19 +749,19 @@ typedef NS_ENUM(NSInteger, CallState) {
     }
     
     // Only show speaker button in iPhones
-    if(![[UIDevice currentDevice].model isEqualToString:@"iPhone"] && _isAudioOnly) {
-        _speakerButton.hidden = YES;
-        // Center audio - video - hang up buttons
-        CGRect audioButtonFrame = _audioMuteButton.frame;
-        audioButtonFrame.origin.x = 40;
-        _audioMuteButton.frame = audioButtonFrame;
-        CGRect videoButtonFrame = _videoCallButton.frame;
-        videoButtonFrame.origin.x = 130;
-        _videoCallButton.frame = videoButtonFrame;
-        CGRect hangUpButtonFrame = _hangUpButton.frame;
-        hangUpButtonFrame.origin.x = 220;
-        _hangUpButton.frame = hangUpButtonFrame;
-    }
+//    if(![[UIDevice currentDevice].model isEqualToString:@"iPhone"] && _isAudioOnly) {
+//        _speakerButton.hidden = YES;
+//        // Center audio - video - hang up buttons
+//        CGRect audioButtonFrame = _audioMuteButton.frame;
+//        audioButtonFrame.origin.x = 40;
+//        _audioMuteButton.frame = audioButtonFrame;
+//        CGRect videoButtonFrame = _videoCallButton.frame;
+//        videoButtonFrame.origin.x = 130;
+//        _videoCallButton.frame = videoButtonFrame;
+//        CGRect hangUpButtonFrame = _hangUpButton.frame;
+//        hangUpButtonFrame.origin.x = 220;
+//        _hangUpButton.frame = hangUpButtonFrame;
+//    }
 }
 
 - (void)setDetailedViewTimer
@@ -869,7 +878,6 @@ typedef NS_ENUM(NSInteger, CallState) {
         {
             NSLog(@"SHOW RAISE HAND");
             [self.raiseHandContainerView setHidden:NO];
-//            [self.requestContainerView setHidden:NO];
         }
             break;
         // committee
@@ -879,7 +887,7 @@ typedef NS_ENUM(NSInteger, CallState) {
         case 222:
         case 333:
         // breakout
-        case 20:
+//        case 20:
         {
             NSLog(@"SHOW REQ CONTROLS");
             [self.requestContainerView setHidden:NO];
@@ -941,12 +949,42 @@ typedef NS_ENUM(NSInteger, CallState) {
     if (!_callController) {return;}
     
     if ([_callController isAudioEnabled]) {
+        NSLog(@"YES... isAudioEnabled ...............%ld", (long)_room.type);
+        switch ((int)_room.type) {
+            // plenary
+            case 222:
+            case 333:
+            {
+                NSLog(@"Stop timer .......................");
+            }
+                break;
+                
+            default:
+                break;
+        }
+        
         if ([CallKitManager isCallKitAvailable]) {
             [[CallKitManager sharedInstance] reportAudioMuted:YES forCall:_room.token];
         } else {
             [self muteAudio];
         }
     } else {
+        NSLog(@"NO... isAudioEnabled ...............%ld", (long)_room.type);
+        
+        switch ((int)_room.type) {
+            // plenary
+            case 222:
+            case 333:
+            {
+                NSLog(@"Start timer .......................");
+                [self startTimer];
+            }
+                break;
+                
+            default:
+                break;
+        }
+        
         if ([CallKitManager isCallKitAvailable]) {
             [[CallKitManager sharedInstance] reportAudioMuted:NO forCall:_room.token];
         } else {
@@ -963,23 +1001,22 @@ typedef NS_ENUM(NSInteger, CallState) {
 // Requesting to speak (0)
 -(void)handleSpeakRequest
 {
-    NSString *speakReqString = NSLocalizedString(@"Requested to speak", nil);
-    self->_speakRequestButton.accessibilityValue = speakReqString;
-    [self.view makeToast:speakReqString duration:1.5 position:CSToastPositionCenter];
-
     if (_callController) {
         if (!_speakRequest) {
-            NSLog(@"Request to speak ......");
-                        
-            _speakRequest = YES;
+            NSLog(@"handleSpeakRequest ......");
             
-            [_callController requestToSpeak];
+            _speakRequest = YES;
 
+            [_callController requestToSpeak];
+            
+            NSString *speakReqString = NSLocalizedString(@"Requested to speak", nil);
+            self->_speakRequestButton.accessibilityValue = speakReqString;
+            [self.view makeToast:speakReqString duration:1.5 position:CSToastPositionCenter];
+                        
             _interveneRequestButton.backgroundColor = [UIColor grayColor];
             [_interveneRequestButton setEnabled:NO];
             
             _speakRequestButton.backgroundColor = [UIColor systemRedColor];
-            
             [_speakRequestButton setTitle:@"Cancel" forState: UIControlStateNormal];
             
         }else{
@@ -993,16 +1030,18 @@ typedef NS_ENUM(NSInteger, CallState) {
 // requesting to intervene (1)
 -(void)handleInterveneRequest
 {
-    NSLog(@"handleInterveneRequest ......");
-    NSString *speakReqString = NSLocalizedString(@"Requested to intervene", nil);
-    self->_interveneRequestButton.accessibilityValue = speakReqString;
-    [self.view makeToast:speakReqString duration:1.5 position:CSToastPositionCenter];
-
     if (_callController) {
         if (!_interveneRequest) {
+            NSLog(@"handleInterveneRequest ......");
+            
             _interveneRequest = YES;
             
             [_callController requestToIntervene];
+            
+            NSString *speakReqString = NSLocalizedString(@"Requested to intervene", nil);
+            self->_interveneRequestButton.accessibilityValue = speakReqString;
+            [self.view makeToast:speakReqString duration:1.0 position:CSToastPositionCenter];
+            
             
             _speakRequestButton.backgroundColor = [UIColor grayColor];
             [_speakRequestButton setEnabled:NO];
@@ -1016,22 +1055,224 @@ typedef NS_ENUM(NSInteger, CallState) {
     }
 }
 
+- (void) methodA
+{
+    //Start playing an audio file.
+    NSLog(@"start timer........");
+    //NSTimer calling Method B, as long the audio file is playing, every 5 seconds.
+    [NSTimer scheduledTimerWithTimeInterval:1.0f
+    target:self selector:@selector(methodB:) userInfo:nil repeats:YES];
+}
+
+- (void) methodB:(NSTimer *)timer
+{
+    NSLog(@"methodB..listening.......");
+    _requestSuccess = [_callController requested];
+    NSLog(@"_requestSuccess...:%id", _requestSuccess);
+    
+    NSInteger *reqId = [_callController requestId];
+//    NSLog(@"_requestId...........................:%ld", (long) reqId);
+//    NSLog(@"_requestId...........................:%ld", (long) [_callController requestId]);
+    
+//    TalkAccount *account = [[NCDatabaseManager sharedInstance] activeAccount];
+
+    if(_requestSuccess){
+        _responses = [_callController allRequests];
+//        _allActivities = [_callController activities];
+        
+//        NSLog(@"Activities...........................%ld", _allActivities.count);
+
+        
+        NSLog(@"Account..ddd.....: %@",_account.userId);
+        
+        if(_approved){
+            if(_responses.count == 0){
+                NSLog(@"No _responses...0...........................");
+                _approved = NO;
+                [self handleCancelRequest];
+            }else{
+                
+            }
+        }
+
+            for (NSDictionary *response in _responses) {
+                NCKActivity *activity = [NCKActivity activityWithDictionary:response];
+    
+                NSLog(@"Activity: %@......Account: %@",activity.userId, _account.userId);
+                NSLog(@"_responses loop.......: %@",response);
+    
+                if(activity.activityId == reqId){
+                        // update activity
+                        _kActivity = [NCKActivity activityWithDictionary:response];
+    
+                        if(activity.approved){
+                            _approved = YES;
+                            
+                            NSLog(@"Show controls....");
+                            [self showControls];
+                            // start timer
+                            if(activity.paused){
+                                NSLog(@"Paused...");
+                                [self hideControls];
+                            }
+    
+                            if (activity.started){
+                                NSLog(@"Started.........");
+                                [self.timerButton setHidden:NO];
+                                NSLog(@"talkingSince.....%ld",(long)activity.talkingSince);
+                                NSLog(@"duration.....%ld",(long)activity.duration);
+                                NSString* time = [NSString stringWithFormat:@"%ld", (long)activity.talkingSince];
+        //                        NSString *epochTime = activity.talkingSince;
+                                NSTimeInterval seconds = [time doubleValue];
+                                NSLog(@"seconds.....%f",seconds);
+                            }
+                        } else {
+                            NSLog(@"Dont show controls..............................");
+                            [self hideControls];
+                        }
+                    
+                        if(activity.canceled){
+                            NSLog(@"No _responses...0...........................");
+                            _approved = NO;
+                            [self handleCancelRequest];
+                        }
+                }
+//                else{
+//                    if(_approved && activity.activityId != reqId){
+//                        NSLog(@"Stopped...........................");
+//                        _approved = NO;
+//                        [self handleCancelRequest];
+//                    }
+//                }
+            }
+        
+        if(_responses.count == 0){
+            NSLog(@"No _responses...0...........................");
+//            [self handleCancelRequest];
+        }
+    }
+        
+}
+
 - (void)timerFired:(NSTimer*)theTimer
 {
+//    NSLog(@"_interveneRequest listening ......%id", _interveneRequest);
+//    NSLog(@"_speakRequest listening ......%id", _speakRequest);
+    
     if(_interveneRequest || _speakRequest){
-      [theTimer isValid]; //recall the NSTimer
-       //implement your methods
+        //recall the NSTimer
         NSLog(@"Timer listening ......");
+        [theTimer isValid];
         
         [_callController listenResponse];
+                
+        _responses = [_callController allRequests];
+                
+        NSLog(@"Account.......: %@",_account.userId);
 
-    }else{
-      [theTimer invalidate]; //stop the NSTimer
     
-      NSLog(@"Not listening ......");
+        NSLog(@"Allresponses.......: %@",_responses);
+        NSLog(@"Allresponses..count.....: %lu",(unsigned long)_responses.count);
+    
+        if(_responses.count == 0) {
+            NSLog(@"No _responses..............................");
+            [self handleCancelRequest];
+        }
+    
+//        if(_responses == nil){
+//            NSLog(@"No _responses..............................");
+//            [self handleCancelRequest];
+//        }
+        
+        // get the request id
+//        NSInteger *reqId = [_callController requestId];
+                
+        for (NSDictionary *response in _responses) {
+            NCKActivity *activity = [NCKActivity activityWithDictionary:response];
 
+            NSLog(@"_responses loop.......: %@",response);
+            
+            NSLog(@"Activity: %@......Account: %@",activity.userId, _account.userId);
+            NSLog(@"_responses loop.......: %@",response);
+            
+//            if(activity.userId == _account.userId){
+                if(activity.activityId == [_callController requestId] ){
+                    _approved = activity.approved;
+                    
+                    // update activity
+                    _kActivity = [NCKActivity activityWithDictionary:response];
+                    
+                    if(activity.approved){
+                        NSLog(@"Show controls....");
+                        [self showControls];
+                        // start timer
+                        if(activity.paused){
+    //                        NSString *string = NSLocalizedString(@"Paused", nil);
+    //                        [self.view makeToast:string duration:1.5 position:CSToastPositionCenter];
+                            NSLog(@"Paused...");
+                            [self hideControls];
+                            // pause timer
+                        }
+                        
+                        if (activity.started){
+                            NSLog(@"Started.........");
+                            [self.timerButton setHidden:NO];
+                            NSLog(@"talkingSince.....%ld",(long)activity.talkingSince);
+                            NSLog(@"duration.....%ld",(long)activity.duration);
+                            NSString* time = [NSString stringWithFormat:@"%ld", (long)activity.talkingSince];
+    //                        NSString *epochTime = activity.talkingSince;
+                            NSTimeInterval seconds = [time doubleValue];
+                            NSLog(@"seconds.....%f",seconds);
+                        }
+                    } else if (activity.canceled){
+    //                    NSString *string = NSLocalizedString(@"Canceled", nil);
+    //                    [self.view makeToast:string duration:1.5 position:CSToastPositionCenter];
+                        NSLog(@"canceled.............");
+    //                    [self hideControls];
+                    }
+                    else {
+                        NSLog(@"Dont show controls..............................");
+    //                    [self hideControls];
+                    }
+                }
+//            }else{
+//                NSLog(@"Not account ......");
+//            }
+        }
+    } else {
+      [theTimer invalidate]; //stop the NSTimer
+      NSLog(@"Not listening ......");
+        [self handleCancelRequest];
     }
 }
+
+//- (void)stopTimerCount
+//{
+//    [self.stopWatchTimer invalidate];
+//    self.stopWatchTimer = nil;
+//    [self updateTimer];
+//
+//}
+//
+//- (void)startTimerCount
+//{
+//
+//    if (self.stopWatchTimer) {
+//        [self.stopWatchTimer invalidate];
+//        self.stopWatchTimer = nil;
+//    }
+//
+//    self.startDate = [NSDate date];
+//
+//    // Create the stop watch timer that fires every 100 ms
+//    self.stopWatchTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/10.0
+//                                           target:self
+//                                         selector:@selector(updateTimer)
+//                                         userInfo:nil
+//                                          repeats:YES];
+//}
+
+
 
 // requesting to intervene (1)
 -(void)handleCancelRequest
@@ -1042,6 +1283,9 @@ typedef NS_ENUM(NSInteger, CallState) {
 
     [self.view makeToast:cancelString duration:1.5 position:CSToastPositionCenter];
 
+    // hide controls
+    [self hideControls];
+    
     _speakRequest = NO;
     _interveneRequest = NO;
 
@@ -1051,33 +1295,53 @@ typedef NS_ENUM(NSInteger, CallState) {
     [_speakRequestButton setEnabled:YES];
     [_interveneRequestButton setEnabled:YES];
 
-    [_speakRequestButton setTitle:@"Speak request" forState: UIControlStateNormal];
+    [_speakRequestButton setTitle:@"Request To Speak" forState: UIControlStateNormal];
 
-    [_interveneRequestButton setTitle:@"Intervene request" forState: UIControlStateNormal];
+    [_interveneRequestButton setTitle:@"Request To Intervene" forState: UIControlStateNormal];
 
     _speakRequestButton.backgroundColor = [UIColor systemGreenColor];
     _interveneRequestButton.backgroundColor = [UIColor systemGreenColor];
     [_interveneRequestButton setEnabled:YES];
-    [_speakRequestButton setTitle:@"Speak request" forState: UIControlStateNormal];
+//    [_speakRequestButton setTitle:@"Request To Speak" forState: UIControlStateNormal];
+
+    
     
     //cancel with api
     [_callController requestToCancel];
+    
+  
+    
+    // stop listener
 
 }
 
-// requesting to intervene (1)
--(void)handleShowControls
+-(void)showControls
 {
-    NSLog(@"handleShowControls ......");
+    NSLog(@"showControls ......");
     
-    NSString *cancelString = NSLocalizedString(@"Request granted", nil);
-    [self.view makeToast:cancelString duration:1.5 position:CSToastPositionCenter];
+    [self.audioMuteButton setHidden:NO];
+    [self.videoCallButton setHidden:NO];
+    [self.videoDisableButton setHidden:NO];
+}
+
+-(void)hideControls
+{
+    NSLog(@"hideControls ......");
     
+    [self muteAudio];
+    [self disableLocalVideo];
     [self.audioMuteButton setHidden:YES];
     [self.videoCallButton setHidden:YES];
     [self.videoDisableButton setHidden:YES];
 }
 
+-(void)startTimer
+{
+    if (_callController) {
+            NSLog(@"startTimer ......");
+            [_callController requestStarted];
+    }
+}
 
 
 #pragma mark - Raise hand actions
@@ -1118,22 +1382,12 @@ typedef NS_ENUM(NSInteger, CallState) {
         self->_raiseHandButton.accessibilityValue = raiseDownString;
         [self.view makeToast:raiseDownString duration:1.5 position:CSToastPositionCenter];
 //        [_buttonFeedbackGenerator impactOccurred];
-        [_callController raiseHand];
+//        [_callController raiseHand];
+        [_callController requestToCancel];
+
 
     }
 }
-
-//- (void)enableRaiseHand:(BOOL)enable
-//{
-////    [self sendDataChannelMessageToAllOfType:enable ? @"hand-up" : @"hand-down" withPayload:nil];
-//
-//    if (enable) {
-//        NSLog(@"YenableRaiseHand.....:%id", enable);
-//        [self ]
-//    }else{
-//        NSLog(@"NenableRaiseHand.....:%id", enable);
-//    }
-//}
 
 - (void)forceMuteAudio
 {
@@ -1162,7 +1416,7 @@ typedef NS_ENUM(NSInteger, CallState) {
             toast = [self.view toastViewForMessage:micDisabledString title:nil image:nil style:nil];
         }
         
-        [self.view showToast:toast duration:duration position:CSToastPositionCenter completion:nil];
+//        [self.view showToast:toast duration:duration position:CSToastPositionCenter completion:nil];
     });
 }
 
@@ -1205,9 +1459,9 @@ typedef NS_ENUM(NSInteger, CallState) {
     [_videoDisableButton setImage:[UIImage imageNamed:@"video-off"] forState:UIControlStateNormal];
     NSString *cameraDisabledString = NSLocalizedString(@"Camera disabled", nil);
     _videoDisableButton.accessibilityValue = cameraDisabledString;
-    if (!_isAudioOnly) {
-        [self.view makeToast:cameraDisabledString duration:1.5 position:CSToastPositionCenter];
-    }
+//    if (!_isAudioOnly) {
+//        [self.view makeToast:cameraDisabledString duration:1.5 position:CSToastPositionCenter];
+//    }
 }
 
 - (void)enableLocalVideo
@@ -1285,6 +1539,11 @@ typedef NS_ENUM(NSInteger, CallState) {
     [self handleSpeakRequest];
 }
 
+//- (IBAction)timerButtonPressed:(id)sender
+//{
+////    [self startTimer];
+//}
+
 - (IBAction)interveneRequestButtonPressed:(id)sender
 {
     [self handleInterveneRequest];
@@ -1360,6 +1619,9 @@ typedef NS_ENUM(NSInteger, CallState) {
 - (void)toggleChatView
 {
     if (!_chatNavigationController) {
+        NSLog(@"No_chatNavigationController...........");
+        [_toggleChatButton setHidden:NO];
+        
         TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
         NCRoom *room = [[NCRoomsManager sharedInstance] roomWithToken:_room.token forAccountId:activeAccount.accountId];
         _chatViewController = [[NCChatViewController alloc] initForRoom:room];
@@ -1372,18 +1634,22 @@ typedef NS_ENUM(NSInteger, CallState) {
         _chatNavigationController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [_chatNavigationController didMoveToParentViewController:self];
         
-        [self setHaloToToggleChatButton];
+//        [self setHaloToToggleChatButton];
         
         [self showChatToggleButtonAnimated:NO];
         //green call
-        [_toggleChatButton setImage:[UIImage imageNamed:@"phone"] forState:UIControlStateNormal];
+//        [_toggleChatButton setImage:[UIImage imageNamed:@"phone"] forState:UIControlStateNormal];
+        [_toggleChatButton setTitle:@"Back to meeting"  forState:UIControlStateNormal];
         if (!_isAudioOnly) {
             [self.view bringSubviewToFront:_localVideoView];
         }
         [self.view bringSubviewToFront:_toggleChatButton];
         [self removeTapGestureForDetailedView];
     } else {
-        [_toggleChatButton setImage:[UIImage imageNamed:@"chat"] forState:UIControlStateNormal];
+        NSLog(@"BAck to_chatNavigationController...........");
+        [_toggleChatButton setHidden:YES];
+
+//        [_toggleChatButton setImage:[UIImage imageNamed:@"chat"] forState:UIControlStateNormal];
         [_halo removeFromSuperlayer];
         
         [self.view bringSubviewToFront:_buttonsContainerView];

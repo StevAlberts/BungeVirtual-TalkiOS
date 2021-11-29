@@ -59,6 +59,13 @@
 @property (nonatomic, copy) NSString *userDisplayName;
 @property (nonatomic, assign) BOOL disableVideoAtStart;
 @property (nonatomic, copy) NSDictionary *allRequests;
+
+@property (nonatomic, copy) NSArray *activities;
+
+
+@property (nonatomic, assign) NSInteger *requestId;
+@property (nonatomic, assign) BOOL requested;
+
 //@property (nonatomic, strong) NCKActivity* kActivity;
 
 
@@ -72,6 +79,8 @@
 - (void)requestToCancel;
 - (void)listenResponse;
 
+- (void)requestStarted;
+//- (void)requestPaused;
 
 - (BOOL)isVideoEnabled;
 - (BOOL)isAudioEnabled;
