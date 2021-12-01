@@ -1155,7 +1155,7 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     //Apply the data to the body
     [urlRequest setHTTPBody:params];
     
-//    NSLog(@"speakRequestApi parameters = %@", params);
+    NSLog(@"speakRequestApi parameters = %@", parameters);
 //    NSLog(@"speakRequestApi URL = %@", urlRequest.URL);
     
     NSURLSession *session = [NSURLSession sharedSession];
@@ -1228,13 +1228,10 @@ NSInteger const kReceivedChatMessagesLimit = 100;
         NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             
-//            NSLog(@"interveneRequestApi...httpResponse: %@", httpResponse);
-
             if(httpResponse.statusCode == 200)
                 {
                     NSError *parseError = nil;
                     NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
-//                    NSLog(@"The interveneRequestApi response is - %@",responseDictionary);
                     if (block) {
                         block(responseDictionary, nil);
                     }
@@ -1270,9 +1267,10 @@ NSInteger const kReceivedChatMessagesLimit = 100;
 
 //    NSDictionary *parameters = @{@"token" : encodedToken, @"canceled" : @(true)};
     NSDictionary *parameters = @{@"canceled" : @(true)};
-    NSData *params = [NSJSONSerialization dataWithJSONObject: parameters options:0 error:nil];
+    NSData *params = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
 
-    NSLog(@"cancelRequestApi parameters = %@", params);
+    NSLog(@"cancelRequestApi params = %@", params);
+    NSLog(@"cancelRequestApi parameters = %@", parameters);
     NSLog(@"cancelRequestApi URL = %@", URLString);
     
     NSString *userToken = [[NCKeyChainController sharedInstance] tokenForAccountId:account.accountId];
@@ -1377,6 +1375,7 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     return dataTask;
 }
 
+
 - (NSURLSessionDataTask *) startedRequestApi:(NSString *)token requestId:(NSInteger *)reqId forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block
 {
     NSLog(@"..........startedRequestApi..............");
@@ -1386,123 +1385,56 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     // make url string
     NSString *encodedToken = [token stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
     NSString *endpoint = [NSString stringWithFormat:@"activities"];
+    
     NSString *URLString = [NSString stringWithFormat:@"%@%@%@/%ld?token=%@", account.server, kikaoUtilities, endpoint, (long)reqId, encodedToken];
 
-    NSDictionary *parameters = @{@"started" : @(true)};
-//    NSDictionary *parameters = @{@"started" : @(true), @"approved" : @(true),};
-    NSData *params = [NSJSONSerialization dataWithJSONObject: parameters options:0 error:nil];
+    // authenticate
+    NSString *userToken = [[NCKeyChainController sharedInstance] tokenForAccountId:account.accountId];
+    NSString *authStr = [NSString stringWithFormat:@"%@:%@", account.userId, userToken];
+    NSData *authData = [authStr dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [authData base64EncodedStringWithOptions:0]];
+    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:URLString]];
+    [urlRequest setValue:authValue forHTTPHeaderField:@"Authorization"];
+
+    NSDictionary *parameters = @{@"started" : @(YES), @"token" : encodedToken };
+    NSData *params = [NSJSONSerialization dataWithJSONObject:parameters options:NSJSONWritingPrettyPrinted error:nil];
 
     NSLog(@"startedRequestApi parameters = %@", parameters);
     NSLog(@"startedRequestApi used params = %@", params);
     NSLog(@"startedRequestApi URL = %@", URLString);
-    
-    
-    NSString *userToken = [[NCKeyChainController sharedInstance] tokenForAccountId:account.accountId];
-    NSString *authStr = [NSString stringWithFormat:@"%@:%@", account.userId, userToken];
-    NSData *authData = [authStr dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [authData base64EncodedStringWithOptions:0]];
-    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:URLString]];
-    [urlRequest setValue:authValue forHTTPHeaderField:@"Authorization"];
-    
-    
+  
     //create the Method "PUT"
     [urlRequest setHTTPMethod:@"PUT"];
     [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
     //Apply the data to the body
     [urlRequest setHTTPBody:params];
         
-    NSURLSession *session = [NSURLSession sharedSession];
+    NSLog(@"StartedRequestApi URL....: %@",URLString);
+    NSLog(@"StartedRequestApi urlRequest....: %@",urlRequest);
 
+//    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config
+                                                          delegate:nil
+                                                     delegateQueue:[NSOperationQueue mainQueue]];
     // Create dataTask
         NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             
-//            NSLog(@"cancelRequestApi...httpResponse: %@", httpResponse);
-
-            if(httpResponse.statusCode == 200)
-                {
-                    NSError *parseError = nil;
-                    NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
-                    NSLog(@"The startedRequestApi URL = response is - %@",responseDictionary);
-                    if (block) {
-                        block(responseDictionary, nil);
-                    }
-                }
-                else
-                {
-                    if (block) {
-                        block(nil, error);
-                    }
-                    NSLog(@"cancelRequestApi...Error: %@", error);
-                }
-        }];
-    
-    // Fire the request
-    [dataTask resume];
-
-    return dataTask;
-}
-
-
-- (NSURLSessionDataTask *) pausedRequestApi:(NSString *)token requestId:(NSInteger *)reqId forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block
-{
-    NSLog(@"..........pausedRequestApi..............");
-
-    NSLog(@"pausedRequestApi......:%ld", (long)reqId);
-    
-    // make url string
-    NSString *encodedToken = [token stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-    NSString *endpoint = [NSString stringWithFormat:@"activities"];
-    NSString *URLString = [NSString stringWithFormat:@"%@%@%@/%ld?token=%@", account.server, kikaoUtilities, endpoint, (long)reqId, encodedToken];
-
-//    NSDictionary *parameters = @{@"token" : encodedToken, @"canceled" : @(true)};
-    NSDictionary *parameters = @{@"paused" : @(true)};
-    NSData *params = [NSJSONSerialization dataWithJSONObject: parameters options:0 error:nil];
-
-    NSLog(@"pausedRequestApi parameters = %@", parameters);
-    NSLog(@"pausedRequestApi used params = %@", params);
-    NSLog(@"pausedRequestApi URL = %@", URLString);
-    
-    
-    NSString *userToken = [[NCKeyChainController sharedInstance] tokenForAccountId:account.accountId];
-    NSString *authStr = [NSString stringWithFormat:@"%@:%@", account.userId, userToken];
-    NSData *authData = [authStr dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [authData base64EncodedStringWithOptions:0]];
-    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:URLString]];
-    [urlRequest setValue:authValue forHTTPHeaderField:@"Authorization"];
-    
-    
-    //create the Method "PUT"
-    [urlRequest setHTTPMethod:@"PUT"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-
-    //Apply the data to the body
-    [urlRequest setHTTPBody:params];
-        
-    NSURLSession *session = [NSURLSession sharedSession];
-
-    // Create dataTask
-        NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            
-//            NSLog(@"cancelRequestApi...httpResponse: %@", httpResponse);
-
-            if(httpResponse.statusCode == 200)
-            {
-                NSError *parseError = nil;
-                NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
-                NSLog(@"The pausedRequestApi URL = response is - %@",responseDictionary);
+            if(httpResponse.statusCode == 200){
+                NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+                NSLog(@"The startedRequestApi response is - %@",responseDictionary);
                 if (block) {
                     block(responseDictionary, nil);
                 }
-            }
-            else
-            {
+            }else{
                 if (block) {
                     block(nil, error);
                 }
-                NSLog(@"cancelRequestApi...Error: %@", error);
+                NSLog(@"startedRequestApi...Error: %@", error);
             }
         }];
     

@@ -281,19 +281,16 @@ static NSString * const kNCVideoTrackKind = @"video";
 {
     NSLog(@"requestStarted...........");
     
-    _startedRequestTask = [[NCAPIController sharedInstance]
-                          startedRequestApi:_room.token requestId:_requestId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
-        
+    [[NCAPIController sharedInstance] startedRequestApi:_room.token requestId:_requestId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
         if (!error) {
-            NSLog(@"requestStarted.......SUCEESS");
-            NSLog(@"requestStarted: %@", responseDict);
+            NSLog(@"Started.......SUCEESS");
+            NSLog(@"Started: %@", responseDict);
         } else {
             NSLog(@"Could not requestStarted. Error: %@", error);
         }
     }];
 
 }
-
 
 - (void) listenResponse
 {

@@ -949,42 +949,12 @@ typedef NS_ENUM(NSInteger, CallState) {
     if (!_callController) {return;}
     
     if ([_callController isAudioEnabled]) {
-        NSLog(@"YES... isAudioEnabled ...............%ld", (long)_room.type);
-        switch ((int)_room.type) {
-            // plenary
-            case 222:
-            case 333:
-            {
-                NSLog(@"Stop timer .......................");
-            }
-                break;
-                
-            default:
-                break;
-        }
-        
         if ([CallKitManager isCallKitAvailable]) {
             [[CallKitManager sharedInstance] reportAudioMuted:YES forCall:_room.token];
         } else {
             [self muteAudio];
         }
     } else {
-        NSLog(@"NO... isAudioEnabled ...............%ld", (long)_room.type);
-        
-        switch ((int)_room.type) {
-            // plenary
-            case 222:
-            case 333:
-            {
-                NSLog(@"Start timer .......................");
-                [self startTimer];
-            }
-                break;
-                
-            default:
-                break;
-        }
-        
         if ([CallKitManager isCallKitAvailable]) {
             [[CallKitManager sharedInstance] reportAudioMuted:NO forCall:_room.token];
         } else {
@@ -1071,6 +1041,9 @@ typedef NS_ENUM(NSInteger, CallState) {
     NSLog(@"_requestSuccess...:%id", _requestSuccess);
     
     NSInteger *reqId = [_callController requestId];
+    
+//    NSInteger numId = [_callController requestId];
+
 //    NSLog(@"_requestId...........................:%ld", (long) reqId);
 //    NSLog(@"_requestId...........................:%ld", (long) [_callController requestId]);
     
@@ -1082,24 +1055,37 @@ typedef NS_ENUM(NSInteger, CallState) {
         
 //        NSLog(@"Activities...........................%ld", _allActivities.count);
 
-        
-        NSLog(@"Account..ddd.....: %@",_account.userId);
-        
+                
         if(_approved){
             if(_responses.count == 0){
-                NSLog(@"No _responses...0...........................");
+                NSLog(@"_approved No _responses..............................");
                 _approved = NO;
                 [self handleCancelRequest];
-            }else{
-                
+//                [self hideControls];
             }
+//            else{
+//                for(int i = 0; i<_responses.count;i++){
+//                    if (_responses[@"id"] == numId){
+//                        NSLog(@"Exists ...................");
+//                    }else{
+//                        NSLog(@"Not Exists ..................");
+//                    }
+//
+//                }
+//
+//                if ([_responses objectForKey:@"id"] == 12) {
+//                    NSLog(@"There's an object set for key @\"b\"!");
+//                } else {
+//                    NSLog(@"No object set for key @\"b\"");
+//                }
+//            }
         }
 
             for (NSDictionary *response in _responses) {
                 NCKActivity *activity = [NCKActivity activityWithDictionary:response];
     
                 NSLog(@"Activity: %@......Account: %@",activity.userId, _account.userId);
-                NSLog(@"_responses loop.......: %@",response);
+                NSLog(@"methodB _responses loop.......: %@",response);
     
                 if(activity.activityId == reqId){
                         // update activity
@@ -1110,51 +1096,91 @@ typedef NS_ENUM(NSInteger, CallState) {
                             
                             NSLog(@"Show controls....");
                             [self showControls];
-                            // start timer
-                            if(activity.paused){
-                                NSLog(@"Paused...");
-                                [self hideControls];
-                            }
     
                             if (activity.started){
                                 NSLog(@"Started.........");
                                 [self.timerButton setHidden:NO];
-                                NSLog(@"talkingSince.....%ld",(long)activity.talkingSince);
-                                NSLog(@"duration.....%ld",(long)activity.duration);
-                                NSString* time = [NSString stringWithFormat:@"%ld", (long)activity.talkingSince];
-        //                        NSString *epochTime = activity.talkingSince;
-                                NSTimeInterval seconds = [time doubleValue];
-                                NSLog(@"seconds.....%f",seconds);
+                                if(activity.paused){
+                                    NSLog(@"Paused...");
+                                    [self hideControls];
+                                }else{
+                                    // start timer
+                                    [self startCount:activity.duration since:activity.talkingSince];
+                                }
                             }
+                            
                         } else {
                             NSLog(@"Dont show controls..............................");
                             [self hideControls];
                         }
                     
                         if(activity.canceled){
-                            NSLog(@"No _responses...0...........................");
+                            NSLog(@"activity.canceled...........................");
                             _approved = NO;
+                            [self.timerButton setHidden:YES];
                             [self handleCancelRequest];
+                            
                         }
                 }
 //                else{
-//                    if(_approved && activity.activityId != reqId){
-//                        NSLog(@"Stopped...........................");
-//                        _approved = NO;
-//                        [self handleCancelRequest];
-//                    }
+//                    NSLog(@"No activity...................");
+//                    [self hideControls];
+//                    [self.timerButton setHidden:YES];
+//                    // reset
+//                    // cancel request
 //                }
             }
-        
-        if(_responses.count == 0){
-            NSLog(@"No _responses...0...........................");
-//            [self handleCancelRequest];
-        }
     }
-        
 }
 
-- (void)timerFired:(NSTimer*)theTimer
+- (void)startCount:(NSInteger)duration since:(NSInteger)talkingSince
+{
+    NSLog(@"----------------------------------------------------------");
+
+    NSLog(@"duration.....: %ld",(long)duration);
+    NSLog(@"talkingSince.....: %ld",(long)talkingSince);
+
+    
+    NSDate *now = [NSDate date]; // current date
+    int today = [now timeIntervalSince1970];
+    
+    NSLog(@"Now.....%d",today);
+    
+    long diff = today - talkingSince;
+
+    NSLog(@"DifferenceSince.....: %ld", diff);
+    
+    double theMinutes = duration - diff;
+    
+    NSLog(@"Difference in minutes.....: %f", theMinutes);
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"mm:ss"];
+
+    NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:theMinutes];
+    
+    NSLog(@"epochNSDate.....: %@", epochNSDate);
+
+    
+    NSString *time = [dateFormatter stringFromDate:epochNSDate];
+    NSLog (@"Time:- %@", time);
+    
+    if(theMinutes>0){
+        [_timerButton setTitle:time forState: UIControlStateNormal];
+
+        if(theMinutes > 60){
+            _timerButton.backgroundColor = [UIColor systemGreenColor];
+        }else if(theMinutes < 30){
+            _timerButton.backgroundColor = [UIColor systemRedColor];
+        }else{
+            _timerButton.backgroundColor = [UIColor systemOrangeColor];
+        }
+    }
+
+    NSLog(@"----------------------------------------------------------");
+}
+
+- (void)timerFiredzz:(NSTimer*)theTimer
 {
 //    NSLog(@"_interveneRequest listening ......%id", _interveneRequest);
 //    NSLog(@"_speakRequest listening ......%id", _speakRequest);
@@ -1246,32 +1272,6 @@ typedef NS_ENUM(NSInteger, CallState) {
     }
 }
 
-//- (void)stopTimerCount
-//{
-//    [self.stopWatchTimer invalidate];
-//    self.stopWatchTimer = nil;
-//    [self updateTimer];
-//
-//}
-//
-//- (void)startTimerCount
-//{
-//
-//    if (self.stopWatchTimer) {
-//        [self.stopWatchTimer invalidate];
-//        self.stopWatchTimer = nil;
-//    }
-//
-//    self.startDate = [NSDate date];
-//
-//    // Create the stop watch timer that fires every 100 ms
-//    self.stopWatchTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/10.0
-//                                           target:self
-//                                         selector:@selector(updateTimer)
-//                                         userInfo:nil
-//                                          repeats:YES];
-//}
-
 
 
 // requesting to intervene (1)
@@ -1285,6 +1285,9 @@ typedef NS_ENUM(NSInteger, CallState) {
 
     // hide controls
     [self hideControls];
+    
+    // reset timer
+    [self.timerButton setHidden:YES];
     
     _speakRequest = NO;
     _interveneRequest = NO;
@@ -1337,10 +1340,8 @@ typedef NS_ENUM(NSInteger, CallState) {
 
 -(void)startTimer
 {
-    if (_callController) {
-            NSLog(@"startTimer ......");
-            [_callController requestStarted];
-    }
+    NSLog(@"startTimer ......");
+    [_callController requestStarted];
 }
 
 
@@ -1428,6 +1429,20 @@ typedef NS_ENUM(NSInteger, CallState) {
 - (void)unmuteAudio
 {
     [_callController enableAudio:YES];
+               
+       switch ((int)_room.type) {
+           // plenary
+           case 222:
+           case 333:
+           {
+               NSLog(@"Start timer ............................................");
+               [self startTimer];
+           }
+               break;
+
+           default:
+               break;
+       }
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self->_audioMuteButton setImage:[UIImage imageNamed:@"audio"] forState:UIControlStateNormal];
@@ -1538,11 +1553,6 @@ typedef NS_ENUM(NSInteger, CallState) {
 {
     [self handleSpeakRequest];
 }
-
-//- (IBAction)timerButtonPressed:(id)sender
-//{
-////    [self startTimer];
-//}
 
 - (IBAction)interveneRequestButtonPressed:(id)sender
 {

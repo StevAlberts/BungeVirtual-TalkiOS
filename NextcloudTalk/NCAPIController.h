@@ -164,7 +164,7 @@ extern NSInteger const kReceivedChatMessagesLimit;
 //- (void)listenResponse;
 - (NSURLSessionDataTask *)listenResponseApi:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
 - (NSURLSessionDataTask *)startedRequestApi:(NSString *)token requestId:(NSInteger *)reqId forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
-- (NSURLSessionDataTask *)pausedRequestApi:(NSString *)token requestId:(NSInteger *)reqId forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
+//- (NSURLSessionDataTask *)pausedRequestApi:(NSString *)token requestId:(NSInteger *)reqId forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
 
 // Chat Controller
 - (NSURLSessionDataTask *)receiveChatMessagesOfRoom:(NSString *)token fromLastMessageId:(NSInteger)messageId history:(BOOL)history includeLastMessage:(BOOL)include timeout:(BOOL)timeout lastCommonReadMessage:(NSInteger)lastCommonReadMessage setReadMarker:(BOOL)setReadMarker forAccount:(TalkAccount *)account withCompletionBlock:(GetChatMessagesCompletionBlock)block;
