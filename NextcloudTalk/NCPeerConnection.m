@@ -366,6 +366,21 @@
     }
 }
 
+- (void)sendRaiseHandOfType:(NSString *)type raised:(BOOL)raised
+{
+    NSDictionary *message = @{@"type":type, @"raiseHand": @(raised), @"peerId": _peerId};
+    NSData *jsonMessage = [self createDataChannelMessage:message];
+    RTCDataBuffer *dataBuffer = [[RTCDataBuffer alloc] initWithData:jsonMessage isBinary:NO];
+    
+    if (_localDataChannel) {
+        [_localDataChannel sendData:dataBuffer];
+    } else if (_remoteDataChannel) {
+        [_remoteDataChannel sendData:dataBuffer];
+    } else {
+        NSLog(@"No data channel opened");
+    }
+}
+
 #pragma mark - RTCSessionDescriptionDelegate
 // Callbacks for this delegate occur on non-main thread and need to be
 // dispatched back to main queue as needed.

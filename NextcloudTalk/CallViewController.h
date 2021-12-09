@@ -40,11 +40,11 @@
 
 @property (nonatomic, weak) id<CallViewControllerDelegate> delegate;
 @property (nonatomic, strong) NCRoom *room;
-@property (nonatomic, strong) NCKActivity *kActivity;
+//@property (nonatomic, strong) NCKActivity *kActivity;
 
-@property (nonatomic, copy) NSDictionary *responses;
+@property (nonatomic, copy) NSMutableArray<NCKActivity *> *responses;
 
-@property (nonatomic, copy) NSArray *allActivities;
+//@property (nonatomic, copy) NSMutableArray *allActivities;
 
 
 @property (nonatomic, assign) BOOL videoDisabledAtStart;

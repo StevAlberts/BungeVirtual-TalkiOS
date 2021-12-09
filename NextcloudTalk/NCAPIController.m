@@ -1252,8 +1252,6 @@ NSInteger const kReceivedChatMessagesLimit = 100;
 }
 
 
-
-
 - (NSURLSessionDataTask *) cancelRequestApi:(NSString *)token requestId:(NSInteger *)reqId forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block
 {
     NSLog(@"..........cancelRequestApi..............");

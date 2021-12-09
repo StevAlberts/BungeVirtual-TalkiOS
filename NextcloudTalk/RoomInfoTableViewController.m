@@ -45,6 +45,7 @@
 #import "NCUtils.h"
 #import "RoomDescriptionTableViewCell.h"
 #import "RoomNameTableViewCell.h"
+#import "NCUserStatus.h"
 
 typedef enum RoomInfoSection {
     kRoomInfoSectionName = 0,
@@ -119,6 +120,7 @@ typedef enum FileAction {
 @property (nonatomic, strong) NCChatViewController *chatViewController;
 @property (nonatomic, strong) NSString *roomName;
 @property (nonatomic, strong) NSMutableArray *roomParticipants;
+@property (nonatomic, strong) NSMutableArray<NCRoomParticipant *> *participantsIncall;
 @property (nonatomic, strong) UITextField *roomNameTextField;
 @property (nonatomic, strong) UISwitch *publicSwitch;
 @property (nonatomic, strong) UISwitch *lobbySwitch;
@@ -131,7 +133,7 @@ typedef enum FileAction {
 @property (nonatomic, strong) UIAlertAction *setPasswordAction;
 @property (nonatomic, strong) UIActivityIndicatorView *fileDownloadIndicator;
 @property (nonatomic, strong) NSString *previewControllerFilePath;
-@property (nonatomic, assign) NSInteger *inMeeting;
+@property (nonatomic, assign) NSInteger *inCallTotal;
 
 @end
 
@@ -619,6 +621,15 @@ typedef enum FileAction {
     }
     if ([newRoomName isEqualToString:@""]) {
         _roomNameTextField.text = _room.name;
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Could not set conversation name", nil)
+                                       message:NSLocalizedString(@"Conversation name cannot be empty", nil)
+                                       preferredStyle:UIAlertControllerStyleAlert];
+
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+           handler:^(UIAlertAction * action) {}];
+
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
         return;
     }
     [self setModifyingRoomUI];
@@ -1039,7 +1050,7 @@ typedef enum FileAction {
                                                                     handler:^void (UIAlertAction *action) {
                                                                         [self demoteFromModerator:participant];
                                                                     }];
-        [demoteFromModerator setValue:[[UIImage imageNamed:@"rename-action"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forKey:@"image"];
+        [demoteFromModerator setValue:[[UIImage imageNamed:@"rename-action"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
         [optionsActionSheet addAction:demoteFromModerator];
     } else if (participant.canBePromoted) {
         UIAlertAction *promoteToModerator = [UIAlertAction actionWithTitle:NSLocalizedString(@"Promote to moderator", nil)
@@ -1047,7 +1058,7 @@ typedef enum FileAction {
                                                                    handler:^void (UIAlertAction *action) {
                                                                        [self promoteToModerator:participant];
                                                                    }];
-        [promoteToModerator setValue:[[UIImage imageNamed:@"rename-action"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forKey:@"image"];
+        [promoteToModerator setValue:[[UIImage imageNamed:@"rename-action"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
         [optionsActionSheet addAction:promoteToModerator];
     }
     
@@ -1068,7 +1079,7 @@ typedef enum FileAction {
                                                               handler:^void (UIAlertAction *action) {
                                                                   [self removeParticipant:participant];
                                                               }];
-    [removeParticipant setValue:[[UIImage imageNamed:@"delete"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forKey:@"image"];
+    [removeParticipant setValue:[[UIImage imageNamed:@"delete"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
     [optionsActionSheet addAction:removeParticipant];
     
     
@@ -1373,10 +1384,16 @@ typedef enum FileAction {
     switch (infoSection) {
         case kRoomInfoSectionParticipants:
         {
-//            NSString *title = [NSString stringWithFormat:NSLocalizedString(@"%lu participants", nil), (unsigned long)_roomParticipants.count];
+            int inCall = 0;
+            for(NCRoomParticipant *member in _roomParticipants){
+                if(member.inCall){
+                    inCall++;
+                }
+            }
+//            NSLog(@"inCall: %d", inCall);
+            // all participants
+            NSString *title = [NSString stringWithFormat:NSLocalizedString(@"%lu In meeting (%li Invited)", nil), (long)inCall, (unsigned long)_roomParticipants.count];
             
-            NSString *title = [NSString stringWithFormat:NSLocalizedString(@"%li in meeting (%lu invited)", nil), (long)_inMeeting, (unsigned long)_roomParticipants.count];
-             
             if (_roomParticipants.count == 1) {
                 title = NSLocalizedString(@"1 participant", nil);
             }
@@ -1530,7 +1547,8 @@ typedef enum FileAction {
                     
                     cell.textLabel.text = NSLocalizedString(@"Chat messages", nil);
                     cell.detailTextLabel.text = _room.notificationLevelString;
-                    [cell.imageView setImage:[UIImage imageNamed:@"notifications-settings"]];
+                    [cell.imageView setImage:[[UIImage imageNamed:@"notifications"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                    cell.imageView.tintColor = [UIColor colorWithRed:0.43 green:0.43 blue:0.45 alpha:1];
                     
                     return cell;
                 }
@@ -1642,7 +1660,8 @@ typedef enum FileAction {
                     }
                     
                     cell.textLabel.text = NSLocalizedString(@"Share conversation link", nil);
-                    [cell.imageView setImage:[UIImage imageNamed:@"share-settings"]];
+                    [cell.imageView setImage:[[UIImage imageNamed:@"share"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                    cell.imageView.tintColor = [UIColor colorWithRed:0.43 green:0.43 blue:0.45 alpha:1];
                     
                     return cell;
                 }
@@ -1805,9 +1824,25 @@ typedef enum FileAction {
             if (participant.isOffline) {
                 cell.contactImage.alpha = 0.5;
                 cell.labelTitle.alpha = 0.5;
+                cell.userStatusMessageLabel.alpha = 0.5;
             } else {
                 cell.contactImage.alpha = 1;
                 cell.labelTitle.alpha = 1;
+                cell.userStatusMessageLabel.alpha = 1;
+            }
+            
+            // User status
+            [cell setUserStatus:participant.status];
+            
+            //User status message
+            [cell setUserStatusMessage:participant.statusMessage withIcon:participant.statusIcon];
+            
+            if (!participant.statusMessage || [participant.statusMessage isEqualToString:@""]) {
+                if ([participant.status isEqualToString: kUserStatusDND]) {
+                    [cell setUserStatusMessage:NSLocalizedString(@"Do not disturb", nil) withIcon:nil];
+                } else if ([participant.status isEqualToString:kUserStatusAway]) {
+                    [cell setUserStatusMessage: NSLocalizedString(@"Away", nil) withIcon:nil];
+                }
             }
             
             // Call status
@@ -1818,18 +1853,7 @@ typedef enum FileAction {
                 cell.accessoryView = nil;
             }
             
-            // show meeting status
-            NSMutableArray *inCallArray = [[NSMutableArray alloc] init];
-            
-            if(participant.inCall){
-//                NSLog(@"In meeting.....%@", participant.displayName);
-                [inCallArray addObject:participant];
-                self.inMeeting = (long *) inCallArray.count;
-            }
-            
             cell.layoutMargins = UIEdgeInsetsMake(0, 72, 0, 0);
-            
-            [cell setUserStatus:participant.status];
             
             return cell;
         }

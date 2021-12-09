@@ -48,6 +48,7 @@
 - (void)callController:(NCCallController *)callController didReceiveUnshareScreenFromPeer:(NCPeerConnection *)peer;
 - (void)callController:(NCCallController *)callController didReceiveForceMuteActionForPeerId:(NSString *)peerId;
 - (void)callControllerIsReconnectingCall:(NCCallController *)callController;
+- (void)callControllerWantsToHangUpCall:(NCCallController *)callController;
 
 @end
 
@@ -58,29 +59,31 @@
 @property (nonatomic, copy) NSString *userSessionId;
 @property (nonatomic, copy) NSString *userDisplayName;
 @property (nonatomic, assign) BOOL disableVideoAtStart;
-@property (nonatomic, copy) NSDictionary *allRequests;
 
-@property (nonatomic, copy) NSArray *activities;
+@property (nonatomic, copy) NSMutableArray<NCKActivity *> *allRequests;
 
-
-@property (nonatomic, assign) NSInteger *requestId;
-@property (nonatomic, assign) BOOL requested;
-
-//@property (nonatomic, strong) NCKActivity* kActivity;
-
+@property (nonatomic, assign) BOOL requestedSpeak;
+@property (nonatomic, assign) BOOL requestedIntervene;
 
 - (instancetype)initWithDelegate:(id<NCCallControllerDelegate>)delegate inRoom:(NCRoom *)room forAudioOnlyCall:(BOOL)audioOnly withSessionId:(NSString *)sessionId;
 - (void)startCall;
 - (void)leaveCall;
 //- (void)speakRequest;
-- (void)raiseHand;
+- (void)raiseHand:(BOOL)raised;
 - (void)requestToSpeak;
 - (void)requestToIntervene;
-- (void)requestToCancel;
+//- (void)requestToCancel;
 - (void)listenResponse;
 
-- (void)requestStarted;
+- (void)cancelSpeak;
+- (void)cancelIntervene;
+
+
+//- (void)requestStarted;
 //- (void)requestPaused;
+- (void)startSpeak;
+- (void)startIntervene;
+
 
 - (BOOL)isVideoEnabled;
 - (BOOL)isAudioEnabled;

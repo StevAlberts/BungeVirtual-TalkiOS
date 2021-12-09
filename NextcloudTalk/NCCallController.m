@@ -174,7 +174,7 @@ static NSString * const kNCVideoTrackKind = @"video";
                 self->_joinCallAttempts += 1;
                 [self joinCall];
                 return;
-            } 
+            }
             [self.delegate callControllerDidFailedJoiningCall:self statusCode:@(statusCode) errorReason:[self getJoinCallErrorReason:statusCode]];
             NSLog(@"Could not join call. Error: %@", error.description);
         }
@@ -183,27 +183,35 @@ static NSString * const kNCVideoTrackKind = @"video";
     [self listenResponse];
 }
 
+
 // raisedhand
-- (void) raiseHand
+- (void) raiseHand: (BOOL)raised
 {
-    NSLog(@"Raised hand...........");
+//    NSLog(@"Raised hand...........");
+//
+//    _raiseHandTask = [[NCAPIController sharedInstance]
+//                       raiseHand:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+//        if (!error) {
+//            NSLog(@"Raise Hand.......SUCEESS");
+//
+//        } else {
+//
+//            NSLog(@"Could not raise hand. Error: %@", error);
+//        }
+//    }];
     
-    _raiseHandTask = [[NCAPIController sharedInstance]
-                       raiseHand:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
-        if (!error) {
-            NSLog(@"Raise Hand.......SUCEESS");
-
-        } else {
-
-            NSLog(@"Could not raise hand. Error: %@", error);
-        }
-    }];
+    
+    [self sendRaisehandToAllOfType:@"raiseHand" raised:raised];
+    
 }
+
 
 - (void) requestToSpeak
 {
     NSLog(@"requestToSpeak...........");
     
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
     _speakRequestTask = [[NCAPIController sharedInstance]
                        speakRequestApi:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
 
@@ -211,85 +219,210 @@ static NSString * const kNCVideoTrackKind = @"video";
             NSLog(@"requestToSpeak SUCEESS: %@", responseDict);
             
             NCKActivity *activity = [NCKActivity activityWithDictionary:responseDict];
-
-            self.requestId = activity.activityId;
-            self->_requested = YES;
+                        
+            [defaults setInteger:activity.activityId forKey:@"speakId"];
+                         
+            [defaults synchronize];
+            NSLog(@"Data are saved to defaults.");
             
-            NSLog(@"activityId_regId...:%ld", (long)self->_requestId);
-            
-            NSLog(@"self.requested.:%id", self->_requested);
-            
+//            self.speakId = activity.activityId;
+            self->_requestedSpeak = YES;
+                                    
         } else {
-            self->_requested = NO;
-
+            self->_requestedSpeak = NO;
             NSLog(@"Could not requestToSpeak. Error: %@", error);
         }
-        
         
     }];
     
 }
-
 
 
 - (void) requestToIntervene
 {
     NSLog(@"requestToIntervene...........");
     
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
     _interveneRequestTask = [[NCAPIController sharedInstance]
                        interveneRequestApi:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
-        
         
         if (!error) {
             NSLog(@"requestToSpeak: %@", responseDict);
             
             NCKActivity *activity = [NCKActivity activityWithDictionary:responseDict];
             
-            self.requestId = activity.activityId;
-            self.requested = YES;
             
-
+            [defaults setInteger:activity.activityId forKey:@"interveneId"];
+            [defaults synchronize];
+            NSLog(@"Data are saved to defaults.");
+            
+//            self.interveneId = activity.activityId;
+            self.requestedIntervene = YES;
+            
         } else {
-            self->_requested = NO;
+            self->_requestedIntervene = NO;
 
             NSLog(@"Could not requestToIntervene. Error: %@", error);
         }
     }];
 }
 
-- (void) requestToCancel
+
+- (void) cancelSpeak
 {
-    NSLog(@"requestToCancel...........");
+
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     
-    NSLog(@"requestToCancel...........%ld", (long)_requestId);
+    NSInteger * speakId = [defaults integerForKey:@"speakId"];
+    NSLog(@"cancelSpeak........._speakId: %ld", (long)speakId);
 
-    _cancelRequestTask = [[NCAPIController sharedInstance]
-                          cancelRequestApi:_room.token requestId:_requestId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
-        
-        if (!error) {
-            NSLog(@"requestToCancel.......SUCEESS");
-            NSLog(@"requestToCancel: %@", responseDict);
-            self.requested = NO;
-        } else {
-            NSLog(@"Could not requestToCancel. Error: %@", error);
-        }
-    }];
-
+    if(speakId != nil){
+//        _cancelRequestTask =
+        [[NCAPIController sharedInstance]
+                              cancelRequestApi:_room.token requestId:speakId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+            
+            if (!error) {
+                NSLog(@"cancelSpeak.......SUCEESS");
+                NSLog(@"cancelSpeak: %@", responseDict);
+                
+                [defaults removeObjectForKey:@"speakId"];
+                [defaults synchronize];
+                
+                NSLog(@"Data are saved to defaults.");
+                
+                self.requestedSpeak = NO;
+            } else {
+                NSLog(@"Could not cancelSpeak. Error: %@", error);
+            }
+        }];
+    }
+    
 }
 
-- (void) requestStarted
+- (void) cancelIntervene
 {
-    NSLog(@"requestStarted...........");
     
-    [[NCAPIController sharedInstance] startedRequestApi:_room.token requestId:_requestId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    NSInteger * interveneId = [defaults integerForKey:@"interveneId"];
+    NSLog(@"cancelIntervene........._interveneId: %ld",(long)interveneId);
+
+    if(interveneId != nil){
+//        _cancelRequestTask =
+        [[NCAPIController sharedInstance]
+                              cancelRequestApi:_room.token requestId:interveneId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+            
+            if (!error) {
+                NSLog(@"cancelIntervene.......SUCEESS");
+                NSLog(@"cancelIntervene: %@", responseDict);
+                
+                [defaults removeObjectForKey:@"interveneId"];
+                [defaults synchronize];
+                
+                self.requestedIntervene = NO;
+            } else {
+                NSLog(@"Could not cancelIntervene. Error: %@", error);
+            }
+        }];
+    }
+    
+}
+
+//- (void) requestToCancel
+//{
+//    NSLog(@"requestToCancel...........");
+//
+//    NSLog(@"requestToCancel........._speakId: %ld _interveneId: %ld", (long)_speakId,(long)_interveneId);
+//
+//    if(_speakId != nil){
+//        _cancelRequestTask = [[NCAPIController sharedInstance]
+//                              cancelRequestApi:_room.token requestId:_speakId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+//
+//            if (!error) {
+//                NSLog(@"requestToCancel.......SUCEESS");
+//                NSLog(@"requestToCancel: %@", responseDict);
+//                self.requested = NO;
+//            } else {
+//                NSLog(@"Could not requestToCancel. Error: %@", error);
+//            }
+//        }];
+//    }else if(_interveneId != nil){
+//        _cancelRequestTask = [[NCAPIController sharedInstance]
+//                              cancelRequestApi:_room.token requestId:_interveneId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+//
+//            if (!error) {
+//                NSLog(@"requestToCancel.......SUCEESS");
+//                NSLog(@"requestToCancel: %@", responseDict);
+//                self.requested = NO;
+//            } else {
+//                NSLog(@"Could not requestToCancel. Error: %@", error);
+//            }
+//        }];
+//    }
+//
+//}
+
+//- (void) requestStarted
+//{
+//    NSLog(@"requestStarted...........");
+//
+//    if(_speakId != nil){
+//        [[NCAPIController sharedInstance] startedRequestApi:_room.token requestId:_speakId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+//            if (!error) {
+//                NSLog(@"Started.......SUCEESS");
+//                NSLog(@"Started: %@", responseDict);
+//            } else {
+//                NSLog(@"Could not requestStarted. Error: %@", error);
+//            }
+//        }];
+//    }else if(_interveneId != nil){
+//        [[NCAPIController sharedInstance] startedRequestApi:_room.token requestId:_interveneId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+//            if (!error) {
+//                NSLog(@"Started.......SUCEESS");
+//                NSLog(@"Started: %@", responseDict);
+//            } else {
+//                NSLog(@"Could not requestStarted. Error: %@", error);
+//            }
+//        }];
+//    }
+//}
+
+
+- (void) startSpeak
+{
+    NSLog(@"startSpeak...........");
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    NSInteger * speakId = [defaults integerForKey:@"speakId"];
+    NSLog(@"startSpeak........._speakId: %ld", (long)speakId);
+    
+    [[NCAPIController sharedInstance] startedRequestApi:_room.token requestId:speakId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
         if (!error) {
-            NSLog(@"Started.......SUCEESS");
-            NSLog(@"Started: %@", responseDict);
+            NSLog(@"startSpeak.......SUCEESS");
+            NSLog(@"startSpeak: %@", responseDict);
         } else {
-            NSLog(@"Could not requestStarted. Error: %@", error);
+            NSLog(@"Could not startSpeak. Error: %@", error);
         }
     }];
+    
+}
 
+- (void) startIntervene
+{
+    NSLog(@"startIntervene...........");
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSInteger * interveneId = [defaults integerForKey:@"interveneId"];
+    NSLog(@"startIntervene........._interveneId: %ld",(long)interveneId);
+
+    [[NCAPIController sharedInstance] startedRequestApi:_room.token requestId:interveneId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+        if (!error) {
+            NSLog(@"startIntervene.......SUCEESS");
+            NSLog(@"startIntervene: %@", responseDict);
+        } else {
+            NSLog(@"Could not startIntervene. Error: %@", error);
+        }
+    }];
+    
 }
 
 - (void) listenResponse
@@ -302,24 +435,62 @@ static NSString * const kNCVideoTrackKind = @"video";
 
 - (void) getRequestApi:(NSTimer *)timer
 {
-    NSLog(@"Started ....");
+//    NSLog(@"Started ....");
     
-//    if(_requested){
-        NSLog(@"Listening ....");
-        _listenTask = [[NCAPIController sharedInstance]
-                              listenResponseApi:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+//        NSLog(@"Listening ....");
+//        _listenTask =
+        [[NCAPIController sharedInstance]
+                        listenResponseApi:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
             if (!error) {
+//
+////                NSDictionary *responses = responseDict;
+//
+//
+//
+//                NSData *resData = [NSKeyedArchiver archivedDataWithRootObject:responseDict];
+//
+//                NSLog(@"getRequestApi resData................: %@",resData);
 
-                self->_allRequests = responseDict;
-                NSLog(@"self->_allRequests................: %@", self->_allRequests);
+                
+//                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:resData options:kNilOptions error:nil];
+//
+//                NSArray *fetchedArr = [json objectForKey:@"id"];
+//
+//                NSMutableArray *arrayRes = [NSMutableArray arrayWithArray:fetchedArr];
+//
+//                NSLog(@"arrayCodigos %@", arrayRes);
+//                NSLog(@"arrayCodigos %lu", (unsigned long)arrayRes.count);
+
+//                NSLog(@"getRequestApi responseDict................: %@",responseDict);
+
+                NSMutableArray<NCKActivity *> * resArray = [[NSMutableArray alloc] init];
+
+//                NCKActivity *_aid = nil;
+                
+                for (NSDictionary *response in responseDict) {
+                    NCKActivity *activity = [NCKActivity activityWithDictionary:response];
+                    
+//                    NSLog(@"getRequestApi activity................: %ld",(long)activity.activityId);
+//                    _aid = activity;
+                    
+                    [resArray addObject:activity];
+                                                            
+                }
+                
+//                if([resArray containsObject:_aid]){
+//
+//                    NSLog(@"NO NO contain ..............");
+//                }
+//                self->_allRequests = responseDict;
+//                NSLog(@"arr arr arr................: %lu",(unsigned long)resArray.count);
+                self->_allRequests = resArray;
+//                NSLog(@"_allRequests................: %lu",(unsigned long)self->_allRequests.count);
 
             } else {
                 NSLog(@"Could not getRequestApi. Error....: %@", error);
             }
         }];
-//    }else{
-//        NSLog(@"Waiting....");
-//    }
+
 }
 
 - (NSString *)getJoinCallErrorReason:(NSInteger)statusCode
@@ -573,7 +744,7 @@ static NSString * const kNCVideoTrackKind = @"video";
 #pragma mark - Audio & Video senders
 
 - (void)createLocalAudioTrack
-{    
+{
     RTCAudioSource *source = [_peerConnectionFactory audioSourceWithConstraints:nil];
     _localAudioTrack = [_peerConnectionFactory audioTrackWithSource:source trackId:kNCAudioTrackId];
     [_localStream addAudioTrack:_localAudioTrack];
@@ -657,6 +828,18 @@ static NSString * const kNCVideoTrackKind = @"video";
             [peerConnection sendDataChannelMessageOfType:type withPayload:payload];
         }
     }
+}
+
+- (void)sendRaisehandToAllOfType:(NSString *)type raised:(BOOL) raised
+{
+//    if ([_externalSignalingController hasMCU]) {
+//        [_ownPeerConnection sendRaiseHandOfType:type raised:raised];
+//    } else {
+//        NSArray *connectionWrappers = [self.connectionsDict allValues];
+//        for (NCPeerConnection *peerConnection in connectionWrappers) {
+//            [peerConnection sendRaiseHandOfType:type raised:raised];
+//        }
+//    }
 }
 
 #pragma mark - External signaling support
@@ -851,6 +1034,10 @@ static NSString * const kNCVideoTrackKind = @"video";
         NSString *peerKey = [sessionId stringByAppendingString:kRoomTypeVideo];
         if (![_connectionsDict objectForKey:peerKey] && ![_userSessionId isEqualToString:sessionId]) {
             if ([_externalSignalingController hasMCU]) {
+                // We request an offer to the MCU, but in case there are no streams published, we won't get an offer
+                // Make sure we still add the peer connection, otherwise the participant will be invisible
+                [self getPeerConnectionWrapperForSessionId:sessionId ofType:kRoomTypeVideo];
+                
                 NSLog(@"Requesting offer to the MCU for session: %@", sessionId);
                 [_externalSignalingController requestOfferForSessionId:sessionId andRoomType:kRoomTypeVideo];
             } else {
@@ -868,6 +1055,13 @@ static NSString * const kNCVideoTrackKind = @"video";
     
     // Close old peer connections for sessions that left the call
     for (NSString *sessionId in leftSessions) {
+        // Hang up call if user sessionId is no longer in the call
+        // Could be because a moderator "ended the call for everyone"
+        if ([_userSessionId isEqualToString:sessionId]) {
+            NSLog(@"User sessionId is no longer in the call -> hang up call");
+            [self.delegate callControllerWantsToHangUpCall:self];
+            return;
+        }
         [self cleanPeerConnectionsForSessionId:sessionId];
     }
 }

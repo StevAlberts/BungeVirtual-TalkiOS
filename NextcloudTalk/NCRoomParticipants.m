@@ -52,13 +52,30 @@ NSString * const NCAttendeeBridgeBotId  = @"bridge-bot";
     participant.sessionId = [participantDict objectForKey:@"sessionId"];
     participant.sessionIds = [participantDict objectForKey:@"sessionIds"];
     participant.userId = [participantDict objectForKey:@"userId"];
-    participant.status = [participantDict objectForKey:@"status"];
     
     id displayName = [participantDict objectForKey:@"displayName"];
     if ([displayName isKindOfClass:[NSString class]]) {
         participant.displayName = displayName;
     } else {
         participant.displayName = [displayName stringValue];
+    }
+    
+    // Optional attribute
+    id status = [participantDict objectForKey:@"status"];
+    if ([status isKindOfClass:[NSString class]]) {
+        participant.status = status;
+    }
+    
+    // Optional attribute
+    id statusIcon = [participantDict objectForKey:@"statusIcon"];
+    if ([statusIcon isKindOfClass:[NSString class]]) {
+        participant.statusIcon = statusIcon;
+    }
+    
+    // Optional attribute
+    id statusMessage = [participantDict objectForKey:@"statusMessage"];
+    if ([statusMessage isKindOfClass:[NSString class]]) {
+        participant.statusMessage = statusMessage;
     }
     
     return participant;
@@ -145,16 +162,16 @@ NSString * const NCAttendeeBridgeBotId  = @"bridge-bot";
     if (self.inCall == CallFlagDisconnected) {
         return nil;
     }
-    
+
     if ((self.inCall & CallFlagWithVideo) != 0) {
         return @"video-active";
     }
-    
+
     if ((self.inCall & CallFlagWithPhone) != 0) {
-        return @"phone";
+        return @"video-active";
     }
     
-    return @"audio";
+    return @"video-active";
 }
 
 @end

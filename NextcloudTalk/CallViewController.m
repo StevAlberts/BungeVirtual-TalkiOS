@@ -77,9 +77,15 @@ typedef NS_ENUM(NSInteger, CallState) {
     BOOL _speakRequest;
     BOOL _interveneRequest;
     BOOL _raisedHand;
-    BOOL _approved;
+    BOOL _approvedSpeak;
+    BOOL _approvedIntervene;
     BOOL _isRequest;
-    BOOL _requestSuccess;
+//    BOOL _requestedSpeak;
+//    BOOL _requestedIntervene;
+
+    
+    NCKActivity * _speakActivity;
+    NCKActivity * _interveneActivity;
 
     PulsingHaloLayer *_halo;
     PulsingHaloLayer *_haloPushToTalk;
@@ -363,7 +369,8 @@ typedef NS_ENUM(NSInteger, CallState) {
         [self startCallWithSessionId:roomController.userSessionId];
     }
     
-    [self methodA];
+    // listen to kikao utilities
+    [self requestListener];
 }
 
 
@@ -982,18 +989,13 @@ typedef NS_ENUM(NSInteger, CallState) {
             NSString *speakReqString = NSLocalizedString(@"Requested to speak", nil);
             self->_speakRequestButton.accessibilityValue = speakReqString;
             [self.view makeToast:speakReqString duration:1.5 position:CSToastPositionCenter];
-                        
-            _interveneRequestButton.backgroundColor = [UIColor grayColor];
-            [_interveneRequestButton setEnabled:NO];
             
             _speakRequestButton.backgroundColor = [UIColor systemRedColor];
             [_speakRequestButton setTitle:@"Cancel" forState: UIControlStateNormal];
             
         }else{
-            [self handleCancelRequest];
+            [self handleCancelSpeak];
         }
-    }else{
-        NSLog(@"No controller....");
     }
 }
 
@@ -1012,158 +1014,196 @@ typedef NS_ENUM(NSInteger, CallState) {
             self->_interveneRequestButton.accessibilityValue = speakReqString;
             [self.view makeToast:speakReqString duration:1.0 position:CSToastPositionCenter];
             
-            
-            _speakRequestButton.backgroundColor = [UIColor grayColor];
-            [_speakRequestButton setEnabled:NO];
-            
             _interveneRequestButton.backgroundColor = [UIColor systemRedColor];
             [_interveneRequestButton setTitle:@"Cancel" forState: UIControlStateNormal];
             
         }else{
-            [self handleCancelRequest];
+            [self handleCancelIntervene];
         }
     }
 }
 
-- (void) methodA
+- (void) requestListener
 {
     //Start playing an audio file.
     NSLog(@"start timer........");
     //NSTimer calling Method B, as long the audio file is playing, every 5 seconds.
     [NSTimer scheduledTimerWithTimeInterval:1.0f
-    target:self selector:@selector(methodB:) userInfo:nil repeats:YES];
+    target:self selector:@selector(handleRequests:) userInfo:nil repeats:YES];
 }
 
-- (void) methodB:(NSTimer *)timer
+- (void) handleRequests:(NSTimer *)timer
 {
-    NSLog(@"methodB..listening.......");
-    _requestSuccess = [_callController requested];
-    NSLog(@"_requestSuccess...:%id", _requestSuccess);
     
-    NSInteger *reqId = [_callController requestId];
+//    NSLog(@"methodB..listening.......");
+//    _requestedSpeak = [_callController requestedSpeak];
+//    _requestedIntervene = [_callController requestedIntervene];
+
+//    NSLog(@"_requestedSpeak...:%id", _requestedSpeak);
+//    NSLog(@"_requestedIntervene...:%id", _requestedIntervene);
+
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    NSInteger * speakId = [defaults integerForKey:@"speakId"];
+    NSInteger * interveneId = [defaults integerForKey:@"interveneId"];
+
+    if(speakId!=nil){
+        NSLog(@"handleSpeakRequest...:%ld", speakId);
+        _speakRequest = YES;
+        _speakRequestButton.backgroundColor = [UIColor systemRedColor];
+        [_speakRequestButton setTitle:@"Cancel" forState: UIControlStateNormal];
+    }
     
-//    NSInteger numId = [_callController requestId];
-
-//    NSLog(@"_requestId...........................:%ld", (long) reqId);
-//    NSLog(@"_requestId...........................:%ld", (long) [_callController requestId]);
+    if(interveneId!=nil){
+        NSLog(@"handleInterveneRequest...:%ld", interveneId);
+        _interveneRequest = YES;
+        _interveneRequestButton.backgroundColor = [UIColor systemRedColor];
+        [_interveneRequestButton setTitle:@"Cancel" forState: UIControlStateNormal];
+    }
     
-//    TalkAccount *account = [[NCDatabaseManager sharedInstance] activeAccount];
-
-    if(_requestSuccess){
-        _responses = [_callController allRequests];
-//        _allActivities = [_callController activities];
-        
-//        NSLog(@"Activities...........................%ld", _allActivities.count);
-
-                
-        if(_approved){
-            if(_responses.count == 0){
-                NSLog(@"_approved No _responses..............................");
-                _approved = NO;
-                [self handleCancelRequest];
-//                [self hideControls];
-            }
-//            else{
-//                for(int i = 0; i<_responses.count;i++){
-//                    if (_responses[@"id"] == numId){
-//                        NSLog(@"Exists ...................");
-//                    }else{
-//                        NSLog(@"Not Exists ..................");
-//                    }
-//
-//                }
-//
-//                if ([_responses objectForKey:@"id"] == 12) {
-//                    NSLog(@"There's an object set for key @\"b\"!");
-//                } else {
-//                    NSLog(@"No object set for key @\"b\"");
-//                }
-//            }
+//    NSInteger * speakId = [_callController speakId];
+//    NSInteger * interveneId = [_callController interveneId];
+    
+    _responses = [_callController allRequests];
+    
+//    NSLog(@"All responses........%ld", _responses.count);
+    
+    // if requested to speak handle speak logic
+    if(_speakRequest){
+        if(_approvedSpeak && _responses.count == 0){
+//                NSLog(@"_approvedSpeak No _responses..............................");
+                _approvedSpeak = NO;
+                [self handleCancelSpeak];
         }
+        
+        
+        for (NCKActivity *activity in _responses) {
+        
+                if(activity.activityId == speakId){
+                    _speakActivity = activity;
 
-            for (NSDictionary *response in _responses) {
-                NCKActivity *activity = [NCKActivity activityWithDictionary:response];
-    
-                NSLog(@"Activity: %@......Account: %@",activity.userId, _account.userId);
-                NSLog(@"methodB _responses loop.......: %@",response);
-    
-                if(activity.activityId == reqId){
-                        // update activity
-                        _kActivity = [NCKActivity activityWithDictionary:response];
-    
-                        if(activity.approved){
-                            _approved = YES;
-                            
-                            NSLog(@"Show controls....");
-                            [self showControls];
-    
-                            if (activity.started){
-                                NSLog(@"Started.........");
-                                [self.timerButton setHidden:NO];
-                                if(activity.paused){
-                                    NSLog(@"Paused...");
-                                    [self hideControls];
-                                }else{
-                                    // start timer
-                                    [self startCount:activity.duration since:activity.talkingSince];
-                                }
+                    if(activity.approved){
+                        _approvedSpeak = YES;
+                        
+//                        NSLog(@"Show controls....");
+                        [self showControls];
+
+                        if (activity.started){
+//                            NSLog(@"Started.........");
+                            [self.timerButton setHidden:NO];
+                            if(activity.paused){
+//                                NSLog(@"Paused...");
+                                [self hideControls];
+                            }else{
+                                // start timer
+                                [self startCount:activity.duration since:activity.talkingSince];
                             }
-                            
-                        } else {
-                            NSLog(@"Dont show controls..............................");
+                        }
+
+                    } else {
+//                        NSLog(@"_approvedSpeak NO..............................");
+                        if(!_approvedIntervene){
                             [self hideControls];
                         }
-                    
-                        if(activity.canceled){
-                            NSLog(@"activity.canceled...........................");
-                            _approved = NO;
-                            [self.timerButton setHidden:YES];
-                            [self handleCancelRequest];
-                            
-                        }
+                    }
                 }
-//                else{
-//                    NSLog(@"No activity...................");
-//                    [self hideControls];
-//                    [self.timerButton setHidden:YES];
-//                    // reset
-//                    // cancel request
-//                }
-            }
+
+        }
+        
+        if(_approvedSpeak && ![_responses containsObject:_speakActivity]){
+            NSLog(@"Cancel request........._speakActivity....: %id", [_responses containsObject:_speakActivity]);
+//            NSLog(@"Cancel request.........._speakActivity......:%ld", (long) _speakActivity.activityId);
+//            NSLog(@"Cancel request........................_speakActivity..............................");
+            _approvedSpeak = NO;
+            [self handleCancelSpeak];
+        }
     }
+    
+    
+    // if requested to intervene handle intervene logic
+    if(_interveneRequest){
+        if(_approvedIntervene && _responses.count == 0){
+//                NSLog(@"_approvedIntervene No _responses..............................");
+                _approvedIntervene = NO;
+                [self handleCancelIntervene];
+        }
+        
+                
+        for (NCKActivity *activity in _responses) {
+
+                if(activity.activityId == interveneId){
+                    _interveneActivity = activity;
+
+                    if(activity.approved){
+                        _approvedIntervene = YES;
+                        
+//                        NSLog(@"Show controls....");
+                        [self showControls];
+
+                        if (activity.started){
+//                            NSLog(@"Started.........");
+                            [self.timerButton setHidden:NO];
+                            if(activity.paused){
+//                                NSLog(@"Paused...");
+                                [self hideControls];
+                            }else{
+                                // start timer
+                                [self startCount:activity.duration since:activity.talkingSince];
+                            }
+                        }
+
+                    } else {
+//                        NSLog(@"_approvedIntervene NO..............................");
+                        if(!_approvedSpeak){
+                            [self hideControls];
+                        }
+                    }
+                }
+
+            }
+        
+        if(_approvedIntervene && ![_responses containsObject:_interveneActivity]){
+            NSLog(@"Cancel request........._interveneActivity....: %id", [_responses containsObject:_interveneActivity]);
+//            NSLog(@"Cancel request.........._interveneActivity......:%ld", (long) _interveneActivity.activityId);
+//            NSLog(@"Cancel request........................_interveneActivity..............................");
+            _approvedIntervene = NO;
+            [self handleCancelIntervene];
+        }
+    }
+    
 }
 
 - (void)startCount:(NSInteger)duration since:(NSInteger)talkingSince
 {
-    NSLog(@"----------------------------------------------------------");
+//    NSLog(@"----------------------------------------------------------");
 
-    NSLog(@"duration.....: %ld",(long)duration);
-    NSLog(@"talkingSince.....: %ld",(long)talkingSince);
+//    NSLog(@"duration.....: %ld",(long)duration);
+//    NSLog(@"talkingSince.....: %ld",(long)talkingSince);
 
     
     NSDate *now = [NSDate date]; // current date
     int today = [now timeIntervalSince1970];
     
-    NSLog(@"Now.....%d",today);
+//    NSLog(@"Now.....%d",today);
     
     long diff = today - talkingSince;
 
-    NSLog(@"DifferenceSince.....: %ld", diff);
+//    NSLog(@"DifferenceSince.....: %ld", diff);
     
     double theMinutes = duration - diff;
     
-    NSLog(@"Difference in minutes.....: %f", theMinutes);
+//    NSLog(@"Difference in theMinutes.....: %f", theMinutes);
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"mm:ss"];
 
     NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:theMinutes];
     
-    NSLog(@"epochNSDate.....: %@", epochNSDate);
+//    NSLog(@"epochNSDate.....: %@", epochNSDate);
 
     
     NSString *time = [dateFormatter stringFromDate:epochNSDate];
-    NSLog (@"Time:- %@", time);
+//    NSLog (@"Time:- %@", time);
+    
     
     if(theMinutes>0){
         [_timerButton setTitle:time forState: UIControlStateNormal];
@@ -1177,142 +1217,58 @@ typedef NS_ENUM(NSInteger, CallState) {
         }
     }
 
-    NSLog(@"----------------------------------------------------------");
+//    NSLog(@"----------------------------------------------------------");
 }
 
-- (void)timerFiredzz:(NSTimer*)theTimer
-{
-//    NSLog(@"_interveneRequest listening ......%id", _interveneRequest);
-//    NSLog(@"_speakRequest listening ......%id", _speakRequest);
-    
-    if(_interveneRequest || _speakRequest){
-        //recall the NSTimer
-        NSLog(@"Timer listening ......");
-        [theTimer isValid];
-        
-        [_callController listenResponse];
-                
-        _responses = [_callController allRequests];
-                
-        NSLog(@"Account.......: %@",_account.userId);
-
-    
-        NSLog(@"Allresponses.......: %@",_responses);
-        NSLog(@"Allresponses..count.....: %lu",(unsigned long)_responses.count);
-    
-        if(_responses.count == 0) {
-            NSLog(@"No _responses..............................");
-            [self handleCancelRequest];
-        }
-    
-//        if(_responses == nil){
-//            NSLog(@"No _responses..............................");
-//            [self handleCancelRequest];
-//        }
-        
-        // get the request id
-//        NSInteger *reqId = [_callController requestId];
-                
-        for (NSDictionary *response in _responses) {
-            NCKActivity *activity = [NCKActivity activityWithDictionary:response];
-
-            NSLog(@"_responses loop.......: %@",response);
-            
-            NSLog(@"Activity: %@......Account: %@",activity.userId, _account.userId);
-            NSLog(@"_responses loop.......: %@",response);
-            
-//            if(activity.userId == _account.userId){
-                if(activity.activityId == [_callController requestId] ){
-                    _approved = activity.approved;
-                    
-                    // update activity
-                    _kActivity = [NCKActivity activityWithDictionary:response];
-                    
-                    if(activity.approved){
-                        NSLog(@"Show controls....");
-                        [self showControls];
-                        // start timer
-                        if(activity.paused){
-    //                        NSString *string = NSLocalizedString(@"Paused", nil);
-    //                        [self.view makeToast:string duration:1.5 position:CSToastPositionCenter];
-                            NSLog(@"Paused...");
-                            [self hideControls];
-                            // pause timer
-                        }
-                        
-                        if (activity.started){
-                            NSLog(@"Started.........");
-                            [self.timerButton setHidden:NO];
-                            NSLog(@"talkingSince.....%ld",(long)activity.talkingSince);
-                            NSLog(@"duration.....%ld",(long)activity.duration);
-                            NSString* time = [NSString stringWithFormat:@"%ld", (long)activity.talkingSince];
-    //                        NSString *epochTime = activity.talkingSince;
-                            NSTimeInterval seconds = [time doubleValue];
-                            NSLog(@"seconds.....%f",seconds);
-                        }
-                    } else if (activity.canceled){
-    //                    NSString *string = NSLocalizedString(@"Canceled", nil);
-    //                    [self.view makeToast:string duration:1.5 position:CSToastPositionCenter];
-                        NSLog(@"canceled.............");
-    //                    [self hideControls];
-                    }
-                    else {
-                        NSLog(@"Dont show controls..............................");
-    //                    [self hideControls];
-                    }
-                }
-//            }else{
-//                NSLog(@"Not account ......");
-//            }
-        }
-    } else {
-      [theTimer invalidate]; //stop the NSTimer
-      NSLog(@"Not listening ......");
-        [self handleCancelRequest];
-    }
-}
-
-
-
-// requesting to intervene (1)
--(void)handleCancelRequest
+-(void)handleCancelSpeak
 {
 
-    NSLog(@"handleCancelRequest ......");
-    NSString *cancelString = NSLocalizedString(@"Canceled", nil);
-
+//    NSLog(@"handleCancelSpeak ......");
+    NSString *cancelString = NSLocalizedString(@"Canceled Speak", nil);
     [self.view makeToast:cancelString duration:1.5 position:CSToastPositionCenter];
 
     // hide controls
     [self hideControls];
     
     // reset timer
+    if(!_approvedIntervene)
     [self.timerButton setHidden:YES];
     
     _speakRequest = NO;
-    _interveneRequest = NO;
 
     _speakRequestButton.backgroundColor = [UIColor systemGreenColor];
-    _interveneRequestButton.backgroundColor = [UIColor systemGreenColor];
-
-    [_speakRequestButton setEnabled:YES];
-    [_interveneRequestButton setEnabled:YES];
 
     [_speakRequestButton setTitle:@"Request To Speak" forState: UIControlStateNormal];
-
-    [_interveneRequestButton setTitle:@"Request To Intervene" forState: UIControlStateNormal];
-
-    _speakRequestButton.backgroundColor = [UIColor systemGreenColor];
-    _interveneRequestButton.backgroundColor = [UIColor systemGreenColor];
-    [_interveneRequestButton setEnabled:YES];
-//    [_speakRequestButton setTitle:@"Request To Speak" forState: UIControlStateNormal];
-
-    
     
     //cancel with api
-    [_callController requestToCancel];
+    [_callController cancelSpeak];
     
-  
+    // stop listener
+
+}
+
+-(void)handleCancelIntervene
+{
+
+//    NSLog(@"handleCancelIntervene ......");
+    NSString *cancelString = NSLocalizedString(@"Canceled Intervene", nil);
+    [self.view makeToast:cancelString duration:1.5 position:CSToastPositionCenter];
+
+    // hide controls
+    [self hideControls];
+    
+    // reset timer
+    if(!_approvedSpeak)
+    [self.timerButton setHidden:YES];
+    
+    _interveneRequest = NO;
+
+    _interveneRequestButton.backgroundColor = [UIColor systemGreenColor];
+
+    [_interveneRequestButton setTitle:@"Request To Intervene" forState: UIControlStateNormal];
+    
+    //cancel with api
+    [_callController cancelIntervene];
     
     // stop listener
 
@@ -1320,7 +1276,7 @@ typedef NS_ENUM(NSInteger, CallState) {
 
 -(void)showControls
 {
-    NSLog(@"showControls ......");
+//    NSLog(@"showControls ......");
     
     [self.audioMuteButton setHidden:NO];
     [self.videoCallButton setHidden:NO];
@@ -1329,7 +1285,7 @@ typedef NS_ENUM(NSInteger, CallState) {
 
 -(void)hideControls
 {
-    NSLog(@"hideControls ......");
+//    NSLog(@"hideControls ......");
     
     [self muteAudio];
     [self disableLocalVideo];
@@ -1340,10 +1296,30 @@ typedef NS_ENUM(NSInteger, CallState) {
 
 -(void)startTimer
 {
-    NSLog(@"startTimer ......");
-    [_callController requestStarted];
+//    NSLog(@"startTimer ......");
+//    [_callController requestStarted];
+    
+    if(_approvedSpeak){
+//        NSLog(@"_approvedSpeak  startTimer ......");
+        [_callController startSpeak];
+    }
+    
+    if(_approvedIntervene){
+//        NSLog(@"_approvedIntervene  startTimer ......");
+        [_callController startIntervene];
+    }
 }
 
+//-(void) startSpeakTimer:(NSInteger*)speakID startInterveneTimer:(NSInteger*)interveneID
+//{
+//    if(speakID != nil){
+//        [_callController startSpeak];
+//    }
+//
+//    if(interveneID != nil){
+//        [_callController startIntervene];
+//    }
+//}
 
 #pragma mark - Raise hand actions
 
@@ -1359,7 +1335,7 @@ typedef NS_ENUM(NSInteger, CallState) {
 - (void)raiseHandUp
 {
     if (!_raisedHand && _callController) {
-        NSLog(@"raiseHandUp...");
+//        NSLog(@"raiseHandUp...");
         _raisedHand = YES;
 
         [self.raiseHandButton setImage:[UIImage imageNamed:@"hand-up"] forState:UIControlStateNormal];
@@ -1367,7 +1343,7 @@ typedef NS_ENUM(NSInteger, CallState) {
         self->_raiseHandButton.accessibilityValue = raiseUpString;
         [self.view makeToast:raiseUpString duration:1.5 position:CSToastPositionCenter];
 //        [_buttonFeedbackGenerator impactOccurred];
-        [_callController raiseHand];
+        [_callController raiseHand:YES];
     }
     
 }
@@ -1375,7 +1351,7 @@ typedef NS_ENUM(NSInteger, CallState) {
 - (void)raiseHandDown
 {
     if (_raisedHand && _callController) {
-        NSLog(@"raiseHandDown...");
+//        NSLog(@"raiseHandDown...");
         _raisedHand = NO;
         
         [self.raiseHandButton setImage:[UIImage imageNamed:@"hand-down"] forState:UIControlStateNormal];
@@ -1384,8 +1360,7 @@ typedef NS_ENUM(NSInteger, CallState) {
         [self.view makeToast:raiseDownString duration:1.5 position:CSToastPositionCenter];
 //        [_buttonFeedbackGenerator impactOccurred];
 //        [_callController raiseHand];
-        [_callController requestToCancel];
-
+        [_callController raiseHand:NO];
 
     }
 }
@@ -1629,7 +1604,7 @@ typedef NS_ENUM(NSInteger, CallState) {
 - (void)toggleChatView
 {
     if (!_chatNavigationController) {
-        NSLog(@"No_chatNavigationController...........");
+//        NSLog(@"No_chatNavigationController...........");
         [_toggleChatButton setHidden:NO];
         
         TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
@@ -1656,7 +1631,7 @@ typedef NS_ENUM(NSInteger, CallState) {
         [self.view bringSubviewToFront:_toggleChatButton];
         [self removeTapGestureForDetailedView];
     } else {
-        NSLog(@"BAck to_chatNavigationController...........");
+//        NSLog(@"BAck to_chatNavigationController...........");
         [_toggleChatButton setHidden:YES];
 
 //        [_toggleChatButton setImage:[UIImage imageNamed:@"chat"] forState:UIControlStateNormal];
@@ -1744,12 +1719,40 @@ typedef NS_ENUM(NSInteger, CallState) {
     [self showScreenOfPeerId:participantCell.peerId];
 }
 
+- (void)cellWantsToChangeZoom:(CallParticipantViewCell *)participantCell showOriginalSize:(BOOL)showOriginalSize
+{
+    NCPeerConnection *peer = [self peerConnectionForPeerId:participantCell.peerId];
+    
+    if (peer) {
+        [peer setShowRemoteVideoInOriginalSize:showOriginalSize];
+    }
+}
+
 #pragma mark - UICollectionView Datasource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     [self setCallStateForPeersInCall];
     return [_peersInCall count];
+}
+
+- (void)updateParticipantCell:(CallParticipantViewCell *)cell withPeerConnection:(NCPeerConnection *)peerConnection
+{
+    BOOL isVideoDisabled = peerConnection.isRemoteVideoDisabled;
+    
+    if (_isAudioOnly || peerConnection.remoteStream == nil) {
+        isVideoDisabled = YES;
+    }
+    
+    [cell setVideoView:[_videoRenderersDict objectForKey:peerConnection.peerId]];
+    [cell setUserAvatar:[_callController getUserIdFromSessionId:peerConnection.peerId]];
+    [cell setDisplayName:peerConnection.peerName];
+    [cell setAudioDisabled:peerConnection.isRemoteAudioDisabled];
+    [cell setScreenShared:[_screenRenderersDict objectForKey:peerConnection.peerId]];
+    [cell setVideoDisabled: isVideoDisabled];
+    [cell setShowOriginalSize:peerConnection.showRemoteVideoInOriginalSize];
+    [cell.peerNameLabel setAlpha:_isDetailedViewVisible ? 1.0 : 0.0];
+    [cell.buttonsContainerView setAlpha:_isDetailedViewVisible ? 1.0 : 0.0];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -1759,14 +1762,7 @@ typedef NS_ENUM(NSInteger, CallState) {
     
     cell.peerId = peerConnection.peerId;
     cell.actionsDelegate = self;
-    [cell setVideoView:[_videoRenderersDict objectForKey:peerConnection.peerId]];
-    [cell setUserAvatar:[_callController getUserIdFromSessionId:peerConnection.peerId]];
-    [cell setDisplayName:peerConnection.peerName];
-    [cell setAudioDisabled:peerConnection.isRemoteAudioDisabled];
-    [cell setScreenShared:[_screenRenderersDict objectForKey:peerConnection.peerId]];
-    [cell setVideoDisabled: (_isAudioOnly) ? YES : peerConnection.isRemoteVideoDisabled];
-    [cell.peerNameLabel setAlpha:_isDetailedViewVisible ? 1.0 : 0.0];
-    [cell.buttonsContainerView setAlpha:_isDetailedViewVisible ? 1.0 : 0.0];
+    [self updateParticipantCell:cell withPeerConnection:peerConnection];
     
     return cell;
 }
@@ -1784,14 +1780,7 @@ typedef NS_ENUM(NSInteger, CallState) {
     CallParticipantViewCell *participantCell = (CallParticipantViewCell *)cell;
     NCPeerConnection *peerConnection = [_peersInCall objectAtIndex:indexPath.row];
     
-    [participantCell setVideoView:[_videoRenderersDict objectForKey:peerConnection.peerId]];
-    [participantCell setUserAvatar:[_callController getUserIdFromSessionId:peerConnection.peerId]];
-    [participantCell setDisplayName:peerConnection.peerName];
-    [participantCell setAudioDisabled:peerConnection.isRemoteAudioDisabled];
-    [participantCell setScreenShared:[_screenRenderersDict objectForKey:peerConnection.peerId]];
-    [participantCell setVideoDisabled: (_isAudioOnly) ? YES : peerConnection.isRemoteVideoDisabled];
-    [participantCell.peerNameLabel setAlpha:_isDetailedViewVisible ? 1.0 : 0.0];
-    [participantCell.buttonsContainerView setAlpha:_isDetailedViewVisible ? 1.0 : 0.0];
+    [self updateParticipantCell:participantCell withPeerConnection:peerConnection];
 }
 
 #pragma mark - Call Controller delegate
@@ -1813,7 +1802,15 @@ typedef NS_ENUM(NSInteger, CallState) {
 
 - (void)callController:(NCCallController *)callController peerJoined:(NCPeerConnection *)peer
 {
-    // Start adding cell for that peer and wait until add
+    // Always add a joined peer, even if the peer doesn't publish any streams (yet)
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (![self->_peersInCall containsObject:peer]) {
+            [self->_peersInCall addObject:peer];
+        }
+    
+        [self.collectionView reloadData];
+    });
+    
 }
 
 - (void)callController:(NCCallController *)callController peerLeft:(NCPeerConnection *)peer
@@ -1859,7 +1856,10 @@ typedef NS_ENUM(NSInteger, CallState) {
         
         if ([remotePeer.roomType isEqualToString:kRoomTypeVideo]) {
             [self->_videoRenderersDict setObject:renderView forKey:remotePeer.peerId];
-            [self->_peersInCall addObject:remotePeer];
+            
+            if (![self->_peersInCall containsObject:remotePeer]) {
+                [self->_peersInCall addObject:remotePeer];
+            }
         } else if ([remotePeer.roomType isEqualToString:kRoomTypeScreen]) {
             [self->_screenRenderersDict setObject:renderView forKey:remotePeer.peerId];
             [self showScreenOfPeerId:remotePeer.peerId];
@@ -1944,6 +1944,13 @@ typedef NS_ENUM(NSInteger, CallState) {
 - (void)callControllerIsReconnectingCall:(NCCallController *)callController
 {
     [self setCallState:CallStateReconnecting];
+}
+
+- (void)callControllerWantsToHangUpCall:(NCCallController *)callController
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self hangup];
+    });
 }
 
 #pragma mark - Screensharing
@@ -2045,6 +2052,16 @@ typedef NS_ENUM(NSInteger, CallState) {
         CallParticipantViewCell *cell = (id)[self.collectionView cellForItemAtIndexPath:indexPath];
         block(cell);
     });
+}
+
+- (NCPeerConnection *)peerConnectionForPeerId:(NSString *)peerId {
+    for (NCPeerConnection *peerConnection in self->_peersInCall) {
+        if ([peerConnection.peerId isEqualToString:peerId]) {
+            return peerConnection;
+        }
+    }
+    
+    return nil;
 }
 
 - (void)showPeersInfo
