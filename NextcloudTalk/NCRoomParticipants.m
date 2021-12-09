@@ -147,7 +147,7 @@ NSString * const NCAttendeeBridgeBotId  = @"bridge-bot";
     }
     
     if ((self.inCall & CallFlagWithVideo) != 0) {
-        return @"video";
+        return @"video-active";
     }
     
     if ((self.inCall & CallFlagWithPhone) != 0) {

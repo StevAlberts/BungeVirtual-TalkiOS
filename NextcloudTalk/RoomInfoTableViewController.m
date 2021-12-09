@@ -131,6 +131,7 @@ typedef enum FileAction {
 @property (nonatomic, strong) UIAlertAction *setPasswordAction;
 @property (nonatomic, strong) UIActivityIndicatorView *fileDownloadIndicator;
 @property (nonatomic, strong) NSString *previewControllerFilePath;
+@property (nonatomic, assign) NSInteger *inMeeting;
 
 @end
 
@@ -1372,7 +1373,10 @@ typedef enum FileAction {
     switch (infoSection) {
         case kRoomInfoSectionParticipants:
         {
-            NSString *title = [NSString stringWithFormat:NSLocalizedString(@"%lu participants", nil), (unsigned long)_roomParticipants.count];
+//            NSString *title = [NSString stringWithFormat:NSLocalizedString(@"%lu participants", nil), (unsigned long)_roomParticipants.count];
+            
+            NSString *title = [NSString stringWithFormat:NSLocalizedString(@"%li in meeting (%lu invited)", nil), (long)_inMeeting, (unsigned long)_roomParticipants.count];
+             
             if (_roomParticipants.count == 1) {
                 title = NSLocalizedString(@"1 participant", nil);
             }
@@ -1809,9 +1813,18 @@ typedef enum FileAction {
             // Call status
             if (participant.callIconImageName) {
                 cell.accessoryView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:participant.callIconImageName] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
-                [cell.accessoryView setTintColor:[NCAppBranding placeholderColor]];
+                [cell.accessoryView setTintColor:[UIColor systemRedColor]];
             } else {
                 cell.accessoryView = nil;
+            }
+            
+            // show meeting status
+            NSMutableArray *inCallArray = [[NSMutableArray alloc] init];
+            
+            if(participant.inCall){
+//                NSLog(@"In meeting.....%@", participant.displayName);
+                [inCallArray addObject:participant];
+                self.inMeeting = (long *) inCallArray.count;
             }
             
             cell.layoutMargins = UIEdgeInsetsMake(0, 72, 0, 0);
