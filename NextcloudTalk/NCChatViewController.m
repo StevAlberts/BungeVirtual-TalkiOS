@@ -75,6 +75,11 @@
 #import "VoiceMessageTableViewCell.h"
 #import "NextcloudTalk-Swift.h"
 
+#import <AudioToolbox/AudioToolbox.h>
+#import <AVFoundation/AVFoundation.h>
+
+#import "SoundManager.h"
+
 
 #define k_send_message_button_tag   99
 #define k_voice_record_button_tag   98
@@ -367,6 +372,11 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
     
     // We can't use UIColor with systemBlueColor directly, because it will switch to indigo. So make sure we actually get a blue tint here
     [self.textView setTintColor:[UIColor colorWithCGColor:[UIColor systemBlueColor].CGColor]];
+    
+    // prepare audio sound
+    [SoundManager sharedManager].allowsBackgroundMusic = YES;
+    [[SoundManager sharedManager] prepareToPlay];
+
 }
 
 - (void)updateToolbar:(BOOL)animated
@@ -435,6 +445,10 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
     [self stopVoiceMessagePlayer];
     
     _isVisible = NO;
+    
+    // stop music
+//    NSLog(@"Stop anthem ..........");
+    [[SoundManager sharedManager] stopSound:@"anthem.mp3"];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -595,14 +609,41 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
     UIImage *videoCallImage = [[UIImage imageNamed:@"video"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 //    UIImage *voiceCallImage = [[UIImage imageNamed:@"phone"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     
-    CGFloat buttonWidth = 24.0;
+    CGFloat buttonWidth = 25.0;
 //    CGFloat buttonPadding = 30.0;
     
     _videoCallButton = [[BarButtonItemWithActivity alloc] initWithWidth:buttonWidth withImage:videoCallImage];
 //    _videoCallButton = [[BarButtonItemWithActivity alloc] initWithImage:videoCallImage style:UIBarButtonItemStylePlain target:self action:@selector(videoCallButtonPressed:)];
 //    [_videoCallButton.innerButton addTarget:self action:@selector(videoCallButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    
     [_videoCallButton.innerButton addTarget:self action:@selector(videoCallButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [_videoCallButton.innerButton setTitle:@" Join meeting" forState:UIControlStateNormal];
+    
+    [_videoCallButton.innerButton setTitle:@" Join meeting " forState:UIControlStateNormal];
+    
+    if(_room.readOnlyState){
+        NSLog(@"Meeting has ended...........");
+        [_videoCallButton.innerButton setTitle:@" Meeting Ended " forState:UIControlStateNormal];
+        [_videoCallButton.innerButton setBackgroundColor:[UIColor redColor]];
+
+        
+        _videoCallButton.innerButton.layer.cornerRadius = 7;
+        _videoCallButton.innerButton.clipsToBounds = YES;
+
+    }[SoundManager sharedManager].allowsBackgroundMusic = YES;
+    [[SoundManager sharedManager] prepareToPlay];
+
+    
+    
+    if(_room.canStartCall){
+        [_videoCallButton.innerButton setTitle:@" Start meeting " forState:UIControlStateNormal];
+    }
+    
+    if(_room.lobbyState){
+        // Play anthem while in lobby
+        [[SoundManager sharedManager] playSound:@"anthem.mp3" looping:YES];
+    }
+
+    
 //    [_videoCallButton.innerButton ];
 //    if(_room.hasCall){
 //        [_videoCallButton.innerButton setTitle:@" Join meeting" forState:UIControlStateNormal];
