@@ -47,6 +47,8 @@
 #import "UserStatusTableViewController.h"
 #import "NCUserInterfaceController.h"
 
+#import "NextcloudTalk-Swift.h"
+
 typedef enum SettingsSection {
     kSettingsSectionUser = 0,
     kSettingsSectionUserStatus,
@@ -179,6 +181,14 @@ typedef enum AboutSection {
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil];
     [confirmDialog addAction:cancelAction];
     [self presentViewController:confirmDialog animated:YES completion:nil];
+    
+//    NSLog(@"Logout pressed");
+//
+//    if (@available(iOS 14.0, *)) {
+//        UIViewController *userPolls = [SwiftUIViewWrapper createSwiftUIViewWithName:@"PollsView"];
+//        NCNavigationController *userStatusMessageNC = [[NCNavigationController alloc] initWithRootViewController:userPolls];
+//        [self presentViewController:userStatusMessageNC animated:YES completion:nil];
+//    }
 }
 
 - (void)logout

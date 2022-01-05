@@ -46,6 +46,9 @@
 #import "NCSignalingMessage.h"
 #import "NCUtils.h"
 
+#import "NCNavigationController.h"
+#import "NextcloudTalk-Swift.h"
+
 typedef NS_ENUM(NSInteger, CallState) {
     CallStateJoining,
     CallStateWaitingParticipants,
@@ -86,6 +89,8 @@ typedef NS_ENUM(NSInteger, CallState) {
     
     NCKActivity * _speakActivity;
     NCKActivity * _interveneActivity;
+    
+    NCVote * _votePoll;
 
     PulsingHaloLayer *_halo;
     PulsingHaloLayer *_haloPushToTalk;
@@ -118,7 +123,7 @@ typedef NS_ENUM(NSInteger, CallState) {
 
 @property (nonatomic, strong) NSTimer *listenerTimer;
 
-
+@property (nonatomic, strong) IBOutlet UIButton *voteButton;
 
 @end
 
@@ -1047,14 +1052,14 @@ typedef NS_ENUM(NSInteger, CallState) {
     NSInteger * interveneId = [defaults integerForKey:@"interveneId"];
 
     if(speakId!=nil){
-        NSLog(@"handleSpeakRequest...:%ld", speakId);
+//        NSLog(@"handleSpeakRequest...:%ld", speakId);
         _speakRequest = YES;
         _speakRequestButton.backgroundColor = [UIColor systemRedColor];
         [_speakRequestButton setTitle:@"Cancel" forState: UIControlStateNormal];
     }
     
     if(interveneId!=nil){
-        NSLog(@"handleInterveneRequest...:%ld", interveneId);
+//        NSLog(@"handleInterveneRequest...:%ld", interveneId);
         _interveneRequest = YES;
         _interveneRequestButton.backgroundColor = [UIColor systemRedColor];
         [_interveneRequestButton setTitle:@"Cancel" forState: UIControlStateNormal];
@@ -1065,7 +1070,24 @@ typedef NS_ENUM(NSInteger, CallState) {
     
     _responses = [_callController allRequests];
     
-//    NSLog(@"All responses........%ld", _responses.count);
+    _allVotes = [_callController allPollVotes];
+    
+//    NCVote *vote = [_callController votePoll];
+        
+    // check if call has a vote
+    if(_allVotes.count > 0){
+        NSLog(@"***************************** LETS VOTE  **************************************");
+        NSLog(@"_allVotes......:%ld",(long)_allVotes.firstObject.voteId);
+        
+        if(_allVotes.firstObject.title != nil)
+            NSLog(@"_allVotes......:%@",_allVotes.firstObject.title);
+        else
+            NSLog(@"No title");
+
+        [self.voteButton setHidden:NO];
+    }else{
+        [self.voteButton setHidden:YES];
+    }
     
     // if requested to speak handle speak logic
     if(_speakRequest){
@@ -1599,6 +1621,47 @@ typedef NS_ENUM(NSInteger, CallState) {
 - (IBAction)toggleChatButtonPressed:(id)sender
 {
     [self toggleChatView];
+}
+
+- (IBAction)toggleRequestOtpButtonPressed:(id)sender
+{
+    if (@available(iOS 14.0, *)) {
+        
+//        _allVotes = [_callController allVotes];
+        
+//        UIViewController *userPolls = [SwiftUIViewWrapper createSwiftUIViewWithVote:_allVotes.firstObject];
+//        NCNavigationController *userStatusMessageNC = [[NCNavigationController alloc] initWithRootViewController:userPolls];
+//        [self presentViewController:userStatusMessageNC animated:YES completion:nil];
+        
+        _allVotes = [_callController allPollVotes];
+        
+        NCVote *vote = [_callController votePoll];
+        
+        NSLog(@"_callControllerVotePoll........: %@",[_callController votePoll]);
+
+        NSLog(@"VotePrintedCopy........: %@",vote);
+
+        
+        for (NCVote *vote in [_callController allPollVotes]) {
+
+            NSLog(@"VotePrinted........: %@",vote);
+
+        }
+//
+//        for (NCVote *vote in _allVotes) {
+//
+//            NSLog(@"VotePrinted_allVotes_allVotes........: %@",vote.title);
+//
+//        }
+        
+        NSLog(@"toggleRequestOtpButtonPressed......: %@", vote.title);
+        
+        
+        
+        UIViewController *userPolls = [SwiftUIViewWrapper createSwiftUIViewWithVote:vote];
+        NCNavigationController *userStatusMessageNC = [[NCNavigationController alloc] initWithRootViewController:userPolls];
+        [self presentViewController:userStatusMessageNC animated:YES completion:nil];
+    }
 }
 
 - (void)toggleChatView

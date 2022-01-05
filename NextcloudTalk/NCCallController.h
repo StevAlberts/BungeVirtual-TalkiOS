@@ -25,6 +25,7 @@
 #import "NCPeerConnection.h"
 #import "NCRoom.h"
 #import "NCKActivity.h"
+#import "Voting/NCVote.h"
 
 @class NCCallController;
 @class RTCCameraVideoCapturer;
@@ -61,6 +62,11 @@
 @property (nonatomic, assign) BOOL disableVideoAtStart;
 
 @property (nonatomic, copy) NSMutableArray<NCKActivity *> *allRequests;
+
+@property (nonatomic, copy) NSMutableArray<NCVote *> *allPollVotes;
+
+@property (nonatomic, assign) NCVote *votePoll;
+
 
 @property (nonatomic, assign) BOOL requestedSpeak;
 @property (nonatomic, assign) BOOL requestedIntervene;

@@ -504,6 +504,66 @@ static NSString * const kNCVideoTrackKind = @"video";
                 NSLog(@"Could not getRequestApi. Error....: %@", error);
             }
         }];
+    
+    
+    // fetch votes
+    [[NCAPIController sharedInstance]
+                    fetchVotes:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+        if (!error) {
+
+
+//            NSData *resData = [NSKeyedArchiver archivedDataWithRootObject:[responseDict objectForKey:@"votes"] requiringSecureCoding:NO error:nil];
+//            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:resData options:kNilOptions error:nil];
+//
+//
+//            NSLog(@"fetchVotes responseDict................: %@",responseDict);
+            
+//            NSLog(@"fetchVotes responseDict................: %@",[responseDict objectForKey:@"votes"]);
+
+//            NSLog(@"fetchVotes json................: %@",json);
+//
+//            NSLog(@"fetchVotes resData................: %@",resData);
+//
+//            NSLog(@"fetchVotes fetchedArr................: %@",fetchedArr);
+
+            
+//            NSMutableArray<NCKActivity *> * resArray = [[NSMutableArray alloc] init];
+
+            
+//            for (NSDictionary *response in responseDict) {
+//                    NSLog(@"Vote.....: %@",response);
+//            }
+            
+//            NSLog(@"VOTE RESPONSE.....: %@",responseDict);
+//            NSArray *fetchedArr = [responseDict objectForKey:@"votes"];
+//
+            NSDictionary *fetchedArr = [responseDict objectForKey:@"votes"];
+            
+            NSMutableArray<NCVote *> * voteArray = [[NSMutableArray alloc] init];
+
+            for (NSDictionary *response in [fetchedArr objectForKey:@"votes"]) {
+                NCVote *vote = [NCVote activityWithDictionary:response];
+
+                NSLog(@"Vote array.....: %@",vote.title);
+
+                [voteArray addObject:vote];
+
+            }
+
+            self->_allPollVotes = voteArray;
+            
+            self->_votePoll = voteArray.firstObject;
+            
+            NSLog(@"V_votePoll.....: %@",self->_votePoll.title);
+            NSLog(@"V_votePoll.....: %@",self->_votePoll.owner);
+            NSLog(@"V_votePoll.....: %@",self->_votePoll.meetingName);
+            NSLog(@"V_votePoll.....: %@",self->_votePoll.meetingId);
+            NSLog(@"V_votePoll.....: %ld",(long)self->_votePoll.notifMins);
+
+        } else {
+            NSLog(@"Could not fetchVotes. Error....: %@", error);
+        }
+    }];
 
 }
 

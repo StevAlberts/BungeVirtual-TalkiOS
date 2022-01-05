@@ -7,10 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04318D1627843EF500B08DD0 /* NCVote.m in Sources */ = {isa = PBXBuildFile; fileRef = 04318D1527843EF500B08DD0 /* NCVote.m */; };
+		04318D19278442E400B08DD0 /* NCPoll.m in Sources */ = {isa = PBXBuildFile; fileRef = 04318D18278442E400B08DD0 /* NCPoll.m */; };
+		04318D1C278446EA00B08DD0 /* NCPollOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 04318D1B278446EA00B08DD0 /* NCPollOption.m */; };
 		0442EB66277496B100C61FC7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C330374255E6EBC00BDB4E4 /* InfoPlist.strings */; };
 		0442EB702774A09C00C61FC7 /* SoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0442EB6F2774A09C00C61FC7 /* SoundManager.m */; };
 		0442EB732774A37C00C61FC7 /* anthem.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0442EB722774A37C00C61FC7 /* anthem.mp3 */; };
-		0481808A276355C6007838B4 /* voting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04818089276355C6007838B4 /* voting.swift */; };
+		04519E9D2782D84C003A5994 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04519E9C2782D84C003A5994 /* MainView.swift */; };
+		04519E9F2782FB39003A5994 /* RadioButtonField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04519E9E2782FB38003A5994 /* RadioButtonField.swift */; };
+		0452AC24277E1BF600BFD2CA /* VoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452AC23277E1BF300BFD2CA /* VoteView.swift */; };
+		049DA9E2277AF13A00231F39 /* PollsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DA9E1277AF13A00231F39 /* PollsView.swift */; };
+		049DA9E4277AFC9B00231F39 /* SwiftUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DA9E3277AFC9A00231F39 /* SwiftUIFactory.swift */; };
+		049DA9E6277B066800231F39 /* AuthClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DA9E5277B066800231F39 /* AuthClass.swift */; };
+		049DA9E8277B070100231F39 /* BVVoting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DA9E7277B070100231F39 /* BVVoting.swift */; };
+		049DA9EA277B072200231F39 /* NCVoting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DA9E9277B072200231F39 /* NCVoting.swift */; };
+		049DA9EC277B182900231F39 /* VotingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DA9EB277B182800231F39 /* VotingAPI.swift */; };
 		04AE57A227300CFB0021145C /* LauncherScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04AE57A127300CFB0021145C /* LauncherScreen.storyboard */; };
 		04BE383E2748F84D00D620F0 /* NCKActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BE383D2748F84D00D620F0 /* NCKActivity.m */; };
 		04BE383F2748F84D00D620F0 /* NCKActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BE383D2748F84D00D620F0 /* NCKActivity.m */; };
@@ -311,10 +322,24 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		04318D1427843DCB00B08DD0 /* NCVote.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NCVote.h; sourceTree = "<group>"; };
+		04318D1527843EF500B08DD0 /* NCVote.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NCVote.m; sourceTree = "<group>"; };
+		04318D17278442D000B08DD0 /* NCPoll.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NCPoll.h; sourceTree = "<group>"; };
+		04318D18278442E400B08DD0 /* NCPoll.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NCPoll.m; sourceTree = "<group>"; };
+		04318D1A278446C700B08DD0 /* NCPollOption.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NCPollOption.h; sourceTree = "<group>"; };
+		04318D1B278446EA00B08DD0 /* NCPollOption.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NCPollOption.m; sourceTree = "<group>"; };
 		0442EB6F2774A09C00C61FC7 /* SoundManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SoundManager.m; sourceTree = "<group>"; };
 		0442EB712774A0E600C61FC7 /* SoundManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundManager.h; sourceTree = "<group>"; };
 		0442EB722774A37C00C61FC7 /* anthem.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = anthem.mp3; sourceTree = "<group>"; };
-		04818089276355C6007838B4 /* voting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = voting.swift; sourceTree = "<group>"; };
+		04519E9C2782D84C003A5994 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		04519E9E2782FB38003A5994 /* RadioButtonField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonField.swift; sourceTree = "<group>"; };
+		0452AC23277E1BF300BFD2CA /* VoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteView.swift; sourceTree = "<group>"; };
+		049DA9E1277AF13A00231F39 /* PollsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsView.swift; sourceTree = "<group>"; };
+		049DA9E3277AFC9A00231F39 /* SwiftUIFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIFactory.swift; sourceTree = "<group>"; };
+		049DA9E5277B066800231F39 /* AuthClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthClass.swift; sourceTree = "<group>"; };
+		049DA9E7277B070100231F39 /* BVVoting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BVVoting.swift; sourceTree = "<group>"; };
+		049DA9E9277B072200231F39 /* NCVoting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NCVoting.swift; sourceTree = "<group>"; };
+		049DA9EB277B182800231F39 /* VotingAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotingAPI.swift; sourceTree = "<group>"; };
 		04AE57A127300CFB0021145C /* LauncherScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LauncherScreen.storyboard; sourceTree = "<group>"; };
 		04BE38392748E3A100D620F0 /* NCKActivity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NCKActivity.h; sourceTree = "<group>"; };
 		04BE383D2748F84D00D620F0 /* NCKActivity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NCKActivity.m; sourceTree = "<group>"; };
@@ -804,7 +829,21 @@
 		04818084276352F3007838B4 /* Voting */ = {
 			isa = PBXGroup;
 			children = (
-				04818089276355C6007838B4 /* voting.swift */,
+				049DA9E1277AF13A00231F39 /* PollsView.swift */,
+				049DA9E3277AFC9A00231F39 /* SwiftUIFactory.swift */,
+				049DA9E5277B066800231F39 /* AuthClass.swift */,
+				049DA9E7277B070100231F39 /* BVVoting.swift */,
+				049DA9E9277B072200231F39 /* NCVoting.swift */,
+				049DA9EB277B182800231F39 /* VotingAPI.swift */,
+				0452AC23277E1BF300BFD2CA /* VoteView.swift */,
+				04519E9C2782D84C003A5994 /* MainView.swift */,
+				04519E9E2782FB38003A5994 /* RadioButtonField.swift */,
+				04318D1427843DCB00B08DD0 /* NCVote.h */,
+				04318D1527843EF500B08DD0 /* NCVote.m */,
+				04318D17278442D000B08DD0 /* NCPoll.h */,
+				04318D18278442E400B08DD0 /* NCPoll.m */,
+				04318D1A278446C700B08DD0 /* NCPollOption.h */,
+				04318D1B278446EA00B08DD0 /* NCPollOption.m */,
 			);
 			path = Voting;
 			sourceTree = "<group>";
@@ -1843,16 +1882,19 @@
 				1FEDE3C6257D439500853F79 /* NCChatFileController.m in Sources */,
 				1FEDE3CE257D43AB00853F79 /* NCMessageFileParameter.m in Sources */,
 				2C4446DD2658158000DF1DBC /* NCChatBlock.m in Sources */,
+				049DA9E6277B066800231F39 /* AuthClass.swift in Sources */,
+				049DA9EC277B182900231F39 /* VotingAPI.swift in Sources */,
 				2CA15545208E41B500CE8EF0 /* NCChatViewController.m in Sources */,
 				2C06BF6720AC647A0031EB46 /* DateHeaderView.m in Sources */,
 				2CB6ACDA2641483800D3D641 /* NCMessageLocationParameter.m in Sources */,
 				2CD5F3242142781A006B71BF /* NCExternalSignalingController.m in Sources */,
 				2C0574851EDD9E8E00D9E7F2 /* AppDelegate.m in Sources */,
 				2C4987BD21E640E20060AC27 /* CallKitManager.m in Sources */,
-				0481808A276355C6007838B4 /* voting.swift in Sources */,
+				04318D1C278446EA00B08DD0 /* NCPollOption.m in Sources */,
 				2C9E071726D934F500F65D41 /* UserStatusTableViewController.m in Sources */,
 				2C4446F3265D51A600DF1DBC /* NCPushNotificationsUtils.m in Sources */,
 				2C78EFA91F87EF39008AFA74 /* NBMPeersFlowLayout.m in Sources */,
+				04519E9F2782FB39003A5994 /* RadioButtonField.swift in Sources */,
 				C1292B8C237313590004C3B7 /* CCBKPasscode.m in Sources */,
 				2C1ABDE5257F883400AEDFB6 /* ABContact.m in Sources */,
 				2CA1CCDB1F1F6FCA002FE6A2 /* RoomTableViewCell.m in Sources */,
@@ -1877,6 +1919,7 @@
 				1F4DD3EB2571C688007DC98E /* EmojiUtils.swift in Sources */,
 				2C4D7D731F309DA500FF4A0D /* RTCSessionDescription+JSON.m in Sources */,
 				2CB3041C2264775E0053078A /* SLKTextView+SLKAdditions.m in Sources */,
+				049DA9E4277AFC9B00231F39 /* SwiftUIFactory.swift in Sources */,
 				2CEDA88C26F492610044552B /* NSMutableAttributedString+Extensions.swift in Sources */,
 				2C4CDCD126A84E500023F403 /* ShareTableViewCell.m in Sources */,
 				2C8CDD0621C2EDE8004E2997 /* AvatarBackgroundImageView.m in Sources */,
@@ -1924,6 +1967,7 @@
 				2CA1CCCD1F181741002FE6A2 /* NCUser.m in Sources */,
 				2CC007CA20E125C20096D91F /* NewRoomTableViewController.m in Sources */,
 				2CBF82B61FD0939600636459 /* NCAPISessionManager.m in Sources */,
+				049DA9E8277B070100231F39 /* BVVoting.swift in Sources */,
 				2CA155562099E07700CE8EF0 /* GroupedChatMessageTableViewCell.m in Sources */,
 				2CA15548208EA1EA00CE8EF0 /* ChatMessageTableViewCell.m in Sources */,
 				2C4446D8265814D100DF1DBC /* ServerCapabilities.m in Sources */,
@@ -1931,6 +1975,7 @@
 				2CBF82C11FD5AE3F00636459 /* NCPushProxySessionManager.m in Sources */,
 				2C78EF951F7E70EB008AFA74 /* NCPeerConnection.m in Sources */,
 				2C06BF6C20AEB0030031EB46 /* RoundedNumberView.m in Sources */,
+				04318D1627843EF500B08DD0 /* NCVote.m in Sources */,
 				2CEDA88926F10BB20044552B /* UserStatusMessageViewController.swift in Sources */,
 				2C7A1236200E0A5700864818 /* UserSettingsTableViewCell.m in Sources */,
 				2C2026A0236832D300DFC89B /* FTPopOverMenu.m in Sources */,
@@ -1950,12 +1995,15 @@
 				2C2026A42369F47400DFC89B /* AccountTableViewCell.m in Sources */,
 				2C1ABDCE257E939600AEDFB6 /* NCContact.m in Sources */,
 				2C7A12422017872600864818 /* AddParticipantsTableViewController.m in Sources */,
+				04318D19278442E400B08DD0 /* NCPoll.m in Sources */,
 				2C063318205ACB140043481A /* VideoResolutionsViewController.m in Sources */,
 				2C43BA7621309A1000B3068A /* NCMessageParameter.m in Sources */,
 				2C4DE9F221F732B40096940D /* NCAudioController.m in Sources */,
 				2C8A2BC9221F094F00DE6D2C /* DirectoryTableViewController.m in Sources */,
 				2C42ADB420B58E6300296DEA /* NCChatController.m in Sources */,
+				049DA9E2277AF13A00231F39 /* PollsView.swift in Sources */,
 				2C4CDCD026A84AEA0023F403 /* ShareViewController.m in Sources */,
+				04519E9D2782D84C003A5994 /* MainView.swift in Sources */,
 				2C4446EC265D25BA00DF1DBC /* NCKeyChainController.m in Sources */,
 				2C2A788E2359CC8800EEB797 /* NCAppBranding.m in Sources */,
 				2CA15541208E350300CE8EF0 /* NCChatMessage.m in Sources */,
@@ -1966,12 +2014,14 @@
 				2C4D7D691F2F7DBC00FF4A0D /* ARDSettingsModel.m in Sources */,
 				2CB6ACBC26385A3800D3D641 /* ShareLocationViewController.m in Sources */,
 				2C444708265E59BC00DF1DBC /* ShareItemController.m in Sources */,
+				049DA9EA277B072200231F39 /* NCVoting.swift in Sources */,
 				2CA1CC951F014EF9002FE6A2 /* NCSettingsController.m in Sources */,
 				2C440D1120EA4A770005F9BB /* RoomInfoTableViewController.m in Sources */,
 				2C4D7D631F2F7C2C00FF4A0D /* ARDCaptureController.m in Sources */,
 				2C4D7D6A1F2F7DBC00FF4A0D /* ARDSettingsStore.m in Sources */,
 				2C9200C32474262C0050084F /* UIBarButtonItem+Badge.m in Sources */,
 				2CC7158C20B8394A0045C789 /* PlaceholderView.m in Sources */,
+				0452AC24277E1BF600BFD2CA /* VoteView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2260,7 +2310,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = RU628PCE8T;
@@ -2287,7 +2337,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/openssl",
 				);
-				MARKETING_VERSION = 1.0.8;
+				MARKETING_VERSION = 1.0.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bungevirtual.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2309,7 +2359,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = RU628PCE8T;
@@ -2336,7 +2386,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/openssl",
 				);
-				MARKETING_VERSION = 1.0.8;
+				MARKETING_VERSION = 1.0.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bungevirtual.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

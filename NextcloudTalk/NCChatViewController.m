@@ -606,41 +606,50 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
 
 - (void)configureActionItems
 {
-    UIImage *videoCallImage = [[UIImage imageNamed:@"video"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    UIImage *videoCallImage = [[UIImage imageNamed:@""] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 //    UIImage *voiceCallImage = [[UIImage imageNamed:@"phone"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     
     CGFloat buttonWidth = 25.0;
 //    CGFloat buttonPadding = 30.0;
     
     _videoCallButton = [[BarButtonItemWithActivity alloc] initWithWidth:buttonWidth withImage:videoCallImage];
+    
 //    _videoCallButton = [[BarButtonItemWithActivity alloc] initWithImage:videoCallImage style:UIBarButtonItemStylePlain target:self action:@selector(videoCallButtonPressed:)];
 //    [_videoCallButton.innerButton addTarget:self action:@selector(videoCallButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     [_videoCallButton.innerButton addTarget:self action:@selector(videoCallButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    [_videoCallButton.innerButton setTitle:@" Join meeting " forState:UIControlStateNormal];
+    [_videoCallButton.innerButton setTitle:@"  Join meeting  " forState:UIControlStateNormal];
+    [_videoCallButton.innerButton setBackgroundColor:[UIColor whiteColor]];
+    [_videoCallButton.innerButton setTitleColor:[UIColor systemGreenColor] forState:UIControlStateNormal];
+    _videoCallButton.innerButton.layer.cornerRadius = 7;
+    _videoCallButton.innerButton.clipsToBounds = YES;
+
     
     if(_room.readOnlyState){
         NSLog(@"Meeting has ended...........");
         [_videoCallButton.innerButton setTitle:@" Meeting Ended " forState:UIControlStateNormal];
         [_videoCallButton.innerButton setBackgroundColor:[UIColor redColor]];
-
-        
+        [_videoCallButton.innerButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _videoCallButton.innerButton.layer.cornerRadius = 7;
         _videoCallButton.innerButton.clipsToBounds = YES;
 
-    }[SoundManager sharedManager].allowsBackgroundMusic = YES;
+    }
+    
+    [SoundManager sharedManager].allowsBackgroundMusic = YES;
     [[SoundManager sharedManager] prepareToPlay];
 
     
-    
-    if(_room.canStartCall){
-        [_videoCallButton.innerButton setTitle:@" Start meeting " forState:UIControlStateNormal];
-    }
+//    if(_room.canStartCall){
+//        [_videoCallButton.innerButton setTitle:@" Start meeting " forState:UIControlStateNormal];
+//    }
     
     if(_room.lobbyState){
         // Play anthem while in lobby
         [[SoundManager sharedManager] playSound:@"anthem.mp3" looping:YES];
+    }else{
+        // stop music
+        [[SoundManager sharedManager] stopSound:@"anthem.mp3"];
     }
 
     
@@ -3184,20 +3193,21 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
     
     
 //    // Delete file option
-//    if (message.file || [message isDeletableForAccount:[[NCDatabaseManager sharedInstance] activeAccount] andParticipantType:_room.participantType]) {
-//        UIImage *deleteImage = [[UIImage imageNamed:@"delete"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-//        UIAction *deleteAction = [UIAction actionWithTitle:NSLocalizedString(@"Delete file", nil) image:deleteImage identifier:nil handler:^(UIAction *action){
-//
-//            [self didPressDelete:message];
-//        }];
-//
-//        deleteAction.attributes = UIMenuElementAttributesDestructive;
-//        [actions addObject:deleteAction];
-//    }
+    if (message.file && [message isDeletableForAccount:[[NCDatabaseManager sharedInstance] activeAccount] andParticipantType:_room.participantType]) {
+
+        UIImage *deleteImage = [[UIImage imageNamed:@"delete"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        UIAction *deleteAction = [UIAction actionWithTitle:NSLocalizedString(@"Delete file", nil) image:deleteImage identifier:nil handler:^(UIAction *action){
+
+            [self didPressDelete:message];
+        }];
+
+        deleteAction.attributes = UIMenuElementAttributesDestructive;
+        [actions addObject:deleteAction];
+    }
     
 
     // Delete message option
-    if (message.file || message.sendingFailed || [message isDeletableForAccount:[[NCDatabaseManager sharedInstance] activeAccount] andParticipantType:_room.participantType]) {
+    if (message.sendingFailed || [message isDeletableForAccount:[[NCDatabaseManager sharedInstance] activeAccount] andParticipantType:_room.participantType]) {
         UIImage *deleteImage = [[UIImage imageNamed:@"delete"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         UIAction *deleteAction = [UIAction actionWithTitle:NSLocalizedString(@"Delete", nil) image:deleteImage identifier:nil handler:^(UIAction *action){
             

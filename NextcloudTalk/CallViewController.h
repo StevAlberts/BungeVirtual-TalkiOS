@@ -26,6 +26,7 @@
 #import "AvatarBackgroundImageView.h"
 #import "NCRoom.h"
 #import "NCKActivity.h"
+#import "Voting/NCVote.h"
 
 @class CallViewController;
 @protocol CallViewControllerDelegate <NSObject>
@@ -43,6 +44,8 @@
 //@property (nonatomic, strong) NCKActivity *kActivity;
 
 @property (nonatomic, copy) NSMutableArray<NCKActivity *> *responses;
+
+@property (nonatomic, copy) NSMutableArray<NCVote *> *allVotes;
 
 //@property (nonatomic, copy) NSMutableArray *allActivities;
 

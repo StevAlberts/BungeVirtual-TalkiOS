@@ -166,6 +166,11 @@ extern NSInteger const kReceivedChatMessagesLimit;
 - (NSURLSessionDataTask *)startedRequestApi:(NSString *)token requestId:(NSInteger *)reqId forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
 //- (NSURLSessionDataTask *)pausedRequestApi:(NSString *)token requestId:(NSInteger *)reqId forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
 
+// Vote Controller
+- (NSURLSessionDataTask *)fetchVotes:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
+- (NSURLSessionDataTask *)getPolls:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
+- (NSURLSessionDataTask *)getPollOptions:(TalkAccount *)account forPollId:(NSInteger *)pollId withCompletionBlock:(RequestCompletionBlock)block;
+
 // Chat Controller
 - (NSURLSessionDataTask *)receiveChatMessagesOfRoom:(NSString *)token fromLastMessageId:(NSInteger)messageId history:(BOOL)history includeLastMessage:(BOOL)include timeout:(BOOL)timeout lastCommonReadMessage:(NSInteger)lastCommonReadMessage setReadMarker:(BOOL)setReadMarker forAccount:(TalkAccount *)account withCompletionBlock:(GetChatMessagesCompletionBlock)block;
 - (NSURLSessionDataTask *)sendChatMessage:(NSString *)message toRoom:(NSString *)token displayName:(NSString *)displayName replyTo:(NSInteger)replyTo referenceId:(NSString *)referenceId forAccount:(TalkAccount *)account withCompletionBlock:(SendChatMessagesCompletionBlock)block;

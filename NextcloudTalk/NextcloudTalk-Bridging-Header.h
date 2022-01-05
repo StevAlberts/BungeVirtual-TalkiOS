@@ -27,6 +27,8 @@
 #import "NCAPIController.h"
 #import "NCDatabaseManager.h"
 #import "NCUserStatus.h"
-
+#import "Voting/NCVote.h"
+#import "Voting/NCPoll.h"
+#import "Voting/NCPollOption.h"
 
 #endif /* NextcloudTalk_Bridging_Header_h */
