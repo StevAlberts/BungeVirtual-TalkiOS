@@ -541,24 +541,22 @@ static NSString * const kNCVideoTrackKind = @"video";
             
             NSMutableArray<NCVote *> * voteArray = [[NSMutableArray alloc] init];
 
-            for (NSDictionary *response in [fetchedArr objectForKey:@"votes"]) {
+//            for (NSDictionary *response in [fetchedArr objectForKey:@"votes"]) {
+            for (NSDictionary *response in fetchedArr ) {
                 NCVote *vote = [NCVote activityWithDictionary:response];
-
-                NSLog(@"Vote array.....: %@",vote.title);
-
                 [voteArray addObject:vote];
-
             }
 
             self->_allPollVotes = voteArray;
             
             self->_votePoll = voteArray.firstObject;
             
-            NSLog(@"V_votePoll.....: %@",self->_votePoll.title);
-            NSLog(@"V_votePoll.....: %@",self->_votePoll.owner);
-            NSLog(@"V_votePoll.....: %@",self->_votePoll.meetingName);
-            NSLog(@"V_votePoll.....: %@",self->_votePoll.meetingId);
-            NSLog(@"V_votePoll.....: %ld",(long)self->_votePoll.notifMins);
+//            NSLog(@"V_votePoll.....             : %@",self->_votePoll.title);
+//            NSLog(@"V_votePoll.owner....        : %@",self->_votePoll.owner);
+//            NSLog(@"V_votePoll.meetingName....  : %@",self->_votePoll.meetingName);
+//            NSLog(@"V_votePoll.meetingId....    : %@",self->_votePoll.meetingId);
+//            NSLog(@"V_votePoll.voteId....       : %ld",(long)self->_votePoll.voteId);
+//            NSLog(@"V_votePoll.notifMins....    : %ld",(long)self->_votePoll.notifMins);
 
         } else {
             NSLog(@"Could not fetchVotes. Error....: %@", error);

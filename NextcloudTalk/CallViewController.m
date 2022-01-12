@@ -1076,14 +1076,9 @@ typedef NS_ENUM(NSInteger, CallState) {
         
     // check if call has a vote
     if(_allVotes.count > 0){
-        NSLog(@"***************************** LETS VOTE  **************************************");
-        NSLog(@"_allVotes......:%ld",(long)_allVotes.firstObject.voteId);
+//        NSLog(@"***************************** LETS VOTE  **************************************");
+//        NSLog(@"_allVotes......:%ld",(long)_allVotes.firstObject.voteId);
         
-        if(_allVotes.firstObject.title != nil)
-            NSLog(@"_allVotes......:%@",_allVotes.firstObject.title);
-        else
-            NSLog(@"No title");
-
         [self.voteButton setHidden:NO];
     }else{
         [self.voteButton setHidden:YES];
@@ -1623,7 +1618,7 @@ typedef NS_ENUM(NSInteger, CallState) {
     [self toggleChatView];
 }
 
-- (IBAction)toggleRequestOtpButtonPressed:(id)sender
+- (IBAction)toggleVoteButtonPressed:(id)sender
 {
     if (@available(iOS 14.0, *)) {
         
@@ -1654,7 +1649,7 @@ typedef NS_ENUM(NSInteger, CallState) {
 //
 //        }
         
-        NSLog(@"toggleRequestOtpButtonPressed......: %@", vote.title);
+//        NSLog(@"toggleRequestOtpButtonPressed......: %@", vote.title);
         
         
         

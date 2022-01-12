@@ -3193,7 +3193,7 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
     
     
 //    // Delete file option
-    if (message.file && [message isDeletableForAccount:[[NCDatabaseManager sharedInstance] activeAccount] andParticipantType:_room.participantType]) {
+    if (message.file || [message isDeletableForAccount:[[NCDatabaseManager sharedInstance] activeAccount] andParticipantType:_room.participantType]) {
 
         UIImage *deleteImage = [[UIImage imageNamed:@"delete"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         UIAction *deleteAction = [UIAction actionWithTitle:NSLocalizedString(@"Delete file", nil) image:deleteImage identifier:nil handler:^(UIAction *action){

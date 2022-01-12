@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 //MARK:- Radio Button Field
-@available(iOS 13.0, *)
+@available(iOS 14.0, *)
 struct RadioButtonField: View {
     let id: String
     let label: String
@@ -26,7 +26,7 @@ struct RadioButtonField: View {
         size: CGFloat = 20,
         color: Color = Color.black,
         bgColor: Color = Color.black,
-        textSize: CGFloat = 14,
+        textSize: CGFloat = 20,
         isMarked: Bool = false,
         callback: @escaping (String)->()
         ) {
@@ -46,7 +46,8 @@ struct RadioButtonField: View {
         }) {
             HStack(alignment: .center) {
                 Image(systemName: self.isMarked ? "checkmark.square.fill" : "square")
-                    .clipShape(Circle())
+                    .frame(width: 40.0, height: 40.0)
+//                    .clipShape(Circle())
                     .foregroundColor(self.bgColor)
                 Text(label)
                     .font(Font.system(size: textSize))

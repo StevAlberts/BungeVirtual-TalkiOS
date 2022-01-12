@@ -103,9 +103,6 @@ struct PollsView: View {
 
                         let api = NCAPIController()
                         
-
-                        
-                        
                         api.getPolls(account) { response, error in
                           
                             print("Response: \(String(describing: response))")

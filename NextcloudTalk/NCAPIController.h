@@ -169,7 +169,11 @@ extern NSInteger const kReceivedChatMessagesLimit;
 // Vote Controller
 - (NSURLSessionDataTask *)fetchVotes:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
 - (NSURLSessionDataTask *)getPolls:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
-- (NSURLSessionDataTask *)getPollOptions:(TalkAccount *)account forPollId:(NSInteger *)pollId withCompletionBlock:(RequestCompletionBlock)block;
+- (NSURLSessionDataTask *)getPollOptions:(TalkAccount *)account forPollId:(NSNumber *)pollId withCompletionBlock:(RequestCompletionBlock)block;
+- (NSURLSessionDataTask *)sendOtpSmsForUser:(TalkAccount *)account otpExpire:(NSNumber *)otpExpire withPollId:(NSNumber *)pollId withCompletionBlock:(RequestCompletionBlock)block;
+- (NSURLSessionDataTask *)verifyOtp:(NSNumber *)otpCode forUser:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
+- (NSURLSessionDataTask *)setVote:(NSNumber *)optionId withValue:(NSString *)option forUser:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block;
+- (NSURLSessionDataTask *)getVotes:(TalkAccount *)account forPollId:(NSNumber *)pollId withCompletionBlock:(RequestCompletionBlock)block;
 
 // Chat Controller
 - (NSURLSessionDataTask *)receiveChatMessagesOfRoom:(NSString *)token fromLastMessageId:(NSInteger)messageId history:(BOOL)history includeLastMessage:(BOOL)include timeout:(BOOL)timeout lastCommonReadMessage:(NSInteger)lastCommonReadMessage setReadMarker:(BOOL)setReadMarker forAccount:(TalkAccount *)account withCompletionBlock:(GetChatMessagesCompletionBlock)block;

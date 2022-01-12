@@ -41,11 +41,10 @@ NSInteger const APIv4                       = 4;
 NSString * const kNCOCSAPIVersion           = @"/ocs/v2.php";
 NSString * const kNCSpreedAPIVersionBase    = @"/apps/spreed/api/v";
 NSString * const kikaoUtilities             = @"/apps/kikaoutilities/api/0.1/";
+//NSString * const kNCPolls                   = @"/apps/polls/";
 NSString * const kNCPolls                   = @"/apps/polls/api/v1.0/";
-//NSString * const kNCVotes                   = @"/apps/polls/";
-//NSString * const kNCVotes                   = @"/apps/polls/api/v1.0/";
-NSString * const kSendOtpSms                = @"/poll/sendOtpSms";
-NSString * const kVerifyOtp                 = @"/poll/verifyOtp";
+NSString * const kNCOtp                = @"/index.php/apps/polls/api/v1.0/";
+//NSString * const kVerifyOtp                 = @"/index.php/apps/polls/api/v1.0/verifyOtp";
 
 
 NSInteger const kReceivedChatMessagesLimit = 100;
@@ -1091,6 +1090,7 @@ NSInteger const kReceivedChatMessagesLimit = 100;
 
     return dataTask;
 }
+
 //{
 //    NSLog(@"..........raisedHand..............");
 //
@@ -1468,6 +1468,28 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     [request setHTTPMethod:@"GET"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
+    /*
+    to be Removed just using it for testing
+     */
+//    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+//
+//    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedCookieStorageForGroupContainerIdentifier:account.accountId];
+//
+//    configuration.HTTPCookieStorage = cookieStorage;
+//
+//    NCAPISessionManager *apiSessionManager = [[NCAPISessionManager alloc] initWithSessionConfiguration:configuration];
+//
+        
+//    [request setValue:@"DckJQ3R/Ckwm64zXlq7W0xWEEnLS8dNf4QRF4BvuH00=:IqJ9BUY2TAVFwOOSr+TmiV/gdTuIgeQd0WE0y1iCSyA=" forHTTPHeaderField:@"Cookie"];
+    
+//    [request setValue:userToken forHTTPHeaderField:@"requesttoken"];
+    
+//    NSLog(@"USERTOKEN....:%@", userToken);
+//    NSLog(@"CookieStorage....:%@", cookieStorage);
+//    NSLog(@"Configuration....:%@", configuration);
+//    NSLog(@"ConfigurationHTTPCookieStorage....:%@", configuration.HTTPCookieStorage);
+//    NSLog(@"ApiSessionManager....:%@", apiSessionManager);
+    
     NSString *userToken = [[NCKeyChainController sharedInstance] tokenForAccountId:account.accountId];
     NSString *authStr = [NSString stringWithFormat:@"%@:%@", account.userId, userToken];
     NSData *authData = [authStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -1517,7 +1539,6 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     
     NSLog(@"URLString: %@",URLString);
     
-    
     NSURL *url = [NSURL URLWithString:URLString];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
 
@@ -1525,8 +1546,6 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
     NSString *userToken = [[NCKeyChainController sharedInstance] tokenForAccountId:account.accountId];
-    
-    
     
     NSString *authStr = [NSString stringWithFormat:@"%@:%@", account.userId, userToken];
     NSData *authData = [authStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -1566,13 +1585,13 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     return dataTask;
 }
 
-- (NSURLSessionDataTask *)getPollOptions:(TalkAccount *)account forPollId:(NSInteger *)pollId withCompletionBlock:(RequestCompletionBlock)block
+- (NSURLSessionDataTask *)getPollOptions:(TalkAccount *)account forPollId:(NSNumber *)pollId withCompletionBlock:(RequestCompletionBlock)block
 {
     NSLog(@"getPollOptionsApi............");
-    
+        
 //    make url string
    NSString *endpoint = [NSString stringWithFormat:@"poll"];
-   NSString *URLString = [NSString stringWithFormat:@"%@%@%@/%ld/options", account.server, kNCPolls, endpoint,(long)pollId];
+    NSString *URLString = [NSString stringWithFormat:@"%@%@%@/%@/options", account.server, kNCPolls, endpoint,pollId];
     
     NSLog(@"URLString: %@",URLString);
     
@@ -1625,82 +1644,14 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     return dataTask;
 }
 
-
-- (NSURLSessionDataTask *) castVoteApizzzz:(NSString *)token requestId:(NSInteger *)reqId forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block
-{
-    NSLog(@"..........startedRequestApi..............");
-
-    NSLog(@"startedRequestApi......:%ld", (long)reqId);
-    
-    // make url string
-    NSString *encodedToken = [token stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-    NSString *endpoint = [NSString stringWithFormat:@"activities"];
-    
-    NSString *URLString = [NSString stringWithFormat:@"%@%@%@/%ld?token=%@", account.server, kikaoUtilities, endpoint, (long)reqId, encodedToken];
-
-    // authenticate
-    NSString *userToken = [[NCKeyChainController sharedInstance] tokenForAccountId:account.accountId];
-    NSString *authStr = [NSString stringWithFormat:@"%@:%@", account.userId, userToken];
-    NSData *authData = [authStr dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [authData base64EncodedStringWithOptions:0]];
-    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:URLString]];
-    [urlRequest setValue:authValue forHTTPHeaderField:@"Authorization"];
-
-    NSDictionary *parameters = @{@"started" : @(YES), @"token" : encodedToken };
-    NSData *params = [NSJSONSerialization dataWithJSONObject:parameters options:NSJSONWritingPrettyPrinted error:nil];
-
-    NSLog(@"startedRequestApi parameters = %@", parameters);
-    NSLog(@"startedRequestApi used params = %@", params);
-    NSLog(@"startedRequestApi URL = %@", URLString);
-  
-    //create the Method "PUT"
-    [urlRequest setHTTPMethod:@"PUT"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    
-    //Apply the data to the body
-    [urlRequest setHTTPBody:params];
-        
-    NSLog(@"StartedRequestApi URL....: %@",URLString);
-    NSLog(@"StartedRequestApi urlRequest....: %@",urlRequest);
-
-//    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:config
-                                                          delegate:nil
-                                                     delegateQueue:[NSOperationQueue mainQueue]];
-    // Create dataTask
-        NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            
-            if(httpResponse.statusCode == 200){
-                NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-                NSLog(@"The startedRequestApi response is - %@",responseDictionary);
-                if (block) {
-                    block(responseDictionary, nil);
-                }
-            }else{
-                if (block) {
-                    block(nil, error);
-                }
-                NSLog(@"startedRequestApi...Error: %@", error);
-            }
-        }];
-    
-    // Fire the request
-    [dataTask resume];
-
-    return dataTask;
-}
-
-- (NSURLSessionDataTask *) sendOtpSms:(NSNumber *)pollId requestId:(NSNumber *)otpExpire forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block
+- (NSURLSessionDataTask *) sendOtpSmsForUser:(TalkAccount *)account otpExpire:(NSNumber *)otpExpire withPollId:(NSNumber *)pollId withCompletionBlock:(RequestCompletionBlock)block
 {
     NSLog(@"..........sendOtpSms..............");
 
     
     // make url string
-    NSString *URLString = [NSString stringWithFormat:@"%@%@", account.server, kSendOtpSms];
+    NSString *endpoint = [NSString stringWithFormat:@"sendOtpSms"];
+    NSString *URLString = [NSString stringWithFormat:@"%@%@%@", account.server, kNCOtp, endpoint];
 
     // authenticate
     NSString *userToken = [[NCKeyChainController sharedInstance] tokenForAccountId:account.accountId];
@@ -1719,7 +1670,7 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     NSData *params = [NSJSONSerialization dataWithJSONObject:parameters options:NSJSONWritingPrettyPrinted error:nil];
 
     NSLog(@"parameters = %@", parameters);
-    NSLog(@"URL = %@", URLString);
+    NSLog(@"sendOtpSmsURL = %@", URLString);
   
     //create the Method "PUT"
     [urlRequest setHTTPMethod:@"POST"];
@@ -1738,11 +1689,13 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     // Create dataTask
         NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             
+//            NSLog(@"The sendOtpSms response is -***************::: %@",response);
+            
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             
             if(httpResponse.statusCode == 200){
                 NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-                NSLog(@"The sendOtpSms response is - %@",responseDictionary);
+                NSLog(@"The sendOtpSms responseDictionary is - %@",responseDictionary);
                 if (block) {
                     block(responseDictionary, nil);
                 }
@@ -1750,7 +1703,8 @@ NSInteger const kReceivedChatMessagesLimit = 100;
                 if (block) {
                     block(nil, error);
                 }
-                NSLog(@"sendOtpSms...Error: %@", error);
+                NSLog(@"sendOtpSms...Error: %@\nError Response:%@", error,httpResponse);
+
             }
         }];
     
@@ -1760,13 +1714,14 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     return dataTask;
 }
 
-- (NSURLSessionDataTask *) verifyOtp:(NSNumber *)otpCode forAccount:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block
+- (NSURLSessionDataTask *) verifyOtp:(NSNumber *)otpCode forUser:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block
 {
     NSLog(@"..........verifyOtp..............");
     
     // make url string
-    
-    NSString *URLString = [NSString stringWithFormat:@"%@%@", account.server, kVerifyOtp];
+   
+    NSString *endpoint = [NSString stringWithFormat:@"verifyOtp"];
+    NSString *URLString = [NSString stringWithFormat:@"%@%@%@", account.server, kNCOtp,endpoint];
 
     // authenticate
     NSString *userToken = [[NCKeyChainController sharedInstance] tokenForAccountId:account.accountId];
@@ -1778,7 +1733,75 @@ NSInteger const kReceivedChatMessagesLimit = 100;
 
     NSDictionary *parameters = @{
         @"userId" : account.userId,
-        @"enteredOtp" : otpCode
+        @"enteredOtp" : [otpCode stringValue]
+    };
+    
+    NSData *params = [NSJSONSerialization dataWithJSONObject:parameters options:NSJSONWritingPrettyPrinted error:nil];
+
+    NSLog(@"parameters = %@", parameters);
+    NSLog(@"verifyOtpURL = %@", URLString);
+  
+    //create the Method "PUT"
+    [urlRequest setHTTPMethod:@"POST"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    //Apply the data to the body
+    [urlRequest setHTTPBody:params];
+        
+
+//    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config
+                                                          delegate:nil
+                                                     delegateQueue:[NSOperationQueue mainQueue]];
+    // Create dataTask
+        NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            NSLog(@"The verifyOtp response is -***************::: %@",response);
+            
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            
+            if(httpResponse.statusCode == 200){
+                NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+                NSLog(@"The verifyOtp responseDictionary is - %@",responseDictionary);
+                if (block) {
+                    block(responseDictionary, nil);
+                }
+            }else{
+                if (block) {
+                    block(nil, error);
+                }
+                NSLog(@"verifyOtp...Error: %@", error);
+            }
+        }];
+    
+    // Fire the request
+    [dataTask resume];
+
+    return dataTask;
+}
+
+- (NSURLSessionDataTask *) setVote:(NSNumber *)optionId withValue:(NSString *)option forUser:(TalkAccount *)account withCompletionBlock:(RequestCompletionBlock)block
+{
+    NSLog(@"..........setVote..............");
+    
+    // make url string
+    NSString *endpoint = [NSString stringWithFormat:@"vote"];
+    NSString *URLString = [NSString stringWithFormat:@"%@%@%@", account.server, kNCPolls, endpoint];
+
+    
+    // authenticate
+    NSString *userToken = [[NCKeyChainController sharedInstance] tokenForAccountId:account.accountId];
+    NSString *authStr = [NSString stringWithFormat:@"%@:%@", account.userId, userToken];
+    NSData *authData = [authStr dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [authData base64EncodedStringWithOptions:0]];
+    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:URLString]];
+    [urlRequest setValue:authValue forHTTPHeaderField:@"Authorization"];
+
+    NSDictionary *parameters = @{
+        @"optionId" : optionId,
+        @"setTo" : option
     };
     
     NSData *params = [NSJSONSerialization dataWithJSONObject:parameters options:NSJSONWritingPrettyPrinted error:nil];
@@ -1807,7 +1830,7 @@ NSInteger const kReceivedChatMessagesLimit = 100;
             
             if(httpResponse.statusCode == 200){
                 NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-                NSLog(@"The sendOtpSms response is - %@",responseDictionary);
+                NSLog(@"The setVote response is - %@",responseDictionary);
                 if (block) {
                     block(responseDictionary, nil);
                 }
@@ -1815,13 +1838,71 @@ NSInteger const kReceivedChatMessagesLimit = 100;
                 if (block) {
                     block(nil, error);
                 }
-                NSLog(@"sendOtpSms...Error: %@", error);
+                NSLog(@"setVote...Error: %@", error);
             }
         }];
     
     // Fire the request
     [dataTask resume];
 
+    return dataTask;
+}
+
+
+- (NSURLSessionDataTask *)getVotes:(TalkAccount *)account forPollId:(NSNumber *)pollId withCompletionBlock:(RequestCompletionBlock)block
+{
+    NSLog(@"getVotes............");
+        
+//    make url string
+   NSString *endpoint = [NSString stringWithFormat:@"poll"];
+    NSString *URLString = [NSString stringWithFormat:@"%@%@%@/%@/votes", account.server, kNCPolls, endpoint,pollId];
+    
+    NSLog(@"getVotesURLString: %@",URLString);
+    
+    
+    NSURL *url = [NSURL URLWithString:URLString];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+
+    [request setHTTPMethod:@"GET"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    NSString *userToken = [[NCKeyChainController sharedInstance] tokenForAccountId:account.accountId];
+        
+    NSString *authStr = [NSString stringWithFormat:@"%@:%@", account.userId, userToken];
+    NSData *authData = [authStr dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [authData base64EncodedStringWithOptions:0]];
+    [request setValue:authValue forHTTPHeaderField:@"Authorization"];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+
+    // Create dataTask
+        NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            
+            NSLog(@"getVotes...httpResponse: %@", httpResponse);
+
+            if(httpResponse.statusCode == 200)
+                {
+                    NSError *parseError = nil;
+                    NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
+                    NSLog(@"The getVotes response is - %@",responseDictionary);
+                    if (block) {
+                        block(responseDictionary, nil);
+                    }
+                }
+                else
+                {
+                    if (block) {
+                        block(nil, error);
+                    }
+                    NSLog(@"getVotes...Error: %@", error);
+                }
+        }];
+
+        // Fire the request
+        [dataTask resume];
+    
     return dataTask;
 }
 
