@@ -183,39 +183,32 @@ static NSString * const kNCVideoTrackKind = @"video";
     [self listenResponse];
 }
 
-
 // raisedhand
 - (void) raiseHand: (BOOL)raised
 {
-//    NSLog(@"Raised hand...........");
-//
-//    _raiseHandTask = [[NCAPIController sharedInstance]
-//                       raiseHand:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
-//        if (!error) {
-//            NSLog(@"Raise Hand.......SUCEESS");
-//
-//        } else {
-//
-//            NSLog(@"Could not raise hand. Error: %@", error);
-//        }
-//    }];
-    
-//    NSString *peerId = [_externalSignalingController sessionId];
+    NSLog(@"Raised hand...........");
 
-//    NSLog(@"PeerID.......: %@", peerId);
-    
+//
 //    NSDictionary *payload = @{
-//                              @"raisehand":@(raised),
-//                              @"peerId":peerId,
-//                              @"state": @(raised)
+//                              @"raiseHand": @(raised)
 //                              };
+//
+////    [self sendRaisehandToAllOfType:@"raiseHand" raised:raised];
+//    [self sendRaisehandToAllOfType:@"raiseHand" withPayload:payload];
     
-    NSDictionary *payload = @{
-                              @"raiseHand": @(raised)
-                              };
     
-//    [self sendRaisehandToAllOfType:@"raiseHand" raised:raised];
-    [self sendRaisehandToAllOfType:@"raiseHand" withPayload:payload];
+   NSDate *now = [NSDate date]; // current date
+   NSInteger today = [now timeIntervalSince1970];
+
+   NSDictionary *payload = @{
+       @"state": @(raised),
+       @"timestamp": @(today)
+     };
+    
+    NSLog(@"payload....:%@",payload);
+
+   [self sendDataChannelMessageToAllOfType:@"raiseHand" withPayload:payload];
+    
     
 }
 
@@ -343,65 +336,6 @@ static NSString * const kNCVideoTrackKind = @"video";
     
 }
 
-//- (void) requestToCancel
-//{
-//    NSLog(@"requestToCancel...........");
-//
-//    NSLog(@"requestToCancel........._speakId: %ld _interveneId: %ld", (long)_speakId,(long)_interveneId);
-//
-//    if(_speakId != nil){
-//        _cancelRequestTask = [[NCAPIController sharedInstance]
-//                              cancelRequestApi:_room.token requestId:_speakId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
-//
-//            if (!error) {
-//                NSLog(@"requestToCancel.......SUCEESS");
-//                NSLog(@"requestToCancel: %@", responseDict);
-//                self.requested = NO;
-//            } else {
-//                NSLog(@"Could not requestToCancel. Error: %@", error);
-//            }
-//        }];
-//    }else if(_interveneId != nil){
-//        _cancelRequestTask = [[NCAPIController sharedInstance]
-//                              cancelRequestApi:_room.token requestId:_interveneId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
-//
-//            if (!error) {
-//                NSLog(@"requestToCancel.......SUCEESS");
-//                NSLog(@"requestToCancel: %@", responseDict);
-//                self.requested = NO;
-//            } else {
-//                NSLog(@"Could not requestToCancel. Error: %@", error);
-//            }
-//        }];
-//    }
-//
-//}
-
-//- (void) requestStarted
-//{
-//    NSLog(@"requestStarted...........");
-//
-//    if(_speakId != nil){
-//        [[NCAPIController sharedInstance] startedRequestApi:_room.token requestId:_speakId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
-//            if (!error) {
-//                NSLog(@"Started.......SUCEESS");
-//                NSLog(@"Started: %@", responseDict);
-//            } else {
-//                NSLog(@"Could not requestStarted. Error: %@", error);
-//            }
-//        }];
-//    }else if(_interveneId != nil){
-//        [[NCAPIController sharedInstance] startedRequestApi:_room.token requestId:_interveneId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
-//            if (!error) {
-//                NSLog(@"Started.......SUCEESS");
-//                NSLog(@"Started: %@", responseDict);
-//            } else {
-//                NSLog(@"Could not requestStarted. Error: %@", error);
-//            }
-//        }];
-//    }
-//}
-
 
 - (void) startSpeak
 {
@@ -456,6 +390,8 @@ static NSString * const kNCVideoTrackKind = @"video";
         [[NCAPIController sharedInstance]
                         listenResponseApi:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
             if (!error) {
+                
+                
 //
 ////                NSDictionary *responses = responseDict;
 //
@@ -537,26 +473,45 @@ static NSString * const kNCVideoTrackKind = @"video";
 //            NSLog(@"VOTE RESPONSE.....: %@",responseDict);
 //            NSArray *fetchedArr = [responseDict objectForKey:@"votes"];
 //
-            NSDictionary *fetchedArr = [responseDict objectForKey:@"votes"];
-            
+//            NSLog(@"Meeting token.....: %@",self->_room.token);
+
+ 
+
+            NSDictionary *fetchedArr = [responseDict objectForKey:@"vote"];
+             
             NSMutableArray<NCVote *> * voteArray = [[NSMutableArray alloc] init];
 
-//            for (NSDictionary *response in [fetchedArr objectForKey:@"votes"]) {
+            
+            
             for (NSDictionary *response in fetchedArr ) {
                 NCVote *vote = [NCVote activityWithDictionary:response];
-                [voteArray addObject:vote];
+                NSDate *now = [NSDate date]; // current date
+                int today = [now timeIntervalSince1970];
+                
+//                NSLog(@"==============VOTE==================================");
+//                NSLog(@"title........: %@",vote.title);
+//                NSLog(@"created........: %ld",(long)vote.created);
+//                NSLog(@"voteId........: %ld",(long)vote.voteId);
+//                NSLog(@"meetingId........: %@",vote.meetingId);
+//                NSLog(@"meetingName........: %@",vote.meetingName);
+//                NSLog(@"owner........: %@",vote.owner);
+//                NSLog(@"room token............: %@",self->_room.token);
+//                NSLog(@"today............: %d",today);
+//                NSLog(@"openingTime......: %ld",(long)vote.openingTime);
+//                NSLog(@"openingTime......: %ld",(long)vote.expire);
+//                NSLog(@"================================================");
+               
+                
+                if ([vote.meetingId isEqualToString:self->_room.token] && vote.openingTime > today){
+                    [voteArray addObject:vote];
+                }
+                                
             }
 
             self->_allPollVotes = voteArray;
             
             self->_votePoll = voteArray.firstObject;
             
-//            NSLog(@"V_votePoll.....             : %@",self->_votePoll.title);
-//            NSLog(@"V_votePoll.owner....        : %@",self->_votePoll.owner);
-//            NSLog(@"V_votePoll.meetingName....  : %@",self->_votePoll.meetingName);
-//            NSLog(@"V_votePoll.meetingId....    : %@",self->_votePoll.meetingId);
-//            NSLog(@"V_votePoll.voteId....       : %ld",(long)self->_votePoll.voteId);
-//            NSLog(@"V_votePoll.notifMins....    : %ld",(long)self->_votePoll.notifMins);
 
         } else {
             NSLog(@"Could not fetchVotes. Error....: %@", error);
@@ -912,6 +867,17 @@ static NSString * const kNCVideoTrackKind = @"video";
 //            [peerConnection sendRaiseHandOfType:type raised:raised];
 //        }
 //    }
+     
+    NSDate *now = [NSDate date]; // current date
+    NSInteger today = [now timeIntervalSince1970];
+
+    NSDictionary *payload = @{
+        @"state": @(raised),
+        @"timestamp": @(today)
+      };
+
+    [self sendDataChannelMessageToAllOfType:@"raiseHand" withPayload:payload];
+
 }
 
 - (void)sendRaisehandToAllOfType:(NSString *)type withPayload:(id)payload

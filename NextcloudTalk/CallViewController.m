@@ -1050,7 +1050,7 @@ typedef NS_ENUM(NSInteger, CallState) {
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     NSInteger * speakId = [defaults integerForKey:@"speakId"];
     NSInteger * interveneId = [defaults integerForKey:@"interveneId"];
-
+    
     if(speakId!=nil){
 //        NSLog(@"handleSpeakRequest...:%ld", speakId);
         _speakRequest = YES;
@@ -1070,15 +1070,12 @@ typedef NS_ENUM(NSInteger, CallState) {
     
     _responses = [_callController allRequests];
     
-    _allVotes = [_callController allPollVotes];
-    
-//    NCVote *vote = [_callController votePoll];
+//    _allVotes = [_callController allPollVotes];
+    NCVote *vote = [_callController votePoll];
         
     // check if call has a vote
-    if(_allVotes.count > 0){
+    if(vote!=nil){
 //        NSLog(@"***************************** LETS VOTE  **************************************");
-//        NSLog(@"_allVotes......:%ld",(long)_allVotes.firstObject.voteId);
-        
         [self.voteButton setHidden:NO];
     }else{
         [self.voteButton setHidden:YES];
@@ -1622,37 +1619,14 @@ typedef NS_ENUM(NSInteger, CallState) {
 {
     if (@available(iOS 14.0, *)) {
         
-//        _allVotes = [_callController allVotes];
-        
-//        UIViewController *userPolls = [SwiftUIViewWrapper createSwiftUIViewWithVote:_allVotes.firstObject];
-//        NCNavigationController *userStatusMessageNC = [[NCNavigationController alloc] initWithRootViewController:userPolls];
-//        [self presentViewController:userStatusMessageNC animated:YES completion:nil];
-        
-        _allVotes = [_callController allPollVotes];
-        
         NCVote *vote = [_callController votePoll];
         
         NSLog(@"_callControllerVotePoll........: %@",[_callController votePoll]);
 
         NSLog(@"VotePrintedCopy........: %@",vote);
-
         
-        for (NCVote *vote in [_callController allPollVotes]) {
-
-            NSLog(@"VotePrinted........: %@",vote);
-
-        }
-//
-//        for (NCVote *vote in _allVotes) {
-//
-//            NSLog(@"VotePrinted_allVotes_allVotes........: %@",vote.title);
-//
-//        }
-        
-//        NSLog(@"toggleRequestOtpButtonPressed......: %@", vote.title);
-        
-        
-        
+        NSLog(@"toggleRequestOtpButtonPressed......: %@", vote.title);
+                
         UIViewController *userPolls = [SwiftUIViewWrapper createSwiftUIViewWithVote:vote];
         NCNavigationController *userStatusMessageNC = [[NCNavigationController alloc] initWithRootViewController:userPolls];
         [self presentViewController:userStatusMessageNC animated:YES completion:nil];

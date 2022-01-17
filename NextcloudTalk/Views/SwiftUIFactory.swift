@@ -20,5 +20,9 @@ class SwiftUIViewWrapper : NSObject {
 //        return UIHostingController(rootView: MainView())
 
     }
+    
+    @objc static func createSwiftUICommentsView() -> UIViewController {
+        return UIHostingController(rootView: CommentsView())
+    }
 
 }

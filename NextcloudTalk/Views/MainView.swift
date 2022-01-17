@@ -7,10 +7,31 @@
 
 import SwiftUI
 import SwiftyJSON
+import UIKit
+import Foundation
+
+extension UIAlertController {
+    class func alert(title:String, msg:String, target: UIViewController) {
+        let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default) {
+        (result: UIAlertAction) -> Void in
+        })
+        target.present(alert, animated: true, completion: nil)
+    }
+}
 
 extension Date {
     func adding(hours: Int) -> Date {
         return Calendar.current.date(byAdding: .hour, value: hours, to: self)!
+    }
+    static func -(recent: Date, previous: Date) -> (month: Int?, day: Int?, hour: Int?, minute: Int?, second: Int?) {
+           let day = Calendar.current.dateComponents([.day], from: previous, to: recent).day
+           let month = Calendar.current.dateComponents([.month], from: previous, to: recent).month
+           let hour = Calendar.current.dateComponents([.hour], from: previous, to: recent).hour
+           let minute = Calendar.current.dateComponents([.minute], from: previous, to: recent).minute
+           let second = Calendar.current.dateComponents([.second], from: previous, to: recent).second
+
+           return (month: month, day: day, hour: hour, minute: minute, second: second)
     }
 }
 
@@ -26,7 +47,8 @@ struct MainView: View {
     @State var otpVerified = false
     @State var poll: Poll?
     @State var loading = false
-    
+    @State private var showingAlert = false
+    @State private var currentButton: Int? = nil
     @State var closeDate: String = ""
 
     func getPolls() {
@@ -46,9 +68,6 @@ struct MainView: View {
                     
             if response != nil {
                 
-                self.loading = false
-//                self.otpVerified = true
-
                   pollsArray.forEach { pollJson in
                       let json = JSON(pollJson).rawString()
                       let jsonData = json!.data(using: .utf8)!
@@ -56,34 +75,27 @@ struct MainView: View {
                       let poll: Poll = try!  JSONDecoder().decode(Poll.self, from: jsonData)
                        
 //                      let polly = try! Poll(data: jsonData)
-                      
-                      print(poll.title)
-                      
-                      print(poll.meetingID)
-                      
-                      print(vote.meetingId!)
+//                      print(poll.title)
+//                      print(poll.meetingID)
+//                      print(vote.meetingId!)
                      
-                      if poll.meetingID == vote.meetingId {
+                      if poll.pollID == vote.voteId {
+                          self.loading = false
                           print("======LETS POLL VOTE====")
-                          self.otpVerified = true
                           self.poll = poll
                           print("Poll..: \(String(describing: self.poll))")
-
+                          self.otpVerified = true
+                          
                       }
                       
                       polls.append(poll)
                  }
                 
-                print(polls.count)
-                
-//                if polls.count > 0{
-//                    if !otpCode.isEmpty{
-//                        self.otpVerified = true
-//                    }
-//                }
+//                print(polls.count)
                 
             }else{
                 print("No results")
+                
             }
             
             
@@ -94,7 +106,6 @@ struct MainView: View {
         }.resume()
         
         
-        print("verifyOTP success")
     }
     
     
@@ -120,39 +131,48 @@ struct MainView: View {
     
     
     func verifyOTP() {
+        
         // get user account
         var account = TalkAccount()
         let db = NCDatabaseManager()
         account = db.activeAccount()
-
-        // verify otp
-        api.verifyOtp(Int(otpCode) as NSNumber?, forUser: account) { response, error in
+//        let alert = UIAlertController(title: "Alert", message: "OTP verification failed", preferredStyle: .alert)
+//        let ok = UIAlertAction(title: "OK", style: .default, handler: { action in })
+//        alert.addAction(ok)
         
+        // verify otp
+        api.verifyOtp(otpCode, withPollId: vote.voteId as NSNumber, forUser: account) { response, error in
+
             print("verifyOTPResponse..: \(String(describing: response))")
             print("verifyOTP success")
+            self.loading = false
+            
             
             // get user polls
             self.getPolls()
 
             if(error != nil){
                 print("verifyOTPError: \(String(describing: error))")
+                self.loading = false
+                self.showingAlert = true
+                print("Verification failed ?????????")
             }
-            
+             
         }.resume()
-         
+        
         
     }
     
 
     var body: some View {
         
-        if !showOTPView {
+        if showOTPView {
             
             VStack(spacing:50){
                 
                 VStack(){
                     Text("Time left to verify")
-                    Text("4:56")
+                    Text("\(closeDate)")
                         .fontWeight(.bold).font(.system(size: 20))
                         .padding(8)
                 }
@@ -193,6 +213,9 @@ struct MainView: View {
                         .background(Color.green)
                         .foregroundColor(Color.white)
                         .cornerRadius(15)
+                        .alert(isPresented: $showingAlert) {
+                            Alert(title: Text("Alert"), message: Text("OTP verification failed."), dismissButton: .default(Text("OK")))
+                        }
                     }
                 }
                 
@@ -204,78 +227,69 @@ struct MainView: View {
 
                 VStack(){
                     Text("Time left to verify")
-                    Text("4:56")
+                    Text("\(closeDate)")
                         .fontWeight(.bold).font(.system(size: 20))
                         .padding(8)
                 }.onAppear(){
-                                      
-//                    var secondsRemaining = vote.openingTime;
- 
+                    print("Welcome to voting")
+                    print("Vote..: \(vote)")
+                    let opening = vote.openingTime;
                     Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { (Timer) in
-
-//                        let date = Date().adding(hours: 3)
-//                        let now = date.timeIntervalSince1970
-//                        let opening = TimeInterval(vote.openingTime)
-//
-//                        let diff = now - opening
+                        let calendar = Calendar.current
+                        let now = Date().adding(hours: 3)
+                        let date = Date(timeIntervalSince1970: TimeInterval(opening)).adding(hours: 3)
+                        let diff = calendar.dateComponents([.hour, .minute, .second], from: now, to: date)
+                        self.closeDate = "\(diff.minute!):\(diff.second!)"
+//                        print("Left...: \(diff.minute!):\(diff.second!)")
+                        // get user polls
+                        self.getPolls()
                         
-                        
-                                       
-//                        let expireTime = TimeInterval(poll?.pollExpire ?? Int(now))
-//                        let myDate = NSDate(timeIntervalSince1970: diff)
-////
-//                        let dateFormatter = DateFormatter()
-//                        dateFormatter.dateFormat = "mm:ss"
-//                        let strDate = dateFormatter.string(from: myDate as Date)
-//                        print("Date: \(strDate)")
-//
-//                        print("\(hour):\(minute):\(second)")
-                        
-                      
-                        
-                        
-
-//                        let duration = differenceInSeconds.second
-                      
-//                        print ("\(String(describing: duration)) seconds")
-                           
-//                        if secondsRemaining > 0 {
-//                            print ("\(String(describing: secondsRemaining)) seconds")
-////                            self.closeDate = String(secondsRemaining)
-//                        } else {
-//                            print("time ended")
-//                            Timer.invalidate()
-//                        }
                     }
                 }
 
-                Button {
-                    AuthClass.isValidUer(reasonString: "Voter verification") {(isSuccess, stringValue) in
-                        if isSuccess {
-                            print("evaluating...... successfully completed")
-                        
-                            self.sendOTP()
-                            self.showOTPView = true
+                if poll == nil {
+                    Button {
+                        AuthClass.isValidUer(reasonString: "Voter verification") {(isSuccess, stringValue) in
+                            if isSuccess {
+                                print("evaluating...... successfully completed")
                             
-                        } else {
-                            print("evaluating...... failed to recognise user \n reason = \(stringValue?.description ?? "invalid")")
-                        }
+                                self.sendOTP()
+                                self.showOTPView = true
+                                
+                            } else {
+                                print("evaluating...... failed to recognise user \n reason = \(stringValue?.description ?? "invalid")")
+                            }
 
+                        }
+                    } label: {
+                        Text("Click to request OTP")
+                            .padding(12)
                     }
-                } label: { 
-                    Text("Click to request OTP")
-                        .padding(12)
+                    .contentShape(Rectangle())
+                    .background(Color.yellow)
+                    .foregroundColor(Color.black)
+                    .cornerRadius(15)
+                    
+                } else {
+                    // navigate if poll is available
+                    NavigationLink(destination: VotingView(poll: self.poll!,meetingId: vote.meetingId!), tag: 1, selection: $currentButton) {
+                        EmptyView()
+                    }
+                    Button {
+                        self.currentButton = 1 // this activates NavigationLink with specified tag
+                    } label: {
+                        Text("Open Vote")
+                            .foregroundColor(Color.red)
+                            .fontWeight(.bold).font(.system(size: 20))
+                            .padding(8)
+                    }
                 }
-                .contentShape(Rectangle())
-                .background(Color.yellow)
-                .foregroundColor(Color.black)
-                .cornerRadius(15)
  
             }
         }
          
         if poll != nil {
-            NavigationLink(destination: VotingView(poll: self.poll!),
+            NavigationLink(destination: VotingView(poll: self.poll!,meetingId: vote.meetingId!),
                isActive: self.$otpVerified) {
                  EmptyView()
             }.hidden().onDisappear{

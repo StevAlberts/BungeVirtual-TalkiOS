@@ -19,11 +19,13 @@
 		0442EB66277496B100C61FC7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C330374255E6EBC00BDB4E4 /* InfoPlist.strings */; };
 		0442EB702774A09C00C61FC7 /* SoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0442EB6F2774A09C00C61FC7 /* SoundManager.m */; };
 		0442EB732774A37C00C61FC7 /* anthem.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0442EB722774A37C00C61FC7 /* anthem.mp3 */; };
+		04488EBB278EFB4E00E0C562 /* PollVoteResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04488EBA278EFB4D00E0C562 /* PollVoteResult.swift */; };
 		04519E9F2782FB39003A5994 /* RadioButtonField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04519E9E2782FB38003A5994 /* RadioButtonField.swift */; };
 		049DA9E2277AF13A00231F39 /* PollsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DA9E1277AF13A00231F39 /* PollsView.swift */; };
 		049DA9E4277AFC9B00231F39 /* SwiftUIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DA9E3277AFC9A00231F39 /* SwiftUIFactory.swift */; };
 		049DA9E6277B066800231F39 /* AuthClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DA9E5277B066800231F39 /* AuthClass.swift */; };
 		049DA9EC277B182900231F39 /* VotingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DA9EB277B182800231F39 /* VotingAPI.swift */; };
+		04A7B49D27954F86006FAAEB /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A7B49C27954F86006FAAEB /* CommentsView.swift */; };
 		04AE57A227300CFB0021145C /* LauncherScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04AE57A127300CFB0021145C /* LauncherScreen.storyboard */; };
 		04BE383E2748F84D00D620F0 /* NCKActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BE383D2748F84D00D620F0 /* NCKActivity.m */; };
 		04BE383F2748F84D00D620F0 /* NCKActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BE383D2748F84D00D620F0 /* NCKActivity.m */; };
@@ -339,11 +341,13 @@
 		0442EB6F2774A09C00C61FC7 /* SoundManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SoundManager.m; sourceTree = "<group>"; };
 		0442EB712774A0E600C61FC7 /* SoundManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundManager.h; sourceTree = "<group>"; };
 		0442EB722774A37C00C61FC7 /* anthem.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = anthem.mp3; sourceTree = "<group>"; };
+		04488EBA278EFB4D00E0C562 /* PollVoteResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollVoteResult.swift; sourceTree = "<group>"; };
 		04519E9E2782FB38003A5994 /* RadioButtonField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonField.swift; sourceTree = "<group>"; };
 		049DA9E1277AF13A00231F39 /* PollsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsView.swift; sourceTree = "<group>"; };
 		049DA9E3277AFC9A00231F39 /* SwiftUIFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIFactory.swift; sourceTree = "<group>"; };
 		049DA9E5277B066800231F39 /* AuthClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthClass.swift; sourceTree = "<group>"; };
 		049DA9EB277B182800231F39 /* VotingAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotingAPI.swift; sourceTree = "<group>"; };
+		04A7B49C27954F86006FAAEB /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
 		04AE57A127300CFB0021145C /* LauncherScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LauncherScreen.storyboard; sourceTree = "<group>"; };
 		04BE38392748E3A100D620F0 /* NCKActivity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NCKActivity.h; sourceTree = "<group>"; };
 		04BE383D2748F84D00D620F0 /* NCKActivity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NCKActivity.m; sourceTree = "<group>"; };
@@ -848,8 +852,10 @@
 				043DC6FA2786DC810071CAE8 /* VotingView.swift */,
 				043DC6FE2786DD1D0071CAE8 /* MainView.swift */,
 				043DC700278706670071CAE8 /* ResultsView.swift */,
+				04A7B49C27954F86006FAAEB /* CommentsView.swift */,
 				043674D12788667A00E36B7A /* Poll.swift */,
 				043674D3278875A700E36B7A /* PollOption.swift */,
+				04488EBA278EFB4D00E0C562 /* PollVoteResult.swift */,
 			);
 			path = Voting;
 			sourceTree = "<group>";
@@ -1944,6 +1950,7 @@
 				2C4D7D721F309DA500FF4A0D /* RTCIceCandidate+JSON.m in Sources */,
 				2C9E6CCE1F6F34F000399B7A /* ARDSDPUtils.m in Sources */,
 				2C06330F2046CC8B0043481A /* NCUserInterfaceController.m in Sources */,
+				04A7B49D27954F86006FAAEB /* CommentsView.swift in Sources */,
 				2CB304222264775E0053078A /* UIView+SLKAdditions.m in Sources */,
 				2C4446F0265D454200DF1DBC /* NotificationCenterNotifications.m in Sources */,
 				043DC6FF2786DD1D0071CAE8 /* MainView.swift in Sources */,
@@ -2021,6 +2028,7 @@
 				0442EB702774A09C00C61FC7 /* SoundManager.m in Sources */,
 				2CA1CC911F014354002FE6A2 /* NCConnectionController.m in Sources */,
 				2C92195C1F58530B008AC1A3 /* UIImageView+Letters.m in Sources */,
+				04488EBB278EFB4E00E0C562 /* PollVoteResult.swift in Sources */,
 				2C4D7D691F2F7DBC00FF4A0D /* ARDSettingsModel.m in Sources */,
 				2CB6ACBC26385A3800D3D641 /* ShareLocationViewController.m in Sources */,
 				2C444708265E59BC00DF1DBC /* ShareItemController.m in Sources */,
@@ -2336,7 +2344,7 @@
 					"\"$(PROJECT_DIR)/ThirdParty\"/**",
 				);
 				INFOPLIST_FILE = NextcloudTalk/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2385,7 +2393,7 @@
 					"\"$(PROJECT_DIR)/ThirdParty\"/**",
 				);
 				INFOPLIST_FILE = NextcloudTalk/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

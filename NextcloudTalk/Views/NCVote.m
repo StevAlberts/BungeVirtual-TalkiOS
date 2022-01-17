@@ -25,9 +25,9 @@
     vote.expire = [[voteDict objectForKey:@"expire"] integerValue];
     vote.voteType = [voteDict objectForKey:@"voteType"];
     vote.notifMins = [[voteDict objectForKey:@"notifMins"] integerValue];
-    vote.meetingName = [voteDict objectForKey:@"meetingName"];
-    vote.meetingId = [voteDict objectForKey:@"meetingId"];
-    vote.openingTime = [[voteDict objectForKey:@"openingTime"] integerValue];
+    vote.meetingName = [voteDict objectForKey:@"meeting_name"];
+    vote.meetingId = [voteDict objectForKey:@"meeting_id"];
+    vote.openingTime = [[voteDict objectForKey:@"opening_time"] integerValue];
 
     return vote;
 }

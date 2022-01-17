@@ -166,29 +166,29 @@ typedef enum AboutSection {
 
 - (void)logoutButtonPressed
 {
-    NSString *alertTitle = (multiAccountEnabled) ? NSLocalizedString(@"Logout", nil) : NSLocalizedString(@"Log out", nil);
-    NSString *alertMessage = (multiAccountEnabled) ? NSLocalizedString(@"Do you really want to log out from this account?", nil) : NSLocalizedString(@"Do you really want to log out from this account?", nil);
-    NSString *actionTitle = (multiAccountEnabled) ? NSLocalizedString(@"Log out", nil) : NSLocalizedString(@"Log out", nil);
-    
-    UIAlertController *confirmDialog =
-    [UIAlertController alertControllerWithTitle:alertTitle
-                                        message:alertMessage
-                                 preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-        [self logout];
-    }];
-    [confirmDialog addAction:confirmAction];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil];
-    [confirmDialog addAction:cancelAction];
-    [self presentViewController:confirmDialog animated:YES completion:nil];
-    
-//    NSLog(@"Logout pressed");
+//    NSString *alertTitle = (multiAccountEnabled) ? NSLocalizedString(@"Logout", nil) : NSLocalizedString(@"Log out", nil);
+//    NSString *alertMessage = (multiAccountEnabled) ? NSLocalizedString(@"Do you really want to log out from this account?", nil) : NSLocalizedString(@"Do you really want to log out from this account?", nil);
+//    NSString *actionTitle = (multiAccountEnabled) ? NSLocalizedString(@"Log out", nil) : NSLocalizedString(@"Log out", nil);
 //
-//    if (@available(iOS 14.0, *)) {
-//        UIViewController *userPolls = [SwiftUIViewWrapper createSwiftUIViewWithName:@"PollsView"];
-//        NCNavigationController *userStatusMessageNC = [[NCNavigationController alloc] initWithRootViewController:userPolls];
-//        [self presentViewController:userStatusMessageNC animated:YES completion:nil];
-//    }
+//    UIAlertController *confirmDialog =
+//    [UIAlertController alertControllerWithTitle:alertTitle
+//                                        message:alertMessage
+//                                 preferredStyle:UIAlertControllerStyleAlert];
+//    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+//        [self logout];
+//    }];
+//    [confirmDialog addAction:confirmAction];
+//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil];
+//    [confirmDialog addAction:cancelAction];
+//    [self presentViewController:confirmDialog animated:YES completion:nil];
+    
+    NSLog(@"Logout pressed");
+ 
+    if (@available(iOS 14.0, *)) {
+        UIViewController *userPolls = [SwiftUIViewWrapper createSwiftUICommentsView];
+        NCNavigationController *userStatusMessageNC = [[NCNavigationController alloc] initWithRootViewController:userPolls];
+        [self presentViewController:userStatusMessageNC animated:YES completion:nil];
+    }
 }
 
 - (void)logout
