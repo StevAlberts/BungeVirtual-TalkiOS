@@ -290,9 +290,9 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
     self.longPressGesture = longPressGesture;
     
     // Add long press gesture recognizer for voice message recording button
-    self.voiceMessageLongPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressInVoiceMessageRecordButton:)];
-    self.voiceMessageLongPressGesture.delegate = self;
-    [self.rightButton addGestureRecognizer:self.voiceMessageLongPressGesture];
+//    self.voiceMessageLongPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressInVoiceMessageRecordButton:)];
+//    self.voiceMessageLongPressGesture.delegate = self;
+//    [self.rightButton addGestureRecognizer:self.voiceMessageLongPressGesture];
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:[ChatMessageTableViewCell class] forCellReuseIdentifier:ChatMessageCellIdentifier];
@@ -625,6 +625,8 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
     _videoCallButton.innerButton.layer.cornerRadius = 7;
     _videoCallButton.innerButton.clipsToBounds = YES;
 
+    NSLog(@"Room state .......:%u",_room.lobbyState);
+    NSLog(@"Room state .......:%id",_room.sipEnabled);
     
     if(_room.readOnlyState){
         NSLog(@"Meeting has ended...........");
@@ -690,11 +692,11 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
 
 - (void)showVoiceMessageRecordButton
 {
-    [self.rightButton setTitle:@"" forState:UIControlStateNormal];
-    [self.rightButton setImage:[UIImage imageNamed:@"audio"] forState:UIControlStateNormal];
-    self.rightButton.tag = k_voice_record_button_tag;
-    self.rightButton.accessibilityLabel = NSLocalizedString(@"Record voice message", nil);
-    self.rightButton.accessibilityHint = NSLocalizedString(@"Tap and hold to record a voice message", nil);
+//    [self.rightButton setTitle:@"" forState:UIControlStateNormal];
+//    [self.rightButton setImage:[UIImage imageNamed:@"audio"] forState:UIControlStateNormal];
+//    self.rightButton.tag = k_voice_record_button_tag;
+//    self.rightButton.accessibilityLabel = NSLocalizedString(@"Record voice message", nil);
+//    self.rightButton.accessibilityHint = NSLocalizedString(@"Tap and hold to record a voice message", nil);
 }
 
 - (void)showSendMessageButton
@@ -3192,9 +3194,11 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
     }
     
     
-//    // Delete file option
-    if (message.file || [message isDeletableForAccount:[[NCDatabaseManager sharedInstance] activeAccount] andParticipantType:_room.participantType]) {
-
+    // Delete file option
+//    if (message.file || [message isDeletableForAccount:[[NCDatabaseManager sharedInstance] activeAccount] andParticipantType:_room.participantType]) {
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    if (message.file && [message.actorId isEqualToString:activeAccount.userId]) {
+ 
         UIImage *deleteImage = [[UIImage imageNamed:@"delete"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         UIAction *deleteAction = [UIAction actionWithTitle:NSLocalizedString(@"Delete file", nil) image:deleteImage identifier:nil handler:^(UIAction *action){
 

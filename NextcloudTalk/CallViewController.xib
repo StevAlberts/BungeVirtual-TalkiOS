@@ -112,15 +112,18 @@
                         <action selector="toggleChatButtonPressed:" destination="-1" eventType="touchUpInside" id="zJP-fn-GWH"/>
                     </connections>
                 </button>
-                <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0UI-gD-drN">
-                    <rect key="frame" x="118" y="295" width="144" height="59"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0UI-gD-drN">
+                    <rect key="frame" x="115" y="303.5" width="145" height="60"/>
                     <color key="backgroundColor" systemColor="systemYellowColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="YyY-H0-JQE"/>
+                        <constraint firstAttribute="width" constant="145" id="zhw-td-1wR"/>
+                    </constraints>
                     <color key="tintColor" systemColor="systemYellowColor"/>
                     <state key="normal" title="Button"/>
                     <buttonConfiguration key="configuration" style="plain" title="Tap to Vote">
                         <fontDescription key="titleFontDescription" type="boldSystem" pointSize="19"/>
-                        <color key="baseForegroundColor" systemColor="labelColor"/>
+                        <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </buttonConfiguration>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -257,6 +260,10 @@
             </subviews>
             <viewLayoutGuide key="safeArea" id="bbs-K4-b33"/>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="0UI-gD-drN" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="jVk-vy-0wU"/>
+                <constraint firstItem="0UI-gD-drN" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="vFF-q9-EdJ"/>
+            </constraints>
             <point key="canvasLocation" x="34.399999999999999" y="52.623688155922046"/>
         </view>
         <view contentMode="scaleToFill" id="BF4-kz-lxP">
@@ -289,9 +296,6 @@
         <image name="switch-camera" width="24" height="24"/>
         <image name="video" width="24" height="24"/>
         <image name="video-off" width="24" height="24"/>
-        <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
         <systemColor name="systemGreenColor">
             <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

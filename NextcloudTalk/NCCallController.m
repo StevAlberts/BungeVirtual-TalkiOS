@@ -184,30 +184,22 @@ static NSString * const kNCVideoTrackKind = @"video";
 }
 
 // raisedhand
-- (void) raiseHand: (BOOL)raised
+- (void) raiseHand: (BOOL)raised peerId:(NSString*) peerId
 {
     NSLog(@"Raised hand...........");
-
-//
-//    NSDictionary *payload = @{
-//                              @"raiseHand": @(raised)
-//                              };
-//
-////    [self sendRaisehandToAllOfType:@"raiseHand" raised:raised];
-//    [self sendRaisehandToAllOfType:@"raiseHand" withPayload:payload];
-    
     
    NSDate *now = [NSDate date]; // current date
    NSInteger today = [now timeIntervalSince1970];
 
    NSDictionary *payload = @{
+//       @"peerId": peerId,
        @"state": @(raised),
        @"timestamp": @(today)
      };
     
     NSLog(@"payload....:%@",payload);
 
-   [self sendDataChannelMessageToAllOfType:@"raiseHand" withPayload:payload];
+   [self sendDataChannelMessageToAllOfType:@"raisedHand" withPayload:payload];
     
     
 }
@@ -281,7 +273,7 @@ static NSString * const kNCVideoTrackKind = @"video";
 
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     
-    NSInteger * speakId = [defaults integerForKey:@"speakId"];
+    NSInteger * speakId = (long *)[defaults integerForKey:@"speakId"];
     NSLog(@"cancelSpeak........._speakId: %ld", (long)speakId);
 
     if(speakId != nil){
@@ -312,7 +304,7 @@ static NSString * const kNCVideoTrackKind = @"video";
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    NSInteger * interveneId = [defaults integerForKey:@"interveneId"];
+    NSInteger * interveneId = (long *)[defaults integerForKey:@"interveneId"];
     NSLog(@"cancelIntervene........._interveneId: %ld",(long)interveneId);
 
     if(interveneId != nil){
@@ -341,7 +333,7 @@ static NSString * const kNCVideoTrackKind = @"video";
 {
     NSLog(@"startSpeak...........");
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    NSInteger * speakId = [defaults integerForKey:@"speakId"];
+    NSInteger * speakId = (long *)[defaults integerForKey:@"speakId"];
     NSLog(@"startSpeak........._speakId: %ld", (long)speakId);
     
     [[NCAPIController sharedInstance] startedRequestApi:_room.token requestId:speakId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
@@ -357,9 +349,9 @@ static NSString * const kNCVideoTrackKind = @"video";
 
 - (void) startIntervene
 {
-    NSLog(@"startIntervene...........");
+    NSLog(@"startIn*tervene...........");
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSInteger * interveneId = [defaults integerForKey:@"interveneId"];
+    NSInteger * interveneId = (long *)[defaults integerForKey:@"interveneId"];
     NSLog(@"startIntervene........._interveneId: %ld",(long)interveneId);
 
     [[NCAPIController sharedInstance] startedRequestApi:_room.token requestId:interveneId forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
@@ -876,8 +868,7 @@ static NSString * const kNCVideoTrackKind = @"video";
         @"timestamp": @(today)
       };
 
-    [self sendDataChannelMessageToAllOfType:@"raiseHand" withPayload:payload];
-
+    [self sendDataChannelMessageToAllOfType:@"raisedHand" withPayload:payload];
 }
 
 - (void)sendRaisehandToAllOfType:(NSString *)type withPayload:(id)payload

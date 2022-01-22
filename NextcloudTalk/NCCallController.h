@@ -75,7 +75,8 @@
 - (void)startCall;
 - (void)leaveCall;
 //- (void)speakRequest;
-- (void)raiseHand:(BOOL)raised;
+//- (void)raiseHand:(BOOL)raised;
+- (void)raiseHand: (BOOL)raised peerId:(NSString*)peerId;
 - (void)requestToSpeak;
 - (void)requestToIntervene;
 //- (void)requestToCancel;

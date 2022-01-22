@@ -36,7 +36,7 @@ typedef enum NCTextColorStyle {
 
 NSString * const talkAppName = @"Bungevirtual Talk";
 NSString * const filesAppName = @"Bungevirtual";
-NSString * const copyright = @"© 2021";
+NSString * const copyright = @"© 2022";
 NSString * const bundleIdentifier = @"com.bungevirtual.ios";
 NSString * const groupIdentifier = @"group.com.bungevirtual.ios";
 //NSString * const bundleIdentifier = @"com.nextcloud.Talk";

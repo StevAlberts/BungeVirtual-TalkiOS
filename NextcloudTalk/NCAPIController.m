@@ -40,12 +40,10 @@ NSInteger const APIv4                       = 4;
 
 NSString * const kNCOCSAPIVersion           = @"/ocs/v2.php";
 NSString * const kNCSpreedAPIVersionBase    = @"/apps/spreed/api/v";
-NSString * const kikaoUtilities             = @"/apps/kikaoutilities/api/0.1/";
-//NSString * const kNCPolls                   = @"/apps/polls/";
+NSString * const kikaoUtilities             = @"/index.php/apps/kikaoutilities/api/0.1/";
 NSString * const kNCPolls                   = @"/apps/polls/api/v1.0/";
+NSString * const kNCVotes                  = @"/index.php/apps/polls/";
 NSString * const kNCOtp                     = @"/index.php/apps/polls/api/v1.0/";
-//NSString * const kVerifyOtp                 = @"/index.php/apps/polls/api/v1.0/verifyOtp";
-
 
 NSInteger const kReceivedChatMessagesLimit = 100;
 
@@ -1333,6 +1331,8 @@ NSInteger const kReceivedChatMessagesLimit = 100;
    NSString *endpoint = [NSString stringWithFormat:@"activities"];
    NSString *URLString = [NSString stringWithFormat:@"%@%@%@?token=%@", account.server, kikaoUtilities, endpoint,encodedToken];
     
+//    NSLog(@"listenResponseApi URL...:%@", URLString);
+    
     NSURL *url = [NSURL URLWithString:URLString];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
 
@@ -1481,8 +1481,6 @@ NSInteger const kReceivedChatMessagesLimit = 100;
             
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             
-//            NSLog(@"getPollsApi...httpResponse: %@", httpResponse);
-
             if(httpResponse.statusCode == 200)
                 {
                     NSError *parseError = nil;
@@ -1743,6 +1741,8 @@ NSInteger const kReceivedChatMessagesLimit = 100;
             
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             
+            NSLog(@"The verifyOtp data.....: %@",data);
+            
             if(httpResponse.statusCode == 200){
                 NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
                 NSLog(@"The verifyOtp responseDictionary is - %@",responseDictionary);
@@ -1770,8 +1770,7 @@ setVote:(NSNumber *)optionId withValue:(NSString *)option forUser:(TalkAccount *
     
     // make url string
     NSString *endpoint = [NSString stringWithFormat:@"vote"];
-    NSString *URLString = [NSString stringWithFormat:@"%@%@%@", account.server, kNCPolls, endpoint];
-
+    NSString *URLString = [NSString stringWithFormat:@"%@%@%@", account.server, kNCVotes, endpoint];
     
     // authenticate
     NSString *userToken = [[NCKeyChainController sharedInstance] tokenForAccountId:account.accountId];
@@ -1792,7 +1791,7 @@ setVote:(NSNumber *)optionId withValue:(NSString *)option forUser:(TalkAccount *
     NSLog(@"URL = %@", URLString);
   
     //create the Method "PUT"
-    [urlRequest setHTTPMethod:@"POST"];
+    [urlRequest setHTTPMethod:@"PUT"];
     [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
@@ -1810,12 +1809,12 @@ setVote:(NSNumber *)optionId withValue:(NSString *)option forUser:(TalkAccount *
             
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             
-            NSLog(@"The setVote httpResponse..: %@",httpResponse);
+//            NSLog(@"The setVote httpResponse..: %@",httpResponse);
 
             
             if(httpResponse.statusCode == 200){
                 NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-                NSLog(@"The setVote response is - %@",responseDictionary);
+//                NSLog(@"The setVote response is - %@",responseDictionary);
                 if (block) {
                     block(responseDictionary, nil);
                 }
@@ -1837,10 +1836,10 @@ setVote:(NSNumber *)optionId withValue:(NSString *)option forUser:(TalkAccount *
 {
     NSLog(@"getVotes............");
         
-//    make url string
-   NSString *endpoint = [NSString stringWithFormat:@"poll"];
+    // make url string
+    NSString *endpoint = [NSString stringWithFormat:@"poll"];
     NSString *URLString = [NSString stringWithFormat:@"%@%@%@/%@/votes", account.server, kNCPolls, endpoint,pollId];
-    
+https://bungevirtualbackup.ml/index.php/apps/polls/vote
     NSLog(@"getVotesURLString: %@",URLString);
     
     

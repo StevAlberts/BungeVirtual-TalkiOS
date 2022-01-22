@@ -881,14 +881,14 @@ typedef NS_ENUM(NSInteger, CallState) {
  */
 - (void)handleTalkControls
 {
-    NSLog(@"CALLVIEWROOM: %ld", (long)_room.type);
+//    NSLog(@"CALLVIEWROOM: %ld", (long)_room.type);
     // Set room image
     switch ((int)_room.type) {
         // staff
         case 2:
         case 3:
         {
-            NSLog(@"SHOW RAISE HAND");
+//            NSLog(@"SHOW RAISE HAND");
             [self.raiseHandContainerView setHidden:NO];
         }
             break;
@@ -901,19 +901,17 @@ typedef NS_ENUM(NSInteger, CallState) {
         // breakout
 //        case 20:
         {
-            NSLog(@"SHOW REQ CONTROLS");
+//            NSLog(@"SHOW REQ CONTROLS");
             [self.requestContainerView setHidden:NO];
             
             [self muteAudio];
             [self disableLocalVideo];
             
             if(_callController){
-                NSLog(@"_callController.....YES");
+//                NSLog(@"_callController.....YES");
                 [self.audioMuteButton setHidden:YES];
                 [self.videoCallButton setHidden:YES];
                 [self.videoDisableButton setHidden:YES];
-            }else{
-                NSLog(@"_callController.....NO");
             }
 
         }
@@ -1031,7 +1029,7 @@ typedef NS_ENUM(NSInteger, CallState) {
 - (void) requestListener
 {
     //Start playing an audio file.
-    NSLog(@"start timer........");
+//    NSLog(@"start timer........");
     //NSTimer calling Method B, as long the audio file is playing, every 5 seconds.
     [NSTimer scheduledTimerWithTimeInterval:1.0f
     target:self selector:@selector(handleRequests:) userInfo:nil repeats:YES];
@@ -1048,8 +1046,8 @@ typedef NS_ENUM(NSInteger, CallState) {
 //    NSLog(@"_requestedIntervene...:%id", _requestedIntervene);
 
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    NSInteger * speakId = [defaults integerForKey:@"speakId"];
-    NSInteger * interveneId = [defaults integerForKey:@"interveneId"];
+    NSInteger * speakId = (long *)[defaults integerForKey:@"speakId"];
+    NSInteger * interveneId = (long *)[defaults integerForKey:@"interveneId"];
     
     if(speakId!=nil){
 //        NSLog(@"handleSpeakRequest...:%ld", speakId);
@@ -1103,7 +1101,18 @@ typedef NS_ENUM(NSInteger, CallState) {
 
                         if (activity.started){
 //                            NSLog(@"Started.........");
-                            [self.timerButton setHidden:NO];
+                            switch ((int)_room.type) {
+                                // plenary
+                                case 222:
+                                case 333:
+                                {
+                                    [self.timerButton setHidden:NO];
+                                }
+                                    break;
+
+                                default:
+                                    break;
+                            }
                             if(activity.paused){
 //                                NSLog(@"Paused...");
                                 [self hideControls];
@@ -1155,7 +1164,19 @@ typedef NS_ENUM(NSInteger, CallState) {
 
                         if (activity.started){
 //                            NSLog(@"Started.........");
-                            [self.timerButton setHidden:NO];
+//                            [self.timerButton setHidden:NO];
+                            switch ((int)_room.type) {
+                                // plenary
+                                case 222:
+                                case 333:
+                                {
+                                    [self.timerButton setHidden:NO];
+                                }
+                                    break;
+
+                                default:
+                                    break;
+                            }
                             if(activity.paused){
 //                                NSLog(@"Paused...");
                                 [self hideControls];
@@ -1176,6 +1197,7 @@ typedef NS_ENUM(NSInteger, CallState) {
             }
         
         if(_approvedIntervene && ![_responses containsObject:_interveneActivity]){
+
             NSLog(@"Cancel request........._interveneActivity....: %id", [_responses containsObject:_interveneActivity]);
 //            NSLog(@"Cancel request.........._interveneActivity......:%ld", (long) _interveneActivity.activityId);
 //            NSLog(@"Cancel request........................_interveneActivity..............................");
@@ -1290,8 +1312,6 @@ typedef NS_ENUM(NSInteger, CallState) {
 
 -(void)showControls
 {
-//    NSLog(@"showControls ......");
-    
     [self.audioMuteButton setHidden:NO];
     [self.videoCallButton setHidden:NO];
     [self.videoDisableButton setHidden:NO];
@@ -1299,8 +1319,6 @@ typedef NS_ENUM(NSInteger, CallState) {
 
 -(void)hideControls
 {
-//    NSLog(@"hideControls ......");
-    
     [self muteAudio];
     [self disableLocalVideo];
     [self.audioMuteButton setHidden:YES];
@@ -1324,16 +1342,16 @@ typedef NS_ENUM(NSInteger, CallState) {
     }
 }
 
-//-(void) startSpeakTimer:(NSInteger*)speakID startInterveneTimer:(NSInteger*)interveneID
-//{
-//    if(speakID != nil){
-//        [_callController startSpeak];
-//    }
-//
-//    if(interveneID != nil){
-//        [_callController startIntervene];
-//    }
-//}
+-(void)startRequests
+{
+    if(_approvedSpeak){
+        [_callController startSpeak];
+    }
+    
+    if(_approvedIntervene){
+        [_callController startIntervene];
+    }
+}
 
 #pragma mark - Raise hand actions
 
@@ -1357,7 +1375,7 @@ typedef NS_ENUM(NSInteger, CallState) {
         self->_raiseHandButton.accessibilityValue = raiseUpString;
         [self.view makeToast:raiseUpString duration:1.5 position:CSToastPositionCenter];
 //        [_buttonFeedbackGenerator impactOccurred];
-        [_callController raiseHand:YES];
+        [_callController raiseHand:YES peerId:@""];
     }
     
 }
@@ -1372,10 +1390,7 @@ typedef NS_ENUM(NSInteger, CallState) {
         NSString *raiseDownString = NSLocalizedString(@"Cancelled", nil);
         self->_raiseHandButton.accessibilityValue = raiseDownString;
         [self.view makeToast:raiseDownString duration:1.5 position:CSToastPositionCenter];
-//        [_buttonFeedbackGenerator impactOccurred];
-//        [_callController raiseHand];
-        [_callController raiseHand:NO];
-
+        [_callController raiseHand:NO peerId:@""];
     }
 }
 
@@ -1419,12 +1434,18 @@ typedef NS_ENUM(NSInteger, CallState) {
 {
     [_callController enableAudio:YES];
                
+    // show timer when user starts talking
        switch ((int)_room.type) {
+           // committee
+           case 22:
+           case 33:
+           {
+               [self startRequests];
+           }
            // plenary
            case 222:
            case 333:
            {
-               NSLog(@"Start timer ............................................");
                [self startTimer];
            }
                break;
@@ -1432,6 +1453,7 @@ typedef NS_ENUM(NSInteger, CallState) {
            default:
                break;
        }
+
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self->_audioMuteButton setImage:[UIImage imageNamed:@"audio"] forState:UIControlStateNormal];
@@ -1789,7 +1811,16 @@ typedef NS_ENUM(NSInteger, CallState) {
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    NSLog(@"collectionView NSIndexPath.....: %@", indexPath);
+    
+    // this is used to push participants in grid
     CallParticipantViewCell *cell = (CallParticipantViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:kCallParticipantCellIdentifier forIndexPath:indexPath];
+    
+    NSLog(@"CallParticipantViewCell.....: %@", cell.displayName);
+    
+    NSLog(@"CallParticipantViewCell.....: %@", cell);
+    
     NCPeerConnection *peerConnection = [_peersInCall objectAtIndex:indexPath.row];
     
     cell.peerId = peerConnection.peerId;
@@ -1924,8 +1955,10 @@ typedef NS_ENUM(NSInteger, CallState) {
 {
 }
 
+// Should show Raise Hand in call
 - (void)callController:(NCCallController *)callController didReceiveDataChannelMessage:(NSString *)message fromPeer:(NCPeerConnection *)peer
 {
+    NSLog(@"Show didReceiveDataChannelMessage.....:%@",message);
     if ([message isEqualToString:@"audioOn"] || [message isEqualToString:@"audioOff"]) {
         [self updatePeer:peer block:^(CallParticipantViewCell *cell) {
             [cell setAudioDisabled:peer.isRemoteAudioDisabled];
