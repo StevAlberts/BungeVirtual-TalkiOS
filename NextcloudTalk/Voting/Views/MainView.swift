@@ -241,9 +241,11 @@ struct MainView: View {
                         let now = Date().adding(hours: 3)
                         let date = Date(timeIntervalSince1970: TimeInterval(opening)).adding(hours: 3)
                         let diff = calendar.dateComponents([.hour, .minute, .second], from: now, to: date)
-                        let mins = String(format: "%02d", diff.minute!)
-                        let secs = String(format: "%02d", diff.second!) // returns "100"
-                        self.closeDate = "\(mins):\(secs)"
+                        if diff.second! >= 0 {
+                            let mins = String(format: "%02d", diff.minute!)
+                            let secs = String(format: "%02d", diff.second!) // returns "100"
+                            self.closeDate = "\(mins):\(secs)"
+                        }
 //                        self.closeDate = "\(diff.minute!):\(diff.second!)"
 //                        print("Left...: \(diff.minute!):\(diff.second!)")
                         // get user polls

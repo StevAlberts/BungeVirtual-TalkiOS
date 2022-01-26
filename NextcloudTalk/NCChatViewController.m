@@ -625,8 +625,8 @@ NSString * const NCChatViewControllerForwardNotification = @"NCChatViewControlle
     _videoCallButton.innerButton.layer.cornerRadius = 7;
     _videoCallButton.innerButton.clipsToBounds = YES;
 
-    NSLog(@"Room state .......:%u",_room.lobbyState);
-    NSLog(@"Room state .......:%id",_room.sipEnabled);
+//    NSLog(@"Room state .......:%u",_room.lobbyState);
+//    NSLog(@"Room state .......:%id",_room.sipEnabled);
     
     if(_room.readOnlyState){
         NSLog(@"Meeting has ended...........");

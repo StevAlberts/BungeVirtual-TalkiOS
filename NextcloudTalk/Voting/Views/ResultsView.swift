@@ -184,6 +184,10 @@ struct ResultsView: View {
         
         self.closeDate = strDate
         
+        print("Closing.....:\(closing)")
+        print("myDate.....:\(myDate)")
+        print("CloseDate.....:\(closeDate)")
+        
     }
     
     var body: some View {

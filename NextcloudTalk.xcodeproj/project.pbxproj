@@ -13,7 +13,6 @@
 		043674D22788667A00E36B7A /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043674D12788667A00E36B7A /* Poll.swift */; };
 		043674D4278875A700E36B7A /* PollOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043674D3278875A700E36B7A /* PollOption.swift */; };
 		043DC6FB2786DC830071CAE8 /* VotingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043DC6FA2786DC810071CAE8 /* VotingView.swift */; };
-		043DC6FD2786DCE10071CAE8 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043DC6FC2786DCE10071CAE8 /* SwiftUIView.swift */; };
 		043DC6FF2786DD1D0071CAE8 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043DC6FE2786DD1D0071CAE8 /* MainView.swift */; };
 		043DC701278706670071CAE8 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043DC700278706670071CAE8 /* ResultsView.swift */; };
 		0442EB66277496B100C61FC7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C330374255E6EBC00BDB4E4 /* InfoPlist.strings */; };
@@ -336,7 +335,6 @@
 		043674D12788667A00E36B7A /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
 		043674D3278875A700E36B7A /* PollOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollOption.swift; sourceTree = "<group>"; };
 		043DC6FA2786DC810071CAE8 /* VotingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotingView.swift; sourceTree = "<group>"; };
-		043DC6FC2786DCE10071CAE8 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		043DC6FE2786DD1D0071CAE8 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		043DC700278706670071CAE8 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
 		0442EB6F2774A09C00C61FC7 /* SoundManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SoundManager.m; sourceTree = "<group>"; };
@@ -846,7 +844,6 @@
 				049DA9E5277B066800231F39 /* AuthClass.swift */,
 				049DA9EB277B182800231F39 /* VotingAPI.swift */,
 				04519E9E2782FB38003A5994 /* RadioButtonField.swift */,
-				043DC6FC2786DCE10071CAE8 /* SwiftUIView.swift */,
 				04318D1427843DCB00B08DD0 /* NCVote.h */,
 				04318D1527843EF500B08DD0 /* NCVote.m */,
 				04318D17278442D000B08DD0 /* NCPoll.h */,
@@ -905,9 +902,9 @@
 		2C05747F1EDD9E8E00D9E7F2 /* NextcloudTalk */ = {
 			isa = PBXGroup;
 			children = (
-				04818084276352F3007838B4 /* Voting */,
 				2C0574831EDD9E8E00D9E7F2 /* AppDelegate.h */,
 				2C0574841EDD9E8E00D9E7F2 /* AppDelegate.m */,
+				04818084276352F3007838B4 /* Voting */,
 				2C5521691F7D48480077E587 /* Calls */,
 				2CF0679E208A2A430070A79B /* Chat */,
 				2C5521671F7D47BA0077E587 /* Contacts */,
@@ -1942,7 +1939,6 @@
 				2C78EF9C1F826B22008AFA74 /* NCCallController.m in Sources */,
 				2C4D7D761F30F7B600FF4A0D /* ARDUtilities.m in Sources */,
 				2CB6ACE92641954700D3D641 /* MapViewController.m in Sources */,
-				043DC6FD2786DCE10071CAE8 /* SwiftUIView.swift in Sources */,
 				2CBF82AE1FC888FC00636459 /* NCPushNotification.m in Sources */,
 				2CC7159420C54D080045C789 /* ChatTableViewCell.m in Sources */,
 				2CA1CCAA1F02D1A4002FE6A2 /* NCAPIController.m in Sources */,

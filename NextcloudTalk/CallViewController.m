@@ -1069,6 +1069,11 @@ typedef NS_ENUM(NSInteger, CallState) {
     _responses = [_callController allRequests];
     
 //    _allVotes = [_callController allPollVotes];
+//    NSLog(@"Listen.Vote...:%@", [_callController allPollVotes]);
+
+    
+//    NSLog(@"Listen.Vote.Title...:%@", [_callController votePoll].title);
+    
     NCVote *vote = [_callController votePoll];
         
     // check if call has a vote
@@ -1478,7 +1483,7 @@ typedef NS_ENUM(NSInteger, CallState) {
 
 - (void)disableLocalVideo
 {
-    NSLog(@"disableLocalVideo...");
+//    NSLog(@"disableLocalVideo...");
     [_callController enableVideo:NO];
     [_captureController stopCapture];
     [_localVideoView setHidden:YES];
@@ -1492,7 +1497,7 @@ typedef NS_ENUM(NSInteger, CallState) {
 
 - (void)enableLocalVideo
 {
-    NSLog(@"enableLocalVideo...");
+//    NSLog(@"enableLocalVideo...");
 
     [_callController enableVideo:YES];
     [_captureController startCapture];

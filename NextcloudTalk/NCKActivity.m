@@ -18,7 +18,7 @@
     }
     
     NCKActivity *activity = [[self alloc] init];
-    activity.activityId = [[roomDict objectForKey:@"id"] integerValue];
+    activity.activityId = (long *)[[roomDict objectForKey:@"id"] integerValue];
     activity.token = [roomDict objectForKey:@"token"];
     activity.userId = [roomDict objectForKey:@"userId"];
     activity.activityType = [[roomDict objectForKey:@"activityType"] integerValue];

@@ -469,16 +469,74 @@ static NSString * const kNCVideoTrackKind = @"video";
 
  
 
-            NSDictionary *fetchedArr = [responseDict objectForKey:@"vote"];
+//            NSDictionary *fetchedArr = [responseDict objectForKey:@"vote"];
              
             NSMutableArray<NCVote *> * voteArray = [[NSMutableArray alloc] init];
 
+//            NSLog(@"VOTE RESPONSE.....: %@",responseDict);
+
+//            NSLog(@"VOTE RESPONSE. Key....: %@",[responseDict objectForKey:@"vote"]);
+            
+            if(![[responseDict objectForKey:@"vote"] isEqual:0]){
+                 
+//                NSLog(@"YES VOTE........");
+
+                NSDictionary *response = [responseDict objectForKey:@"vote"];
+                
+                if (response != nil) {
+                    NCVote *ncVote = [NCVote activityWithDictionary:response];
+                    
+                    NSDate *now = [NSDate date]; // current date
+                    int today = [now timeIntervalSince1970];
+                    
+                    if ([ncVote.meetingId isEqualToString:self->_room.token]){
+                        
+                        NSLog(@"Expire....: %ld",(long)ncVote.expire);
+                        NSLog(@"Today.....: %d",today);
+                        
+                        if(ncVote.expire>0){
+                            NSLog(@"YES with expire .....");
+                            if(ncVote.expire > today){
+                                [voteArray addObject:ncVote];
+                            }
+                        }else{
+                            NSLog(@"YES with opening.....");
+                            if(ncVote.openingTime > today){
+                                [voteArray addObject:ncVote];
+                            }
+                        }
+                    }
+
+    //                [voteArray addObject:ncVote];
+                    
+                    self->_allPollVotes = voteArray;
+                    self->_votePoll = voteArray.firstObject;
+                }
+            }else{
+                NSLog(@"NO VOTE........");
+            }
             
             
-            for (NSDictionary *response in fetchedArr ) {
-                NCVote *vote = [NCVote activityWithDictionary:response];
-                NSDate *now = [NSDate date]; // current date
-                int today = [now timeIntervalSince1970];
+            
+//            self->_allPollVotes = voteArray;
+//            self->_votePoll = voteArray.firstObject;
+            
+//            NSLog(@"==============VOTE _votePoll======================");
+//            NSLog(@"title........: %@",self->_votePoll.title);
+//            NSLog(@"created........: %ld",(long)self->_votePoll.created);
+//            NSLog(@"voteId........: %ld",(long)self->_votePoll.voteId);
+//            NSLog(@"meetingId........: %@",self->_votePoll.meetingId);
+//            NSLog(@"meetingName........: %@",self->_votePoll.meetingName);
+//            NSLog(@"owner........: %@",self->_votePoll.owner);
+//            NSLog(@"openingTime......: %ld",(long)self->_votePoll.openingTime);
+//            NSLog(@"expireTime......: %ld",(long)self->_votePoll.expire);
+//            NSLog(@"================================================");
+            
+            
+//            for (NSDictionary *response in fetchedArr ) {
+//                NCVote *vote = [NCVote activityWithDictionary:response];
+//                NSDate *now = [NSDate date]; // current date
+//                int today = [now timeIntervalSince1970];
                 
 //                NSLog(@"==============VOTE==================================");
 //                NSLog(@"title........: %@",vote.title);
@@ -494,15 +552,15 @@ static NSString * const kNCVideoTrackKind = @"video";
 //                NSLog(@"================================================");
                
                 
-                if ([vote.meetingId isEqualToString:self->_room.token] && vote.openingTime > today){
-                    [voteArray addObject:vote];
-                }
+//                if ([vote.meetingId isEqualToString:self->_room.token] && vote.openingTime > today){
+//                    [voteArray addObject:vote];
+//                }
                                 
-            }
+//            }
 
-            self->_allPollVotes = voteArray;
+//            self->_allPollVotes = voteArray;
             
-            self->_votePoll = voteArray.firstObject;
+//            self->_votePoll = voteArray.firstObject;
             
 
         } else {

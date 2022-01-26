@@ -41,7 +41,8 @@ NSInteger const APIv4                       = 4;
 NSString * const kNCOCSAPIVersion           = @"/ocs/v2.php";
 NSString * const kNCSpreedAPIVersionBase    = @"/apps/spreed/api/v";
 NSString * const kikaoUtilities             = @"/index.php/apps/kikaoutilities/api/0.1/";
-NSString * const kNCPolls                   = @"/apps/polls/api/v1.0/";
+NSString * const kNCPolls                   = @"/index.php/apps/polls/api/v1.0/";
+//NSString * const kNCPolls                   = @"/apps/polls/api/v1.0/";
 NSString * const kNCVotes                  = @"/index.php/apps/polls/";
 NSString * const kNCOtp                     = @"/index.php/apps/polls/api/v1.0/";
 
@@ -1331,7 +1332,7 @@ NSInteger const kReceivedChatMessagesLimit = 100;
    NSString *endpoint = [NSString stringWithFormat:@"activities"];
    NSString *URLString = [NSString stringWithFormat:@"%@%@%@?token=%@", account.server, kikaoUtilities, endpoint,encodedToken];
     
-//    NSLog(@"listenResponseApi URL...:%@", URLString);
+    NSLog(@"listenResponseApi URL...:%@", URLString);
     
     NSURL *url = [NSURL URLWithString:URLString];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -1459,8 +1460,6 @@ NSInteger const kReceivedChatMessagesLimit = 100;
    NSString *endpoint = [NSString stringWithFormat:@"fetchOpenVote"];
    NSString *URLString = [NSString stringWithFormat:@"%@%@%@/%@", account.server, kNCPolls, endpoint,encodedToken];
     
-    NSLog(@"fetchVotes-URLString: %@",URLString);
-    
     
     NSURL *url = [NSURL URLWithString:URLString];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -1481,11 +1480,13 @@ NSInteger const kReceivedChatMessagesLimit = 100;
             
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             
+            // NSLog(@"fetchVotes...response: %@", response);
+
             if(httpResponse.statusCode == 200)
                 {
                     NSError *parseError = nil;
                     NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
-//                    NSLog(@"The fetchVotes response is - %@",responseDictionary);
+//                    NSLog(@"The fetchVotes response....: %@",responseDictionary);
                     if (block) {
                         block(responseDictionary, nil);
                     }

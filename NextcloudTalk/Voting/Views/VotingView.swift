@@ -307,20 +307,14 @@ struct VotingView: View {
         
         if canViewResults {
             // show vote results when voting is done
-            ResultsView(poll: self.poll, meetingId: self.meetingId, shares: self.shares, pollOptions: pollOptions)
+            ResultsView(poll: self.pollStream ?? self.poll, meetingId: self.meetingId, shares: self.shares, pollOptions: pollOptions)
         } else {
             VStack(spacing:70){
                  
                 VStack{
                     Text("\(poll.title)")
                         .fontWeight(.bold)
-                                             
-                    
-//                    if poll.pollExpired {
-//                        Text("Closed on \(startDate)")
-//                            .foregroundColor(Color.red)
-//                            .multilineTextAlignment(.center)
-//                    } else
+
                     if timeLeft != "" {
                         Text("Closing in \(timeLeft)")
                             .foregroundColor(Color.orange)
