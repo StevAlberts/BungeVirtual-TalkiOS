@@ -20,9 +20,6 @@ pod 'TOCropViewController', '~> 2.6.0'
 pod 'libPhoneNumber-iOS'
 pod 'MZTimerLabel'
 pod "LetterAvatarKit", "1.2.5" # Swift 5.0+, Xcode 12
-pod "LetterAvatarKit", "1.2.3" # Swift 5.0+, Xcode 11
-pod "LetterAvatarKit", "1.1.7" # Swift 4.2
-pod "LetterAvatarKit", "1.1.5" # Swift 4.0
 end
 
 target "NotificationServiceExtension" do

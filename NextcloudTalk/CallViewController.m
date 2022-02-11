@@ -1822,9 +1822,9 @@ typedef NS_ENUM(NSInteger, CallState) {
     // this is used to push participants in grid
     CallParticipantViewCell *cell = (CallParticipantViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:kCallParticipantCellIdentifier forIndexPath:indexPath];
     
-    NSLog(@"CallParticipantViewCell.....: %@", cell.displayName);
-    
-    NSLog(@"CallParticipantViewCell.....: %@", cell);
+//    NSLog(@"CallParticipantViewCell.....: %@", cell.displayName);
+//
+//    NSLog(@"CallParticipantViewCell.....: %@", cell);
     
     NCPeerConnection *peerConnection = [_peersInCall objectAtIndex:indexPath.row];
     

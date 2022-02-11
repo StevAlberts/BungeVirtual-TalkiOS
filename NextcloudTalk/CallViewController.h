@@ -26,7 +26,7 @@
 #import "AvatarBackgroundImageView.h"
 #import "NCRoom.h"
 #import "NCKActivity.h"
-#import "Voting/NCVote.h"
+#import "Voting/Models/NCVote.h"
 
 @class CallViewController;
 @protocol CallViewControllerDelegate <NSObject>

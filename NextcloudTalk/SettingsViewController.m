@@ -186,13 +186,13 @@ typedef enum AboutSection {
 
 - (void)logoutButtonPressedz
 {
-    NSLog(@"Logout pressed");
-
-    if (@available(iOS 14.0, *)) {
-        UIViewController *userPolls = [SwiftUIViewWrapper createSwiftUICommentsView];
-        NCNavigationController *userStatusMessageNC = [[NCNavigationController alloc] initWithRootViewController:userPolls];
-        [self presentViewController:userStatusMessageNC animated:YES completion:nil];
-    }
+//    NSLog(@"Logout pressed");
+//
+//    if (@available(iOS 14.0, *)) {
+//        UIViewController *userPolls = [SwiftUIViewWrapper createSwiftUICommentsView];
+//        NCNavigationController *userStatusMessageNC = [[NCNavigationController alloc] initWithRootViewController:userPolls];
+//        [self presentViewController:userStatusMessageNC animated:YES completion:nil];
+//    }
 }
 
 - (void)logout

@@ -25,7 +25,7 @@
 #import "NCPeerConnection.h"
 #import "NCRoom.h"
 #import "NCKActivity.h"
-#import "Voting/NCVote.h"
+#import "Voting/Models/NCVote.h"
 
 @class NCCallController;
 @class RTCCameraVideoCapturer;

@@ -379,121 +379,62 @@ static NSString * const kNCVideoTrackKind = @"video";
     
 //        NSLog(@"Listening ....");
 //        _listenTask =
-        [[NCAPIController sharedInstance]
-                        listenResponseApi:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
-            if (!error) {
-                
-                
-//
-////                NSDictionary *responses = responseDict;
-//
-//
-//
-//                NSData *resData = [NSKeyedArchiver archivedDataWithRootObject:responseDict];
-//
-//                NSLog(@"getRequestApi resData................: %@",resData);
+    
+//        if(_requestedSpeak || _requestedIntervene){
+            [[NCAPIController sharedInstance]
+                            listenResponseApi:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+                if (!error) {
 
-                
-//                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:resData options:kNilOptions error:nil];
-//
-//                NSArray *fetchedArr = [json objectForKey:@"id"];
-//
-//                NSMutableArray *arrayRes = [NSMutableArray arrayWithArray:fetchedArr];
-//
-//                NSLog(@"arrayCodigos %@", arrayRes);
-//                NSLog(@"arrayCodigos %lu", (unsigned long)arrayRes.count);
+                    NSMutableArray<NCKActivity *> * resArray = [[NSMutableArray alloc] init];
 
-//                NSLog(@"getRequestApi responseDict................: %@",responseDict);
-
-                NSMutableArray<NCKActivity *> * resArray = [[NSMutableArray alloc] init];
-
-//                NCKActivity *_aid = nil;
-                
-                for (NSDictionary *response in responseDict) {
-                    NCKActivity *activity = [NCKActivity activityWithDictionary:response];
-                    
-//                    NSLog(@"getRequestApi activity................: %ld",(long)activity.activityId);
-//                    _aid = activity;
-                    
-                    [resArray addObject:activity];
-                                                            
+                    for (NSDictionary *response in responseDict) {
+                        NCKActivity *activity = [NCKActivity activityWithDictionary:response];
+                        [resArray addObject:activity];
+                    }
+                    self->_allRequests = resArray;
+                } else {
+                    NSLog(@"Could not getRequestApi. Error....: %@", error);
                 }
-                
-//                if([resArray containsObject:_aid]){
-//
-//                    NSLog(@"NO NO contain ..............");
-//                }
-//                self->_allRequests = responseDict;
-//                NSLog(@"arr arr arr................: %lu",(unsigned long)resArray.count);
-                self->_allRequests = resArray;
-//                NSLog(@"_allRequests................: %lu",(unsigned long)self->_allRequests.count);
-
-            } else {
-                NSLog(@"Could not getRequestApi. Error....: %@", error);
-            }
-        }];
+            }];
+//        }
     
     
     // fetch votes
     [[NCAPIController sharedInstance]
                     fetchVotes:_room.token forAccount:_account withCompletionBlock:^(NSDictionary *responseDict,NSError *error) {
+
+
         if (!error) {
 
+            NSLog(@"fetchVotes responseDict................: %@",responseDict);
 
-//            NSData *resData = [NSKeyedArchiver archivedDataWithRootObject:[responseDict objectForKey:@"votes"] requiringSecureCoding:NO error:nil];
-//            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:resData options:kNilOptions error:nil];
-//
-//
-//            NSLog(@"fetchVotes responseDict................: %@",responseDict);
-            
-//            NSLog(@"fetchVotes responseDict................: %@",[responseDict objectForKey:@"votes"]);
 
-//            NSLog(@"fetchVotes json................: %@",json);
-//
-//            NSLog(@"fetchVotes resData................: %@",resData);
-//
-//            NSLog(@"fetchVotes fetchedArr................: %@",fetchedArr);
-
-            
-//            NSMutableArray<NCKActivity *> * resArray = [[NSMutableArray alloc] init];
-
-            
-//            for (NSDictionary *response in responseDict) {
-//                    NSLog(@"Vote.....: %@",response);
-//            }
-            
-//            NSLog(@"VOTE RESPONSE.....: %@",responseDict);
-//            NSArray *fetchedArr = [responseDict objectForKey:@"votes"];
-//
-//            NSLog(@"Meeting token.....: %@",self->_room.token);
-
- 
-
-//            NSDictionary *fetchedArr = [responseDict objectForKey:@"vote"];
-             
+            // arrray to hold the votes
             NSMutableArray<NCVote *> * voteArray = [[NSMutableArray alloc] init];
 
-//            NSLog(@"VOTE RESPONSE.....: %@",responseDict);
 
-//            NSLog(@"VOTE RESPONSE. Key....: %@",[responseDict objectForKey:@"vote"]);
-            
-            if(![[responseDict objectForKey:@"vote"] isEqual:0]){
-                 
-//                NSLog(@"YES VOTE........");
+            BOOL canVote = [[responseDict objectForKey:@"vote"] isKindOfClass:[NSArray class]];
+
+            NSLog(@"VOTE RESPONSE. Key....: %id",canVote);
+
+//            if(![[responseDict objectForKey:@"vote"] isEqual:0]){
+            if(canVote){
+
+                NSLog(@"YES VOTE........");
 
                 NSDictionary *response = [responseDict objectForKey:@"vote"];
-                
+
                 if (response != nil) {
                     NCVote *ncVote = [NCVote activityWithDictionary:response];
-                    
+
                     NSDate *now = [NSDate date]; // current date
                     int today = [now timeIntervalSince1970];
-                    
+
                     if ([ncVote.meetingId isEqualToString:self->_room.token]){
-                        
+
                         NSLog(@"Expire....: %ld",(long)ncVote.expire);
                         NSLog(@"Today.....: %d",today);
-                        
+
                         if(ncVote.expire>0){
                             NSLog(@"YES with expire .....");
                             if(ncVote.expire > today){
@@ -508,60 +449,14 @@ static NSString * const kNCVideoTrackKind = @"video";
                     }
 
     //                [voteArray addObject:ncVote];
-                    
+
                     self->_allPollVotes = voteArray;
                     self->_votePoll = voteArray.firstObject;
                 }
             }else{
                 NSLog(@"NO VOTE........");
             }
-            
-            
-            
-//            self->_allPollVotes = voteArray;
-//            self->_votePoll = voteArray.firstObject;
-            
-//            NSLog(@"==============VOTE _votePoll======================");
-//            NSLog(@"title........: %@",self->_votePoll.title);
-//            NSLog(@"created........: %ld",(long)self->_votePoll.created);
-//            NSLog(@"voteId........: %ld",(long)self->_votePoll.voteId);
-//            NSLog(@"meetingId........: %@",self->_votePoll.meetingId);
-//            NSLog(@"meetingName........: %@",self->_votePoll.meetingName);
-//            NSLog(@"owner........: %@",self->_votePoll.owner);
-//            NSLog(@"openingTime......: %ld",(long)self->_votePoll.openingTime);
-//            NSLog(@"expireTime......: %ld",(long)self->_votePoll.expire);
-//            NSLog(@"================================================");
-            
-            
-//            for (NSDictionary *response in fetchedArr ) {
-//                NCVote *vote = [NCVote activityWithDictionary:response];
-//                NSDate *now = [NSDate date]; // current date
-//                int today = [now timeIntervalSince1970];
-                
-//                NSLog(@"==============VOTE==================================");
-//                NSLog(@"title........: %@",vote.title);
-//                NSLog(@"created........: %ld",(long)vote.created);
-//                NSLog(@"voteId........: %ld",(long)vote.voteId);
-//                NSLog(@"meetingId........: %@",vote.meetingId);
-//                NSLog(@"meetingName........: %@",vote.meetingName);
-//                NSLog(@"owner........: %@",vote.owner);
-//                NSLog(@"room token............: %@",self->_room.token);
-//                NSLog(@"today............: %d",today);
-//                NSLog(@"openingTime......: %ld",(long)vote.openingTime);
-//                NSLog(@"openingTime......: %ld",(long)vote.expire);
-//                NSLog(@"================================================");
-               
-                
-//                if ([vote.meetingId isEqualToString:self->_room.token] && vote.openingTime > today){
-//                    [voteArray addObject:vote];
-//                }
-                                
-//            }
 
-//            self->_allPollVotes = voteArray;
-            
-//            self->_votePoll = voteArray.firstObject;
-            
 
         } else {
             NSLog(@"Could not fetchVotes. Error....: %@", error);

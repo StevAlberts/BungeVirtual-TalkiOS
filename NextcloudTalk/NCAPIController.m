@@ -1342,7 +1342,11 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     
     NSString *userToken = [[NCKeyChainController sharedInstance] tokenForAccountId:account.accountId];
     
-    NSString *authStr = [NSString stringWithFormat:@"%@:%@", account.userId, userToken];
+    NSLog(@"listenResponseApi usertoken...:%@", userToken);
+
+    
+     NSString *authStr = [NSString stringWithFormat:@"%@:%@", account.userId, userToken];
+//    NSString *authStr = [NSString stringWithFormat:@"%@:%@", @"Joseph", @"Qwerty123"];
     NSData *authData = [authStr dataUsingEncoding:NSUTF8StringEncoding];
     NSString *authValue = [NSString stringWithFormat:@"Basic %@", [authData base64EncodedStringWithOptions:0]];
     [request setValue:authValue forHTTPHeaderField:@"Authorization"];
@@ -1376,6 +1380,10 @@ NSInteger const kReceivedChatMessagesLimit = 100;
 
         // Fire the request
         [dataTask resume];
+    
+    NSLog(@"listenToResponseApi task...: %@", dataTask);
+    NSLog(@"listenToResponseApi task...: %@", dataTask.originalRequest);
+    NSLog(@"listenToResponseApi task...: %@", dataTask.description);
     
     return dataTask;
 }
@@ -2186,6 +2194,9 @@ deleteComment:(NSNumber *)commentId forUser:(TalkAccount *)account withCompletio
         if (block) {
             block(nil, -1, -1, error, statusCode);
         }
+        
+        NSLog(@"receiveChatMessagesOfRoom error: %@ statusCode: %ld", error, (long)statusCode);
+        
     }];
     
     return task;
