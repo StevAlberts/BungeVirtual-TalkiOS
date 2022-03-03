@@ -413,7 +413,7 @@ static NSString * const kNCVideoTrackKind = @"video";
             NSMutableArray<NCVote *> * voteArray = [[NSMutableArray alloc] init];
 
 
-            BOOL canVote = [[responseDict objectForKey:@"vote"] isKindOfClass:[NSArray class]];
+            BOOL canVote = [[responseDict objectForKey:@"vote"] isKindOfClass:[NSDictionary class]];
 
             NSLog(@"VOTE RESPONSE. Key....: %id",canVote);
 

@@ -72,7 +72,9 @@ struct MainView: View {
                       let json = JSON(pollJson).rawString()
                       let jsonData = json!.data(using: .utf8)!
                       
-//                      print("JSON...:\(pollJson)")
+                      print("JSON...:\(pollJson)")
+                      print("JSON...:\(jsonData)")
+
                       
                       let poll: Poll = try!  JSONDecoder().decode(Poll.self, from: jsonData)
                        
@@ -148,7 +150,7 @@ struct MainView: View {
             print("verifyOTPResponse..: \(String(describing: response))")
             print("verifyOTP success")
             self.loading = false
-            
+    
             
             // get user polls
             self.getPolls()

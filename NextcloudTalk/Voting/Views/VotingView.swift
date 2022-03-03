@@ -273,21 +273,8 @@ struct VotingView: View {
         api.getVotes(account, forPollId: poll.pollID as NSNumber) { response, error in
             
             let resultsArray : NSArray = response?["votes"] as? NSArray ?? []
-             
-//            print("ResultsArray..: \(String(describing: resultsArray))")
-                    
+                                 
             if response != nil {
-                
-//                resultsArray.forEach { resultJson in
-//                      let json = JSON(resultJson).rawString()
-//                      let jsonData = json!.data(using: .utf8)!
-//
-//                      let result: PollVoteResult = try!  JSONDecoder().decode(PollVoteResult.self, from: jsonData)
-//
-//                      print(result)
-//
-//                    voteResults.append(result)
-//                 }
                 
                 voteResults = resultsArray
                 

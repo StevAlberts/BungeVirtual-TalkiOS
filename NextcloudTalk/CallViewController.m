@@ -1304,7 +1304,7 @@ typedef NS_ENUM(NSInteger, CallState) {
     
     _interveneRequest = NO;
 
-    _interveneRequestButton.backgroundColor = [UIColor systemGreenColor];
+    _interveneRequestButton.backgroundColor = [UIColor systemRedColor];
 
     [_interveneRequestButton setTitle:@"Request To Intervene" forState: UIControlStateNormal];
     
