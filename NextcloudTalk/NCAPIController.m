@@ -1482,13 +1482,15 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     [request setValue:authValue forHTTPHeaderField:@"Authorization"];
     
     NSURLSession *session = [NSURLSession sharedSession];
+    
+    NSLog(@"fetchVotes...URLString: %@", URLString);
 
     // Create dataTask
         NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             
-            // NSLog(@"fetchVotes...response: %@", response);
+//             NSLog(@"fetchVotes...response: %@", response);
 
             if(httpResponse.statusCode == 200)
                 {
